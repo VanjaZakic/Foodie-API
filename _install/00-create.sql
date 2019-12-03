@@ -10,7 +10,7 @@ CREATE TABLE `companies` (
 	`address` varchar(255) NOT NULL,
 	`email` varchar(60) NOT NULL,
 	`password` varchar(255) NOT NULL,
-    `role` ENUM('producer', 'customer'),
+    `role` ENUM('producer', 'customer') NOT NULL,
 	`created_at` datetime NOT NULL,
     `updated_at` datetime NOT NULL,
     `deleted_at`  datetime NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE `users` (
 	`address` varchar(255) NOT NULL,
 	`email` varchar(60) NOT NULL,
 	`password` varchar(255) NOT NULL,
-    `role` ENUM('admin', 'worker', 'customer', 'menager'),
+    `role` ENUM('producer_admin', 'producer_user', 'customer_admin', 'customer_user') NOT NULL,
     `created_at` datetime NOT NULL,
     `updated_at` datetime NOT NULL,
     `deleted_at`  datetime NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `meal_categories` (
 	`created_at` datetime NOT NULL,
 	`updated_at` datetime NOT NULL,
 	`deleted_at`  datetime NOT NULL,
-    `company_id` int(10) unsigned NOT NULL, 
+    `company_id` int(10) unsigned NOT NULL,
     PRIMARY KEY(`id`),
     UNIQUE KEY (`name`),
     FOREIGN KEY (`company_id`) REFERENCES `companies` (`id`)
@@ -65,8 +65,8 @@ CREATE TABLE `meals` (
 	`created_at` datetime NOT NULL,
     `updated_at` datetime NOT NULL,
     `deleted_at`  datetime NOT NULL,
-    `meal_category_id` int(10) unsigned NOT NULL, 
-    `company_id` int(10) unsigned NOT NULL, 
+    `meal_category_id` int(10) unsigned NOT NULL,
+    `company_id` int(10) unsigned NOT NULL,
     PRIMARY KEY(`id`),
     UNIQUE KEY (`name`),
     UNIQUE KEY (`image`),
@@ -85,7 +85,7 @@ CREATE TABLE `orders` (
     `deleted_at`  datetime NOT NULL,
     `user_id` int(10) unsigned NOT NULL,
 	`company_id` int(10) unsigned NOT NULL,
-    `company_role` ENUM('producer', 'customer'),
+    `company_role` ENUM('producer', 'customer') NOT NULL,
     PRIMARY KEY(`id`),
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
 	FOREIGN KEY (`company_id`, `company_role`) REFERENCES `companies` (`id`, `role`)
@@ -100,4 +100,3 @@ CREATE TABLE `meal_order` (
     FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
     FOREIGN KEY (`meal_id`) REFERENCES `meals` (`id`)
 )ENGINE=InnoDB;
-
