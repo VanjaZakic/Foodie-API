@@ -41,6 +41,9 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+$app->register(
+    Prettus\Repository\Providers\LumenRepositoryServiceProvider::class
+);
 /*
 |--------------------------------------------------------------------------
 | Return The Application
