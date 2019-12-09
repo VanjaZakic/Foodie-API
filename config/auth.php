@@ -114,4 +114,14 @@ return [
 
     'password_timeout' => 10800,
 
+
+
+    'auth' => [
+        'passport' => [
+            'grant_type' => 'password',
+            'client_id' => 2,
+            'client_secret' => 'xGzO6OQ61hqSHW8SUmPpBKb6ooGuQsyw9XRA9eHa',
+
+        ],
+    ],
 ];
