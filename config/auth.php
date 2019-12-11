@@ -109,11 +109,11 @@ return [
 
     'password_timeout' => 10800,
 
-
     'passport' => [
-        'grant_type' => 'password',
-        'client_id' => 2,
-        'client_secret' => 'xGzO6OQ61hqSHW8SUmPpBKb6ooGuQsyw9XRA9eHa',
-        'scope' => '*'
+        'grant_type' => env('GRANT_TYPE'),
+        'client_id' => env('CLIENT_ID'),
+        'client_secret' => env('CLIENT_SECRET'),
+        'scope' => env('SCOPE'),
     ],
+
 ];
