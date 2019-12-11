@@ -2,7 +2,6 @@
 
 namespace App\Traits;
 
-//use App\Serializers\EmbedSerializer;
 use Prettus\Repository\Transformer\ModelTransformer as Transformer;
 use Spatie\Fractal\Fractal;
 use Illuminate\Http\JsonResponse;
@@ -47,8 +46,7 @@ Trait ResponseTrait
 
         $fractal = Fractal::create($data, $transformer)
             ->withResourceName($resourceKey)
-            ->addMeta($this->metaData)
-//            ->serializeWith(new EmbedSerializer());
+            ->addMeta($this->metaData);
 
         $request = Request::instance();
         if ($requestIncludes = $request->get('include')) {

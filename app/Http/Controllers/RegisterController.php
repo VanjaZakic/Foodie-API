@@ -8,9 +8,6 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use League\Fractal\Manager;
-use League\Fractal\Resource\Collection;
-
 class RegisterController extends Controller
 {
     public function register(RegisterRequest $request)

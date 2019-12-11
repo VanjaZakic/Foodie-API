@@ -71,10 +71,10 @@ return [
             'model' => App\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+         'users' => [
+             'driver' => 'database',
+             'table' => 'users',
+         ],
     ],
 
     /*
@@ -115,13 +115,10 @@ return [
     'password_timeout' => 10800,
 
 
-
-    'auth' => [
-        'passport' => [
-            'grant_type' => 'password',
-            'client_id' => 2,
-            'client_secret' => 'xGzO6OQ61hqSHW8SUmPpBKb6ooGuQsyw9XRA9eHa',
-
-        ],
+    'passport' => [
+        'grant_type' => 'password',
+        'client_id' => 2,
+        'client_secret' => 'xGzO6OQ61hqSHW8SUmPpBKb6ooGuQsyw9XRA9eHa',
+        'scope' => '*'
     ],
 ];
