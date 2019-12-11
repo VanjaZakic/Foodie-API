@@ -33,13 +33,12 @@ class LoginController extends AccessTokenController
                 'client_secret' => config('auth.passport.client_secret'),
                 'scope' => config('auth.passport.scope', '*'),
                 'username' => $request->get('email'),
-                'password' => $request->get('password')
+                'password' => $request->get('password'),
             ]);
             $tokenResponse = $this->issueToken($tokenRequest);
             $token         = $tokenResponse->getContent();
             $user = User::whereEmail($request->get('email'))->first();
         } catch(\Exception $exception) {
-            //return $exception;
             return $this->json('Wrong credentials', 422);
         }
 
