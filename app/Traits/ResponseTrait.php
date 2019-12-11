@@ -8,7 +8,12 @@ use Illuminate\Http\JsonResponse;
 use ReflectionClass;
 use Illuminate\Support\Facades\Request;
 
-Trait ResponseTrait
+
+/**
+ * Trait ResponseTrait
+ * @package App\Traits
+ */
+trait ResponseTrait
 {
     protected $metaData = [];
 
@@ -41,7 +46,7 @@ Trait ResponseTrait
 
         $this->metaData = [
             'include' => $transformer->getAvailableIncludes(),
-            'custom' => $meta,
+            'custom'  => $meta,
         ];
 
         $fractal = Fractal::create($data, $transformer)
