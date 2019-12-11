@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Services\UserService;
 use App\Traits\ResponseTrait;
 use App\User;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
@@ -21,26 +22,9 @@ class LoginController extends AccessTokenController
      *
      * @return \Illuminate\Http\JsonResponse|mixed
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request, UserService $userService)
     {
-        try {
-            $tokenRequest  = (new ServerRequest())->withParsedBody([
-                'grant_type'    => config('auth.passport.grant_type', 'password'),
-                'client_id'     => config('auth.passport.client_id'),
-                'client_secret' => config('auth.passport.client_secret'),
-                'username'      => $request->get('email'),
-                'password'      => $request->get('password'),
-            ]);
-            $tokenResponse = $this->issueToken($tokenRequest);
-            $token         = $tokenResponse->getContent();
-            $user          = User::whereEmail($request->get('email'))->first();
-        } catch (\Exception $exception) {
-            return $this->json('Wrong credentials', 422);
-        }
-
-        $tokenInfo              = json_decode($token, true);
-        $tokenInfo['user_type'] = $user->role;
-
+        $tokenInfo = $userService->login($request);
         return $tokenInfo;
     }
 }

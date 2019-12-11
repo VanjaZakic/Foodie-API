@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RegisterRequest;
 use App\Services\UserService;
 use App\Transformers\UserTransformer;
-use App\User;
 
 /**
  * Class RegisterController
@@ -22,9 +21,8 @@ class RegisterController extends Controller
      */
     public function register(RegisterRequest $request, UserService $userService)
     {
-        $user = $userService->populateUser($request);
-        $user->save();
-
+        $user = $userService->save($request);
+        
         return fractal()
             ->item($user)
             ->transformWith(new UserTransformer())
