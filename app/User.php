@@ -6,6 +6,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
+/**
+ * Class User
+ * @package App
+ */
 class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
@@ -36,14 +40,8 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
+     * @param $password
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = bcrypt($password);

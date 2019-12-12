@@ -22,6 +22,7 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request, UserService $userService)
     {
         $user = $userService->save($request);
+        
         return fractal()
             ->item($user)
             ->transformWith(new UserTransformer())

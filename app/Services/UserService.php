@@ -36,9 +36,7 @@ class UserService
      */
     public function save(RegisterRequest $request)
     {
-        $request->password = bcrypt($request->password);
-        $user              = $this->repository->create($request->all());
-        return $user;
+        return $user = $this->repository->create($request->all());
     }
 
     /**
@@ -56,9 +54,10 @@ class UserService
                 'username'      => $request->get('email'),
                 'password'      => $request->get('password'),
             ]);
+
             return $tokenRequest;
         } catch (\Exception $exception) {
-            return NULL;
+            return null;
         }
     }
 }
