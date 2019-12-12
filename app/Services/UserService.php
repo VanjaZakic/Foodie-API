@@ -4,76 +4,61 @@ namespace App\Services;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Traits\ResponseTrait;
-use App\User;
-use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Zend\Diactoros\ServerRequest;
+use App\Repositories\UserRepository;
 
 /**
  * Class UserService
  * @package App\Services
  */
-class UserService extends AccessTokenController
+class UserService
 {
-    use ResponseTrait;
+    /**
+     * @var UserRepository
+     */
+    protected $repository;
 
     /**
-     * @param RegisterRequest $request
+     * UserService constructor.
      *
-     * @return User
+     * @param UserRepository $repository
      */
-    public function save(RegisterRequest $request)
+    public function __construct(UserRepository $repository)
     {
-        $user = $this->populate($request);
-        $user->save();
-
-        return $user;
+        $this->repository = $repository;
     }
 
     /**
      * @param RegisterRequest $request
      *
-     * @return User
+     * @return mixed
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    private function populate(RegisterRequest $request)
+    public function save(RegisterRequest $request)
     {
-        $user             = new User();
-        $user->first_name = $request->get('first_name');
-        $user->last_name  = $request->get('last_name');
-        $user->phone      = $request->get('phone');
-        $user->address    = $request->get('address');
-        $user->email      = $request->get('email');
-        $user->password   = bcrypt($request->get('password'));
-        $user->role       = $request->get('role');
+        $request->password = bcrypt($request->password);
+        $user              = $this->repository->create($request->all());
         return $user;
     }
 
     /**
      * @param LoginRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return ServerRequest|null
      */
     public function login(LoginRequest $request)
     {
         try {
-            $tokenRequest  = (new ServerRequest())->withParsedBody([
+            $tokenRequest = (new ServerRequest())->withParsedBody([
                 'grant_type'    => config('auth.passport.grant_type', 'password'),
                 'client_id'     => config('auth.passport.client_id'),
                 'client_secret' => config('auth.passport.client_secret'),
                 'username'      => $request->get('email'),
                 'password'      => $request->get('password'),
             ]);
-            $tokenResponse = $this->issueToken($tokenRequest);
-            $token         = $tokenResponse->getContent();
-            $user          = User::whereEmail($request->get('email'))->first();
+            return $tokenRequest;
         } catch (\Exception $exception) {
-            return $this->json('Wrong credentials', 422);
+            return NULL;
         }
-
-        $tokenInfo              = json_decode($token, true);
-        $tokenInfo['user_type'] = $user->role;
-
-        return $tokenInfo;
     }
-
 }

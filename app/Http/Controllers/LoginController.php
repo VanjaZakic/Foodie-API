@@ -7,7 +7,6 @@ use App\Services\UserService;
 use App\Traits\ResponseTrait;
 use App\User;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
-use Zend\Diactoros\ServerRequest;
 
 /**
  * Class LoginController
@@ -19,12 +18,24 @@ class LoginController extends AccessTokenController
 
     /**
      * @param LoginRequest $request
+     * @param UserService  $userService
      *
      * @return \Illuminate\Http\JsonResponse|mixed
      */
     public function login(LoginRequest $request, UserService $userService)
     {
-        $tokenInfo = $userService->login($request);
+        $tokenRequest = $userService->login($request);
+        if ($tokenRequest == NULL) {
+            return $this->json('Wrong credentials', 422);
+        }
+
+        $tokenResponse = $this->issueToken($tokenRequest);
+        $token         = $tokenResponse->getContent();
+        $user          = User::whereEmail($request->get('email'))->first();
+
+        $tokenInfo              = json_decode($token, true);
+        $tokenInfo['user_type'] = $user->role;
+
         return $tokenInfo;
     }
 }

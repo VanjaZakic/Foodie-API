@@ -14,15 +14,14 @@ class RegisterController extends Controller
 {
     /**
      * @param RegisterRequest $request
-     *
      * @param UserService     $userService
      *
      * @return array
+     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
     public function register(RegisterRequest $request, UserService $userService)
     {
         $user = $userService->save($request);
-        
         return fractal()
             ->item($user)
             ->transformWith(new UserTransformer())
