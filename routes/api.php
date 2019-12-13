@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +14,21 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::prefix('v1')->group(function () {
+    Route::get('/', function () {
+        $data = ['version' => 1];
+        return $data;
+    });
+
+    Route::middleware('auth:api')->get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('register', 'Api\v1\RegisterController@register');
+    Route::post('login', 'Api\v1\LoginController@login');
 });
 
-Route::post('register', 'RegisterController@register');
-Route::post('login', 'LoginController@login');
+
+
 

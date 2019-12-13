@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Requests\RegisterRequest;
 use App\Services\UserService;
@@ -22,7 +22,7 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request, UserService $userService)
     {
         $user = $userService->save($request);
-        
+
         return fractal()
             ->item($user)
             ->transformWith(new UserTransformer())
