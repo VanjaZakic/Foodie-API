@@ -29,14 +29,23 @@ class User extends Authenticatable
         'role',
         'company_id',
     ];
-    
+
+    const ROLE_ADMIN = 'admin';
+    const ROLE_PRODUCER_ADMIN = 'producer_admin';
+    const ROLE_PRODUCER_USER = 'producer_user';
+    const ROLE_CUSTOMER_ADMIN = 'customer_admin';
+    const ROLE_CUSTOMER_USER = 'customer_user';
+    const ROLE_USER = 'user';
+    /**
+     * @var array
+     */
     public static $roles = [
-        'ADMIN'          => 'admin',
-        'PRODUCER_ADMIN' => 'producer_admin',
-        'PRODUCER_USER'  => 'producer_user',
-        'CUSTOMER_ADMIN' => 'customer_admin',
-        'CUSTOMER_USER'  => 'customer_user',
-        'USER'           => 'user'
+        User::ROLE_ADMIN,
+        User::ROLE_PRODUCER_ADMIN,
+        User::ROLE_PRODUCER_USER,
+        User::ROLE_CUSTOMER_ADMIN,
+        User::ROLE_CUSTOMER_USER,
+        User::ROLE_USER
     ];
 
 

@@ -34,7 +34,7 @@ class RegisterRequest extends FormRequest
             'address'    => 'required',
             'email'      => 'email|required|unique:users',
             'password'   => 'required|confirmed',
-            'role'       => 'required|not_in:admin',
+            'role'       => 'required|in:customer_user, user',
         ];
     }
 }

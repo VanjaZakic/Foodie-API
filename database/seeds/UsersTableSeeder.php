@@ -16,15 +16,19 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $roles = User::$roles;
-        foreach ($roles as $role) {
-            factory(User::class, 1)->create(['role' => $role]);
-        }
+        unset($roles[0]);
 
-        factory(User::class, 1)->create(['role' => User::$roles['ADMIN']]);
-        factory(User::class, 2)->create(['role' => User::$roles['PRODUCER_ADMIN']]);
-        factory(User::class, 5)->create(['role' => User::$roles['PRODUCER_USER']]);
-        factory(User::class, 1)->create(['role' => User::$roles['CUSTOMER_ADMIN']]);
-        factory(User::class, 5)->create(['role' => User::$roles['CUSTOMER_USER']]);
-        factory(User::class, 10)->create(['role' => User::$roles['USER']]);
+        factory(User::class, 1)->create([
+            'role'     => User::ROLE_ADMIN,
+            'password' => '123456'
+        ]);
+
+        for ($i = 0; $i < 20; $i++) {
+            $random_keys = array_rand($roles, 1);
+            factory(User::class, 1)->create([
+                'role'     => $roles[$random_keys],
+                'password' => '123456'
+            ]);
+        }
     }
 }

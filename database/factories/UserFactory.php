@@ -12,7 +12,6 @@ $factory->define(User::class, function (Faker $faker) {
         'phone'      => $faker->e164PhoneNumber,
         'address'    => $faker->address,
         'email'      => $faker->unique()->safeEmail,
-        'password'   => '$2y$10$HQbhz5w8azeW2OwkERIoHe45rFwo11aGpNliLbbdREck6WJ/fjzke', // 123456
     ];
 });
 
