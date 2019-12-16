@@ -15,11 +15,16 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(User::class, 1)->states('admin')->create();
-        factory(User::class, 1)->states('producer_admin')->create();
-        factory(User::class, 1)->states('producer_user')->create();
-        factory(User::class, 1)->states('customer_admin')->create();
-        factory(User::class, 1)->states('customer_user')->create();
-        factory(User::class, 1)->states('user')->create();
+        $roles = User::$roles;
+        foreach ($roles as $role) {
+            factory(User::class, 1)->create(['role' => $role]);
+        }
+
+        factory(User::class, 1)->create(['role' => User::$roles['ADMIN']]);
+        factory(User::class, 2)->create(['role' => User::$roles['PRODUCER_ADMIN']]);
+        factory(User::class, 5)->create(['role' => User::$roles['PRODUCER_USER']]);
+        factory(User::class, 1)->create(['role' => User::$roles['CUSTOMER_ADMIN']]);
+        factory(User::class, 5)->create(['role' => User::$roles['CUSTOMER_USER']]);
+        factory(User::class, 10)->create(['role' => User::$roles['USER']]);
     }
 }

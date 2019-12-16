@@ -29,6 +29,16 @@ class User extends Authenticatable
         'role',
         'company_id',
     ];
+    
+    public static $roles = [
+        'ADMIN'          => 'admin',
+        'PRODUCER_ADMIN' => 'producer_admin',
+        'PRODUCER_USER'  => 'producer_user',
+        'CUSTOMER_ADMIN' => 'customer_admin',
+        'CUSTOMER_USER'  => 'customer_user',
+        'USER'           => 'user'
+    ];
+
 
     /**
      * The attributes that should be hidden for arrays.

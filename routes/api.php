@@ -25,8 +25,11 @@ Route::prefix('v1')->group(function () {
         return $request->user();
     });
 
-    Route::post('register', 'Api\v1\RegisterController@register');
-    Route::post('login', 'Api\v1\LoginController@login');
+    Route::group(['namespace' => 'Api\\V1\\'], function () {
+        Route::post('register', 'RegisterController@register');
+        Route::post('login', 'LoginController@login');
+    });
+    
 });
 
 
