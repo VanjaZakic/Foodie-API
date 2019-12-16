@@ -24,17 +24,13 @@ class CreateCompaniesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('name', 60);
-            $table->string('phone', 20);
+            $table->string('phone', 20)->unique();
             $table->string('address');
-            $table->string('email', 60);
+            $table->string('email', 60)->unique();
             $table->enum('type', ['producer', 'customer']);
             $table->string('image');
             $table->decimal('lat', 10, 8)->nullable()->default(null);
             $table->decimal('lng', 11, 8)->nullable()->default(null);
-
-            $table->unique(["phone"], 'phone');
-
-            $table->unique(["email"], 'email');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -45,8 +41,8 @@ class CreateCompaniesTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

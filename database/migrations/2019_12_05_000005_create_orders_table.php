@@ -35,8 +35,7 @@ class CreateOrdersTable extends Migration
             $table->index(["company_id"], 'company_id');
             $table->softDeletes();
             $table->timestamps();
-
-
+            
             $table->foreign('user_id')
                 ->references('id')->on('users')
                 ->onDelete('restrict')
@@ -54,8 +53,8 @@ class CreateOrdersTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }

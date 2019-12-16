@@ -23,32 +23,16 @@ class CreateMealsTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('name', 60);
+            $table->string('name', 60)->unique();
             $table->text('description')->nullable()->default(null);
             $table->string('image');
             $table->decimal('price', 8, 2);
-            $table->unsignedInteger('meal_category_id');
-            $table->unsignedInteger('user_id');
-            $table->enum('user_role', ['admin', 'producer_admin', 'producer_user', 'customer_admin', 'customer_user', 'user']);
-
-            $table->index(["user_id", "user_role"], 'user_id');
-
-            $table->index(["meal_category_id"], 'meal_category_id');
-
-            $table->unique(["image"], 'image');
-
-            $table->unique(["name"], 'name');
+            $table->unsignedInteger('meal_category_id')->index();
             $table->softDeletes();
             $table->timestamps();
 
-
             $table->foreign('meal_category_id')
                 ->references('id')->on('meal_categories')
-                ->onDelete('restrict')
-                ->onUpdate('restrict');
-
-            $table->foreign('user_id')
-                ->references('id')->on('users')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
         });
@@ -59,8 +43,8 @@ class CreateMealsTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }
