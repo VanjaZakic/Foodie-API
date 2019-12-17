@@ -30,6 +30,26 @@ class User extends Authenticatable
         'company_id',
     ];
 
+    const ROLE_ADMIN = 'admin';
+    const ROLE_PRODUCER_ADMIN = 'producer_admin';
+    const ROLE_PRODUCER_USER = 'producer_user';
+    const ROLE_CUSTOMER_ADMIN = 'customer_admin';
+    const ROLE_CUSTOMER_USER = 'customer_user';
+    const ROLE_USER = 'user';
+
+    /**
+     * @var array
+     */
+    public static $roles = [
+        User::ROLE_ADMIN,
+        User::ROLE_PRODUCER_ADMIN,
+        User::ROLE_PRODUCER_USER,
+        User::ROLE_CUSTOMER_ADMIN,
+        User::ROLE_CUSTOMER_USER,
+        User::ROLE_USER
+    ];
+
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -47,4 +67,8 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($password);
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::Class);
+    }
 }

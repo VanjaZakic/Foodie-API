@@ -23,20 +23,14 @@ class CreateMealCategoriesTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('name', 30);
+            $table->string('name', 30)->unique();
             $table->string('image');
-            $table->unsignedInteger('user_id');
-            $table->enum('user_role', ['admin', 'producer_admin', 'producer_user', 'customer_admin', 'customer_user', 'user']);
-
-            $table->index(["user_id", "user_role"], 'user_id');
-
-            $table->unique(["name"], 'name');
+            $table->unsignedInteger('company_id');
             $table->softDeletes();
             $table->timestamps();
 
-
-            $table->foreign('user_id')
-                ->references('id')->on('users')
+            $table->foreign('company_id')
+                ->references('id')->on('companies')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
         });
@@ -47,8 +41,8 @@ class CreateMealCategoriesTable extends Migration
      *
      * @return void
      */
-     public function down()
-     {
-       Schema::dropIfExists($this->tableName);
-     }
+    public function down()
+    {
+        Schema::dropIfExists($this->tableName);
+    }
 }
