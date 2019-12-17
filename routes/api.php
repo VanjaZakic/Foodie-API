@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::prefix('v1')->group(function () {
     Route::get('/', function () {
         return $data = ['version' => 1];
@@ -27,10 +26,14 @@ Route::prefix('v1')->group(function () {
     Route::group(['namespace' => 'Api\\V1\\'], function () {
         Route::post('register', 'RegisterController@register');
         Route::post('login', 'LoginController@login');
+
+        Route::get('mealCategories', 'MealCategoryController@index');
+        Route::get('mealCategories/new', 'MealCategoryController@new');
+        Route::post('mealCategories', 'MealCategoryController@create');
+        Route::get('mealCategories/:id', 'MealCategoryController@show');
+        Route::get('mealCategories/:id/edit', 'MealCategoryController@edit');
+        Route::put('mealCategories/:id', 'MealCategoryController@update');
+        Route::delete('mealCategories/:id', 'MealCategoryController@destroy');
+        
     });
-
 });
-
-
-
-
