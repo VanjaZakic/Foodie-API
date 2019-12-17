@@ -16,19 +16,29 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $roles = User::$roles;
-        unset($roles[0]);
+        $key   = array_search(User::ROLE_ADMIN, $roles);
+        unset($roles[$key]);
 
-        factory(User::class, 1)->create([
+        $password = bcrypt('123456');
+
+        $users = factory(User::class, 1)->raw([
             'role'     => User::ROLE_ADMIN,
-            'password' => '123456'
+            'password' => $password
         ]);
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 10000; $i++) {
             $random_keys = array_rand($roles, 1);
-            factory(User::class, 1)->create([
+            $tempUsers   = factory(User::class, 1)->raw([
                 'role'     => $roles[$random_keys],
-                'password' => '123456'
+                'password' => $password
             ]);
+
+            $users = array_merge($users, $tempUsers);
+            if (count($users) == 9362) {
+                User::insert($users);
+                $users = [];
+            }
         }
+        User::insert($users);
     }
 }

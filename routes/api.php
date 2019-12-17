@@ -17,8 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::get('/', function () {
-        $data = ['version' => 1];
-        return $data;
+        return $data = ['version' => 1];
     });
 
     Route::middleware('auth:api')->get('/user', function (Request $request) {

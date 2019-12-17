@@ -36,6 +36,7 @@ class User extends Authenticatable
     const ROLE_CUSTOMER_ADMIN = 'customer_admin';
     const ROLE_CUSTOMER_USER = 'customer_user';
     const ROLE_USER = 'user';
+
     /**
      * @var array
      */
@@ -66,4 +67,8 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($password);
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::Class);
+    }
 }
