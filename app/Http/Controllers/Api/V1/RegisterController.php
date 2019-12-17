@@ -8,7 +8,7 @@ use App\Transformers\UserTransformer;
 
 /**
  * Class RegisterController
- * @package App\Http\Controllers
+ * @package App\Http\Controllers\Api\V1
  */
 class RegisterController extends Controller
 {

@@ -10,7 +10,7 @@ use Laravel\Passport\Http\Controllers\AccessTokenController;
 
 /**
  * Class LoginController
- * @package App\Http\Controllers
+ * @package App\Http\Controllers\Api\V1
  */
 class LoginController extends AccessTokenController
 {

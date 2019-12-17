@@ -36,7 +36,7 @@ class RegisterRequest extends FormRequest
             'address'    => 'required',
             'email'      => 'email|required|unique:users',
             'password'   => 'required|confirmed',
-            'role'       => ['required', Rule::in([User::ROLE_CUSTOMER_USER, User::ROLE_USER])],
+            'role'       => ['required', Rule::in([User::ROLE_PRODUCER_USER, User::ROLE_CUSTOMER_USER, User::ROLE_USER])],
         ];
     }
 }
