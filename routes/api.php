@@ -27,6 +27,8 @@ Route::prefix('v1')->group(function () {
     Route::group(['namespace' => 'Api\\V1\\'], function () {
         Route::post('register', 'RegisterController@register');
         Route::post('login', 'LoginController@login');
+        
+        Route::post('companies', 'CompanyController@store')->middleware('admin');
     });
 
 });

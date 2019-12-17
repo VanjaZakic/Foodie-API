@@ -67,6 +67,9 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($password);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function company()
     {
         return $this->belongsTo(Company::Class);
