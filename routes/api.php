@@ -20,15 +20,13 @@ Route::prefix('v1')->group(function () {
         return $data = ['version' => 1];
     });
 
-    Route::middleware('auth:api')->get('/user', function (Request $request) {
-        return $request->user();
-    });
-
     Route::group(['namespace' => 'Api\\V1\\'], function () {
         Route::post('register', 'RegisterController@register');
         Route::post('login', 'LoginController@login');
-        
-        Route::post('companies', 'CompanyController@store')->middleware('admin');
+
+        Route::post('companies', 'CompanyController@store');
+
+        Route::resource('users', 'UserController');
     });
 
 });
