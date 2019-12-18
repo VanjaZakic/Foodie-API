@@ -19,12 +19,10 @@ class CompanyTransformer extends TransformerAbstract
     public function transform(Company $company)
     {
         return [
-            'id'      => (int)$company->id,
             'name'    => $company->name,
             'phone'   => $company->phone,
             'address' => $company->address,
             'email'   => $company->email,
-            'type'    => $company->type,
             'image'   => $company->image,
             'lat'     => $company->lat,
             'lng'     => $company->lng

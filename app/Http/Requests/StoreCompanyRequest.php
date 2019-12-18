@@ -6,7 +6,11 @@ use App\Company;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CompanyRequest extends FormRequest
+/**
+ * Class StoreCompanyRequest
+ * @package App\Http\Requests
+ */
+class StoreCompanyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,7 +31,7 @@ class CompanyRequest extends FormRequest
     {
         return [
             'name'    => 'required',
-            'phone'   => 'required',
+            'phone'   => 'required|unique',
             'address' => 'required',
             'email'   => 'email|required|unique:companies',
             'image'   => 'required',

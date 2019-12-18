@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->group(/**
+ *
+ */ function () {
     Route::get('/', function () {
         return $data = ['version' => 1];
     });
@@ -24,7 +26,13 @@ Route::prefix('v1')->group(function () {
         Route::post('register', 'RegisterController@register');
         Route::post('login', 'LoginController@login');
 
-        Route::post('companies', 'CompanyController@store');
+        Route::prefix('companies')->group(function () {
+            Route::get('/', 'CompanyController@index');
+            Route::get('{company}', 'CompanyController@show');
+            Route::post('/', 'CompanyController@store')->middleware('admin');
+            Route::patch('/{company}', 'CompanyController@update')->middleware('admin');
+            Route::delete('/{company}', 'CompanyController@destroy')->middleware('admin');
+        });
 
         Route::resource('users', 'UserController');
     });

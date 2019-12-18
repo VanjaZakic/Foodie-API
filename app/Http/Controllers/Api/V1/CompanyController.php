@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\CompanyRequest;
+use App\Company;
+use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\UpdateCompanyRequest;
 use App\Services\CompanyService;
+use App\Transformers\CompanyIndexTransformer;
 use App\Transformers\CompanyTransformer;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 
 /**
@@ -15,19 +21,79 @@ class CompanyController extends Controller
 {
 
     /**
-     * @param CompanyRequest $request
      * @param CompanyService $companyService
      *
      * @return array
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function store(CompanyRequest $request, CompanyService $companyService)
+    public function index(CompanyService $companyService)
     {
-        $company = $companyService->save($request);
+        $producerCompanies = $companyService->get();
+
+        return fractal()
+            ->collection($producerCompanies)
+            ->transformWith(new CompanyIndexTransformer())
+            ->toArray();
+    }
+
+    /**
+     * @param StoreCompanyRequest $request
+     * @param CompanyService      $companyService
+     *
+     * @return array
+     * @throws ValidatorException
+     */
+    public function store(StoreCompanyRequest $request, CompanyService $companyService)
+    {
+        $company = $companyService->store($request);
 
         return fractal()
             ->item($company)
             ->transformWith(new CompanyTransformer())
             ->toArray();
+    }
+
+    /**
+     * @param Company $company
+     *
+     * @return array
+     */
+    Public function show(Company $company)
+    {
+        return fractal()
+            ->item($company)
+            ->transformWith(new CompanyTransformer())
+            ->toArray();
+    }
+
+    /**
+     * @param UpdateCompanyRequest $request
+     *
+     * @param CompanyService       $companyService
+     * @param Company              $company
+     *
+     * @return array
+     * @throws ValidatorException
+     */
+    public function update(UpdateCompanyRequest $request, CompanyService $companyService, Company $company)
+    {
+        $company = $companyService->update($request, $company->id);
+
+        return fractal()
+            ->item($company)
+            ->transformWith(new CompanyTransformer())
+            ->toArray();
+    }
+
+    /**
+     * @param CompanyService $companyService
+     * @param Company        $company
+     *
+     * @return ResponseFactory|Response
+     */
+    public function destroy(CompanyService $companyService, Company $company)
+    {
+        $companyService->delete($company->id);
+
+        return response(null, 204);
     }
 }
