@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Company;
 use App\Http\Requests\UserRequest;
 use App\Services\UserService;
 use App\Transformers\UserTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class UserController
@@ -24,7 +27,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function index()
     {
@@ -32,28 +35,24 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
+     *
+     * @param Company     $company
      *
      * @param UserRequest $request
      *
      * @param UserService $userService
      *
-     * @return \Illuminate\Http\Response
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @return Response
+     * @throws ValidatorException
      */
-    public function store(UserRequest $request, UserService $userService)
+    public function store(Company $company, UserRequest $request, UserService $userService)
     {
-        $user = $userService->save($request);
+        $user = $userService->store($request, $company);
+
+        if (!$user) {
+            return response('Not Acceptable', 406);
+        }
 
         return fractal()
             ->item($user)
@@ -66,21 +65,9 @@ class UserController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function show($id)
-    {
-
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }
@@ -88,10 +75,10 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $id
+     * @param Request $request
+     * @param int     $id
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function update(Request $request, $id)
     {
@@ -103,7 +90,7 @@ class UserController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function destroy($id)
     {

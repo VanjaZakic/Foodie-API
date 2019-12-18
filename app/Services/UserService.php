@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use Prettus\Validator\Exceptions\ValidatorException;
 use Zend\Diactoros\ServerRequest;
 use App\Repositories\UserRepository;
 
@@ -31,12 +32,21 @@ class UserService
     /**
      * @param RegisterRequest $request
      *
+     * @param                 $company
+     *
      * @return mixed
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws ValidatorException
      */
-    public function save($request)
+    public function store($request, $company)
     {
-        return $user = $this->repository->create($request->all());
+        $user = $this->repository->findByField('company_id', $company->id);
+
+        if (!count($user)) {
+            $request = array_merge($request->all(), ['company_id' => $company->id]);
+            return $this->repository->create($request);
+        }
+
+        return null;
     }
 
     /**
