@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Requests\MealCategoryRequest;
+use App\MealCategory;
 use App\Repositories\MealCategoryRepository;
 
 /**
@@ -27,13 +28,48 @@ class MealCategoryService
     }
 
     /**
+     * @return mixed
+     */
+    public function showAll()
+    {
+        return $this->repository->all();
+    }
+
+    /**
      * @param MealCategoryRequest $request
-     *
      * @return mixed
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function save(MealCategoryRequest $request)
+    public function store(MealCategoryRequest $request)
     {
-        return $mealCategory = $this->repository->create($request->all());
+        return $this->repository->create($request->all());
+    }
+
+    /**
+     * @param MealCategory $id
+     * @return mixed
+     */
+    public function show(MealCategory $id)
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
+     * @param MealCategory $id
+     * @param MealCategoryRequest $request
+     * @return mixed
+     */
+    public function update(MealCategory $id, MealCategoryRequest $request)
+    {
+        return $this->repository->find($id)->first()->fill($request->all())->save();
+    }
+
+    /**
+     * @param MealCategory $id
+     * @return mixed
+     */
+    public function destroy(MealCategory $id)
+    {
+        return $this->repository->find($id)->each->delete();
     }
 }

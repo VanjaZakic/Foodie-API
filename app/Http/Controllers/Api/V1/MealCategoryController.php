@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\MealCategoryRequest;
+use App\MealCategory;
 use App\Services\MealCategoryService;
 use App\Transformers\MealCategoryTransformer;
-use Illuminate\Http\Request;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class MealCategoryController
@@ -16,22 +17,40 @@ class MealCategoryController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param MealCategoryService $mealCategoryService
+     * @return array
      */
-    public function index()
+    public function index(MealCategoryService $mealCategoryService)
+    {
+        $mealCategories = $mealCategoryService->showAll();
+
+        return fractal()
+            ->collection($mealCategories)
+            ->transformWith(new MealCategoryTransformer())
+            ->toArray();
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return void
+     */
+    public function create()
     {
         //
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
      * @param MealCategoryRequest $request
      * @param MealCategoryService $mealCategoryService
      * @return array
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws ValidatorException
      */
-    public function create(MealCategoryRequest $request, MealCategoryService $mealCategoryService)
+    public function store(MealCategoryRequest $request, MealCategoryService $mealCategoryService)
     {
-        $mealCategory = $mealCategoryService->save($request);
+        $mealCategory = $mealCategoryService->store($request);
 
         return fractal()
             ->item($mealCategory)
@@ -40,34 +59,29 @@ class MealCategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param MealCategory $id
+     * @param MealCategoryService $mealCategoryService
+     * @return array
      */
-    public function show($id)
+    public function show(MealCategory $id, MealCategoryService $mealCategoryService)
     {
-        //
+        $mealCategory = $mealCategoryService->show($id);
+
+        return fractal()
+            ->collection($mealCategory)
+            ->transformWith(new MealCategoryTransformer())
+            ->toArray();
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param MealCategory $id
+     * @return void
      */
-    public function edit($id)
+    public function edit(MealCategory $id)
     {
         //
     }
@@ -75,23 +89,29 @@ class MealCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param MealCategoryRequest $request
+     * @param MealCategory $id
+     * @param MealCategoryService $mealCategoryService
+     * @return array
      */
-    public function update(Request $request, $id)
+    public function update(MealCategoryRequest $request, MealCategory $id, MealCategoryService $mealCategoryService)
     {
-        //
+        $mealCategoryService->update($id, $request);
+
+        return $this->show($id, $mealCategoryService);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param MealCategory $id
+     * @param MealCategoryService $mealCategoryService
+     * @return array
      */
-    public function destroy($id)
+    public function destroy(MealCategory $id, MealCategoryService $mealCategoryService)
     {
-        //
+        $mealCategoryService->destroy($id);
+
+        return $this->index($mealCategoryService);
     }
 }
