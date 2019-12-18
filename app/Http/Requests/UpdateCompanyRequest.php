@@ -29,7 +29,7 @@ class UpdateCompanyRequest extends FormRequest
     {
         return [
             'name'    => 'required',
-            'phone'   => 'required|unique',
+            'phone'   => 'required|unique:companies',
             'address' => 'required',
             'email'   => 'email|required|unique:companies',
             'image'   => 'required',

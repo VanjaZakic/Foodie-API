@@ -25,7 +25,7 @@ class LoginController extends AccessTokenController
     public function login(LoginRequest $request, UserService $userService)
     {
         $tokenRequest = $userService->login($request);
-        if ($tokenRequest == NULL) {
+        if ($tokenRequest == null) {
             return $this->json('Wrong credentials', 422);
         }
 
