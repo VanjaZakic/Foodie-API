@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
  * Class UserRequest
  * @package App\Http\Requests
  */
-class UserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -36,7 +36,6 @@ class UserRequest extends FormRequest
             'address'    => 'required',
             'email'      => 'email|required|unique:users',
             'password'   => 'required|confirmed',
-            'role'       => ['required', Rule::in([User::ROLE_PRODUCER_ADMIN, User::ROLE_CUSTOMER_ADMIN])],
         ];
     }
 }

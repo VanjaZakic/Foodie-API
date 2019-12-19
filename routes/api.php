@@ -29,12 +29,16 @@ Route::prefix('v1')->group(/**
         Route::prefix('companies')->group(function () {
             Route::get('/', 'CompanyController@index');
             Route::get('{company}', 'CompanyController@show');
-            Route::post('/', 'CompanyController@store')->middleware('admin');
-            Route::patch('{company}', 'CompanyController@update')->middleware('admin');
-            Route::delete('{company}', 'CompanyController@destroy')->middleware('admin');
+            Route::post('/', 'CompanyController@store')->middleware('role:admin');
+            Route::patch('{company}', 'CompanyController@update')->middleware('role:admin');
+            Route::delete('{company}', 'CompanyController@destroy')->middleware('role:admin');
 
             Route::prefix('/{company}/users')->group(function () {
-                Route::post('/', 'UserController@store');
+                Route::get('/', 'UserController@index')->middleware('role:admin, producer_admin, customer_admin');
+                Route::get('/{user}', 'UserController@show');
+                Route::post('/', 'UserController@store')->middleware('role:admin');
+                Route::patch('/{user}', 'UserController@update')->middleware('role:admin');
+                Route::delete('/{user}', 'UserController@destroy')->middleware('role:admin');
             });
         });
 

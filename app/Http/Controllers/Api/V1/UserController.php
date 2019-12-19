@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Company;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Services\UserService;
+use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -17,21 +20,18 @@ use Prettus\Validator\Exceptions\ValidatorException;
 class UserController extends Controller
 {
     /**
-     * UserController constructor.
-     */
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return void
      */
-    public function index()
+    public function index(Company $company, UserService $userService)
     {
-        //
+        $users = $userService->getAll($company->id);
+
+        return fractal()
+            ->collection($users)
+            ->transformWith(new UserIndexTransformer())
+            ->toArray();
     }
 
     /**
@@ -63,13 +63,17 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param Company $company
+     * @param User    $user
      *
-     * @return void
+     * @return array
      */
-    public function show($id)
+    public function show(Company $company, User $user, UserService $userService)
     {
-        //
+        return fractal()
+            ->item($user)
+            ->transformWith(new UserTransformer())
+            ->toArray();
     }
 
     /**
@@ -80,9 +84,14 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, Company $company, User $user, UserService $userService)
     {
-        //
+        $user = $userService->update($request, $user->id);
+
+        return fractal()
+            ->item($user)
+            ->transformWith(new UserTransformer())
+            ->toArray();
     }
 
     /**
@@ -92,8 +101,10 @@ class UserController extends Controller
      *
      * @return void
      */
-    public function destroy($id)
+    public function destroy(Company $company, User $user, UserService $userService)
     {
-        //
+        $userService->delete($user->id);
+
+        return response(null, 204);
     }
 }

@@ -6,7 +6,11 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class IsAdmin
+/**
+ * Class CheckRole
+ * @package App\Http\Middleware
+ */
+class CheckRole
 {
     /**
      * Handle an incoming request.
@@ -16,14 +20,16 @@ class IsAdmin
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role)
     {
-        if (Auth::user()->role == 'admin') {
-            return $next($request);
+        if (Auth::check()) {
+            if ($request->user()->role == $role) {
+                return $next($request);
+            }
         }
-
+        
         return response()->json([
-            'You are not admin'
+            'Unauthorized'
         ]);
     }
 }
