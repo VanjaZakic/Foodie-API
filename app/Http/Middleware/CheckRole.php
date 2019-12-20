@@ -26,10 +26,14 @@ class CheckRole
             if ($request->user()->role == $role) {
                 return $next($request);
             }
+
+            return response()->json([
+                'Unauthorized'
+            ]);
         }
-        
+
         return response()->json([
-            'Unauthorized'
+            'Pease login'
         ]);
     }
 }
