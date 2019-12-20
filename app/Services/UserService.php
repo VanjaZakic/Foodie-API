@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Criteria\CompanyUsersCriteria;
+use App\Criteria\NotDeletedCriteria;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -57,30 +57,15 @@ class UserService
      *
      * @return mixed
      */
-    public function getAll($companyId)
+    public function getAll()
     {
-        $users = $this->repository->getByCriteria(new CompanyUsersCriteria($companyId));
+        $users = $this->repository->getByCriteria(new NotDeletedCriteria());
         return $users;
     }
 
-    /**
-     * @param RegisterRequest $request
-     *
-     * @param                 $company
-     *
-     * @return mixed
-     * @throws ValidatorException
-     */
-    public function store($request, $company)
+    public function save($request)
     {
-        $user = $this->repository->findByField('company_id', $company->id);
-
-        if (!count($user)) {
-            $request = array_merge($request->all(), ['company_id' => $company->id]);
-            return $this->repository->create($request);
-        }
-
-        return null;
+        return $this->repository->create($request->all());
     }
 
     /**
@@ -95,12 +80,14 @@ class UserService
         return $this->repository->update($request->all(), $id);
     }
 
+
     /**
      * @param $id
      *
      * @return int
+     * @throws ValidatorException
      */
-    public function delete($id)
+    public function softDelete($id)
     {
         return $this->repository->delete($id);
     }

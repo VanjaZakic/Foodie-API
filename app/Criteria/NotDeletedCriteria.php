@@ -6,27 +6,12 @@ use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Class CompanyUsersCriteria.
+ * Class NotDeletedCCriteria.
  *
  * @package namespace App\Criteria;
  */
-class CompanyUsersCriteria implements CriteriaInterface
+class NotDeletedCriteria implements CriteriaInterface
 {
-    /**
-     * @var
-     */
-    protected $companyId;
-
-    /**
-     * CompanyUsersCriteria constructor.
-     *
-     * @param $companyId
-     */
-    public function __construct($companyId)
-    {
-        $this->companyId = $companyId;
-    }
-
     /**
      * Apply criteria in query repository
      *
@@ -37,6 +22,6 @@ class CompanyUsersCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where('company_id', '=', $this->companyId);
+        return $model->where('deleted_at', '=', null);
     }
 }

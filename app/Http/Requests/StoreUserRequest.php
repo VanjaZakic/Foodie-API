@@ -6,11 +6,7 @@ use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-/**
- * Class UserRequest
- * @package App\Http\Requests
- */
-class UpdateUserRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,17 +28,11 @@ class UpdateUserRequest extends FormRequest
         return [
             'first_name' => 'required',
             'last_name'  => 'required',
-            'phone'      => 'required|unique:users',
+            'phone'      => 'required',
             'address'    => 'required',
             'email'      => 'email|required|unique:users',
             'password'   => 'required|confirmed',
-            'role'       => ['required', Rule::in([
-                User::ROLE_PRODUCER_ADMIN,
-                User::ROLE_CUSTOMER_ADMIN,
-                User::ROLE_PRODUCER_USER,
-                User::ROLE_CUSTOMER_USER,
-                User::ROLE_USER
-            ])],
+            'role'       => ['required', Rule::in([User::ROLE_PRODUCER_USER, User::ROLE_CUSTOMER_USER, User::ROLE_USER])],
         ];
     }
 }

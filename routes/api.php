@@ -27,6 +27,14 @@ Route::prefix('v1')->group(function () {
         Route::post('register', 'RegisterController@register');
         Route::post('login', 'LoginController@login');
 
+        Route::prefix('users')->group(function () {
+            Route::get('/', 'UserController@index')->middleware('role:admin');
+            Route::get('/{user}', 'UserController@show');
+            Route::post('/', 'UserController@store');
+            Route::patch('/{user}', 'UserController@update')->middleware('role:admin');
+            Route::delete('/{user}', 'UserController@destroy')->middleware('role:admin');
+        });
+
         Route::prefix('companies')->group(function () {
             Route::get('/', 'CompanyController@index');
             Route::get('{company}', 'CompanyController@show');
@@ -35,11 +43,11 @@ Route::prefix('v1')->group(function () {
             Route::delete('{company}', 'CompanyController@destroy')->middleware('role:admin');
 
             Route::prefix('/{company}/users')->group(function () {
-                Route::get('/', 'UserController@index')->middleware('role:admin, producer_admin, customer_admin');
-                Route::get('/{user}', 'UserController@show');
-                Route::post('/', 'UserController@store')->middleware('role:admin');
-                Route::patch('/{user}', 'UserController@update')->middleware('role:admin');
-                Route::delete('/{user}', 'UserController@destroy')->middleware('role:admin');
+                Route::get('/', 'CompanyUserController@index')->middleware('role:admin, producer_admin, customer_admin');
+                Route::get('/{user}', 'CompanyUserController@show')->middleware('role:admin, producer_admin, customer_admin');
+                Route::post('/', 'CompanyUserController@store')->middleware('role:admin');
+//                Route::patch('/{user}', 'CompanyUserController@update')->middleware('role:admin');
+//                Route::delete('/{user}', 'CompanyUserController@destroy')->middleware('role:admin');
             });
         });
     });

@@ -12,6 +12,6 @@ $factory->define(Company::class, function (Faker $faker) {
         'address' => $faker->address,
         'email'   => $faker->unique()->safeEmail,
         'image'   => $faker->image(),
-        'type'    => 'customer'
+        'type'    => 'producer'
     ];
 });

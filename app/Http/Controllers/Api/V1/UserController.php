@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Company;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Http\Requests\UserRequest;
 use App\Services\UserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
 use App\User;
-use Illuminate\Http\Request;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Response;
 use Prettus\Validator\Exceptions\ValidatorException;
 
@@ -22,11 +21,13 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return void
+     * @param UserService $userService
+     *
+     * @return Response
      */
-    public function index(Company $company, UserService $userService)
+    public function index(UserService $userService)
     {
-        $users = $userService->getAll($company->id);
+        $users = $userService->getAll();
 
         return fractal()
             ->collection($users)
@@ -37,22 +38,15 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Company     $company
+     * @param StoreUserRequest $request
      *
-     * @param UserRequest $request
-     *
-     * @param UserService $userService
+     * @param UserService      $userService
      *
      * @return Response
-     * @throws ValidatorException
      */
-    public function store(Company $company, UserRequest $request, UserService $userService)
+    public function store(StoreUserRequest $request, UserService $userService)
     {
-        $user = $userService->store($request, $company);
-
-        if (!$user) {
-            return response('Not Acceptable', 406);
-        }
+        $user = $userService->save($request);
 
         return fractal()
             ->item($user)
@@ -63,13 +57,15 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Company $company
-     * @param User    $user
+     * @param User $user
      *
-     * @return array
+     * @return Response
+     * @throws AuthorizationException
      */
-    public function show(Company $company, User $user, UserService $userService)
+    public function show(User $user)
     {
+        $this->authorize('view', $user);
+
         return fractal()
             ->item($user)
             ->transformWith(new UserTransformer())
@@ -79,12 +75,14 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param int     $id
+     * @param UpdateUserRequest $request
+     * @param UserService       $userService
+     * @param User              $user
      *
      * @return void
+     * @throws ValidatorException
      */
-    public function update(UpdateUserRequest $request, Company $company, User $user, UserService $userService)
+    public function update(UpdateUserRequest $request, UserService $userService, User $user)
     {
         $user = $userService->update($request, $user->id);
 
@@ -97,13 +95,15 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param User        $user
+     * @param UserService $userService
      *
-     * @return void
+     * @return Response
+     * @throws ValidatorException
      */
-    public function destroy(Company $company, User $user, UserService $userService)
+    public function destroy(User $user, UserService $userService)
     {
-        $userService->delete($user->id);
+        $userService->softDelete($user->id);
 
         return response(null, 204);
     }
