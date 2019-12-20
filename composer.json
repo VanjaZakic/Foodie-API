@@ -10,7 +10,6 @@
     "require": {
         "php": "^7.2",
         "ext-json": "*",
-        "ext-http": "*",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.2",
         "laravel/helpers": "^1.1",
