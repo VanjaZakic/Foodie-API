@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::prefix('v1')->group(function () {
     Route::get('/', function () {
         return $data = ['version' => 1];
@@ -27,10 +26,22 @@ Route::prefix('v1')->group(function () {
     Route::group(['namespace' => 'Api\\V1\\'], function () {
         Route::post('register', 'RegisterController@register');
         Route::post('login', 'LoginController@login');
+
+        Route::get('mealCategories', 'MealCategoryController@index');
+        Route::get('mealCategories/create', 'MealCategoryController@create');
+        Route::post('mealCategories', 'MealCategoryController@store')->middleware('role:producer_admin');
+        Route::get('mealCategories/{id}', 'MealCategoryController@show');
+        Route::get('mealCategories/{id}/edit', 'MealCategoryController@edit');
+        Route::put('mealCategories/{id}', 'MealCategoryController@update')->middleware('role:producer_admin');
+        Route::delete('mealCategories/{id}', 'MealCategoryController@destroy')->middleware('role:producer_admin');
+
+        Route::get('meals', 'MealController@index');
+        Route::get('meals/create', 'MealController@create');
+        Route::post('meals', 'MealController@store')->middleware('role:producer_admin');
+        Route::get('meals/{id}', 'MealController@show');
+        Route::get('meals/{id}/edit', 'MealController@edit');
+        Route::put('meals/{id}', 'MealController@update')->middleware('role:producer_admin');
+        Route::delete('meals/{id}', 'MealController@destroy')->middleware('role:producer_admin');
+
     });
-
 });
-
-
-
-
