@@ -12,6 +12,15 @@ use App\User;
 class UserTransformer extends TransformerAbstract
 {
     /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+    protected $availableIncludes = [
+        'company',
+    ];
+
+    /**
      * A Fractal transformer.
      *
      * @return array
@@ -27,5 +36,19 @@ class UserTransformer extends TransformerAbstract
             'email'      => $user->email,
             'role'       => $user->role,
         ];
+    }
+
+    /**
+     * Include Company
+     *
+     * @param User $user
+     *
+     * @return \League\Fractal\Resource\Item
+     */
+    public function includeCompany(User $user)
+    {
+        if ($user->company) {
+            return $this->item($user->company, new CompanyIndexTransformer());
+        }
     }
 }

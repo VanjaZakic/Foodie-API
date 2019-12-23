@@ -50,6 +50,7 @@ class UserController extends Controller
 
         return fractal()
             ->item($user)
+            ->parseIncludes('company')
             ->transformWith(new UserTransformer())
             ->toArray();
     }
@@ -68,6 +69,7 @@ class UserController extends Controller
 
         return fractal()
             ->item($user)
+            ->parseIncludes('company')
             ->transformWith(new UserTransformer())
             ->toArray();
     }
@@ -88,6 +90,7 @@ class UserController extends Controller
 
         return fractal()
             ->item($user)
+            ->parseIncludes('company')
             ->transformWith(new UserTransformer())
             ->toArray();
     }

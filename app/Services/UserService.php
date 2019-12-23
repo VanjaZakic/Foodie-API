@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Criteria\NotDeletedCriteria;
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Zend\Diactoros\ServerRequest;
 use App\Repositories\UserRepository;

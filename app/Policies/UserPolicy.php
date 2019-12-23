@@ -31,7 +31,9 @@ class UserPolicy
      */
     public function view(User $authUser, User $user)
     {
-        return $authUser->id == $user->id;
+        return $authUser->id == $user->id ||
+            ($authUser->role == User::ROLE_PRODUCER_ADMIN && $authUser->company_id == $user->company_id) ||
+            ($authUser->role == User::ROLE_CUSTOMER_ADMIN && $authUser->company_id == $user->company_id);
     }
 
     /**
@@ -54,9 +56,12 @@ class UserPolicy
      *
      * @return mixed
      */
-    public function update(User $user, User $model)
+    public function update(User $authUser, User $user)
     {
-        //
+        return (($authUser->role == User::ROLE_PRODUCER_ADMIN ||
+                    $authUser->role == User::ROLE_CUSTOMER_ADMIN) &&
+                $authUser->company_id == $user->company_id) ||
+            $authUser->id == $user->id;
     }
 
     /**

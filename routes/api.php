@@ -19,19 +19,14 @@ Route::prefix('v1')->group(function () {
         return $data = ['version' => 1];
     });
 
-    Route::middleware('auth:api')->get('/user', function (Request $request) {
-        return $request->user();
-    });
-
     Route::group(['namespace' => 'Api\\V1\\'], function () {
-        Route::post('register', 'RegisterController@register');
         Route::post('login', 'LoginController@login');
 
         Route::prefix('users')->group(function () {
             Route::get('/', 'UserController@index')->middleware('role:admin');
             Route::get('/{user}', 'UserController@show');
             Route::post('/', 'UserController@store');
-            Route::patch('/{user}', 'UserController@update')->middleware('role:admin');
+            Route::put('/{user}', 'UserController@update');
             Route::delete('/{user}', 'UserController@destroy')->middleware('role:admin');
         });
 
@@ -43,11 +38,8 @@ Route::prefix('v1')->group(function () {
             Route::delete('{company}', 'CompanyController@destroy')->middleware('role:admin');
 
             Route::prefix('/{company}/users')->group(function () {
-                Route::get('/', 'CompanyUserController@index')->middleware('role:admin, producer_admin, customer_admin');
-                Route::get('/{user}', 'CompanyUserController@show')->middleware('role:admin, producer_admin, customer_admin');
+                Route::get('/', 'CompanyUserController@index')->middleware('role:admin,producer_admin,customer_admin');
                 Route::post('/', 'CompanyUserController@store')->middleware('role:admin');
-//                Route::patch('/{user}', 'CompanyUserController@update')->middleware('role:admin');
-//                Route::delete('/{user}', 'CompanyUserController@destroy')->middleware('role:admin');
             });
         });
     });
