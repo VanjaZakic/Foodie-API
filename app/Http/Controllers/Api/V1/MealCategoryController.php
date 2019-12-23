@@ -31,16 +31,6 @@ class MealCategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return void
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param MealCategoryRequest $request
@@ -61,56 +51,44 @@ class MealCategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param MealCategory $id
+     * @param MealCategory $mealCategory
      * @param MealCategoryService $mealCategoryService
      * @return array
      */
-    public function show(MealCategory $id, MealCategoryService $mealCategoryService)
+    public function show(MealCategory $mealCategory, MealCategoryService $mealCategoryService)
     {
-        $mealCategory = $mealCategoryService->show($id);
+        $mealCategory = $mealCategoryService->show($mealCategory);
 
         return fractal()
             ->collection($mealCategory)
             ->transformWith(new MealCategoryTransformer())
             ->toArray();
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param MealCategory $id
-     * @return void
-     */
-    public function edit(MealCategory $id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      *
      * @param MealCategoryRequest $request
-     * @param MealCategory $id
+     * @param MealCategory $mealCategory
      * @param MealCategoryService $mealCategoryService
      * @return array
      */
-    public function update(MealCategoryRequest $request, MealCategory $id, MealCategoryService $mealCategoryService)
+    public function update(MealCategoryRequest $request, MealCategory $mealCategory, MealCategoryService $mealCategoryService)
     {
-        $mealCategoryService->update($id, $request);
+        $mealCategoryService->update($mealCategory, $request);
 
-        return $this->show($id, $mealCategoryService);
+        return $this->show($mealCategory, $mealCategoryService);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param MealCategory $id
+     * @param MealCategory $mealCategory
      * @param MealCategoryService $mealCategoryService
      * @return array
      */
-    public function destroy(MealCategory $id, MealCategoryService $mealCategoryService)
+    public function destroy(MealCategory $mealCategory, MealCategoryService $mealCategoryService)
     {
-        $mealCategoryService->destroy($id);
+        $mealCategoryService->destroy($mealCategory);
 
         return $this->index($mealCategoryService);
     }

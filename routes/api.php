@@ -27,21 +27,17 @@ Route::prefix('v1')->group(function () {
         Route::post('register', 'RegisterController@register');
         Route::post('login', 'LoginController@login');
 
-        Route::get('mealCategories', 'MealCategoryController@index');
-        Route::get('mealCategories/create', 'MealCategoryController@create');
-        Route::post('mealCategories', 'MealCategoryController@store')->middleware('role:producer_admin');
-        Route::get('mealCategories/{id}', 'MealCategoryController@show');
-        Route::get('mealCategories/{id}/edit', 'MealCategoryController@edit');
-        Route::put('mealCategories/{id}', 'MealCategoryController@update')->middleware('role:producer_admin');
-        Route::delete('mealCategories/{id}', 'MealCategoryController@destroy')->middleware('role:producer_admin');
+        Route::get('meal-categories', 'MealCategoryController@index');
+        Route::post('meal-categories', 'MealCategoryController@store')->middleware('role:producer_admin');
+        Route::get('meal-categories/{mealCategory}', 'MealCategoryController@show');
+        Route::put('meal-categories/{mealCategory}', 'MealCategoryController@update')->middleware('role:producer_admin');
+        Route::delete('meal-categories/{mealCategory}', 'MealCategoryController@destroy')->middleware('role:producer_admin');
 
         Route::get('meals', 'MealController@index');
-        Route::get('meals/create', 'MealController@create');
         Route::post('meals', 'MealController@store')->middleware('role:producer_admin');
-        Route::get('meals/{id}', 'MealController@show');
-        Route::get('meals/{id}/edit', 'MealController@edit');
-        Route::put('meals/{id}', 'MealController@update')->middleware('role:producer_admin');
-        Route::delete('meals/{id}', 'MealController@destroy')->middleware('role:producer_admin');
+        Route::get('meals/{meal}', 'MealController@show');
+        Route::put('meals/{meal}', 'MealController@update')->middleware('role:producer_admin');
+        Route::delete('meals/{meal}', 'MealController@destroy')->middleware('role:producer_admin');
 
     });
 });

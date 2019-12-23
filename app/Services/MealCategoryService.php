@@ -40,36 +40,36 @@ class MealCategoryService
      * @return mixed
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function store(MealCategoryRequest $request)
+    public function store($request)
     {
         return $this->repository->create($request->all());
     }
 
     /**
-     * @param MealCategory $id
+     * @param MealCategory $mealCategory
      * @return mixed
      */
-    public function show(MealCategory $id)
+    public function show($mealCategory)
     {
-        return $this->repository->find($id);
+        return $this->repository->find($mealCategory);
     }
 
     /**
-     * @param MealCategory $id
+     * @param MealCategory $mealCategory
      * @param MealCategoryRequest $request
      * @return mixed
      */
-    public function update(MealCategory $id, MealCategoryRequest $request)
+    public function update($mealCategory, $request)
     {
-        return $this->repository->find($id)->first()->fill($request->all())->save();
+        return $this->repository->find($mealCategory)->first()->fill($request->all())->save();
     }
 
     /**
-     * @param MealCategory $id
+     * @param MealCategory $mealCategory
      * @return mixed
      */
-    public function destroy(MealCategory $id)
+    public function destroy($mealCategory)
     {
-        return $this->repository->find($id)->each->delete();
+        return $this->repository->find($mealCategory)->each->delete();
     }
 }
