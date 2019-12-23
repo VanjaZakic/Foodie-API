@@ -31,16 +31,6 @@ class MealController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return void
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param MealRequest $request
@@ -61,13 +51,13 @@ class MealController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Meal $id
+     * @param Meal $meal
      * @param MealService $mealService
      * @return array
      */
-    public function show(Meal $id, MealService $mealService)
+    public function show(Meal $meal, MealService $mealService)
     {
-        $meal = $mealService->show($id);
+        $meal = $mealService->show($meal);
 
         return fractal()
             ->collection($meal)
@@ -76,41 +66,30 @@ class MealController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Meal $id
-     * @return void
-     */
-    public function edit(Meal $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param MealRequest $request
-     * @param Meal $id
+     * @param Meal $meal
      * @param MealService $mealService
      * @return array
      */
-    public function update(MealRequest $request, Meal $id, MealService $mealService)
+    public function update(MealRequest $request, Meal $meal, MealService $mealService)
     {
-        $mealService->update($id, $request);
+        $mealService->update($meal, $request);
 
-        return $this->show($id, $mealService);
+        return $this->show($meal, $mealService);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Meal $id
+     * @param Meal $meal
      * @param MealService $mealService
      * @return array
      */
-    public function destroy(Meal $id, MealService $mealService)
+    public function destroy(Meal $meal, MealService $mealService)
     {
-        $mealService->destroy($id);
+        $mealService->destroy($meal);
 
         return $this->index($mealService);
     }
