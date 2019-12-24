@@ -18,22 +18,22 @@ class CheckRole
      * @param Request $request
      * @param Closure $next
      *
+     * @param array   $roles
+     *
      * @return mixed
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, ...$roles)
     {
         if (Auth::check()) {
-            if ($request->user()->role == $role) {
-                return $next($request);
+            foreach ($roles as $role) {
+                if (Auth::user()->role == trim($role)) {
+                    return $next($request);
+                }
             }
-
-            return response()->json([
-                'Unauthorized'
-            ]);
         }
 
         return response()->json([
-            'Pease login'
+            'Unauthorized'
         ]);
     }
 }

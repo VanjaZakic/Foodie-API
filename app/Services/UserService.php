@@ -34,7 +34,7 @@ class UserService
      * @return mixed
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function save(RegisterRequest $request)
+    public function save($request)
     {
         return $user = $this->repository->create($request->all());
     }

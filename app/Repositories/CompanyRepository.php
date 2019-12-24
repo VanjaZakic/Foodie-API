@@ -1,15 +1,16 @@
 <?php
 
+
 namespace App\Repositories;
 
+use App\Company;
 use Prettus\Repository\Eloquent\BaseRepository;
-use App\MealCategory;
 
 /**
- * Class MealCategoryRepository
+ * Class CompanyRepository
  * @package App\Repositories
  */
-class MealCategoryRepository extends BaseRepository
+class CompanyRepository extends BaseRepository
 {
     /**
      * Specify Model class name
@@ -18,6 +19,6 @@ class MealCategoryRepository extends BaseRepository
      */
     public function model()
     {
-        return MealCategory::class;
+        return Company::class;
     }
 }
