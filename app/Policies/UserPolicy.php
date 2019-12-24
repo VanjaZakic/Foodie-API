@@ -4,10 +4,18 @@ namespace App\Policies;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Http\Request;
 
 class UserPolicy
 {
     use HandlesAuthorization;
+
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
+        $request->get('nova_rola');
+    }
 
     /**
      * Determine whether the user can view any models.
@@ -58,10 +66,7 @@ class UserPolicy
      */
     public function update(User $authUser, User $user)
     {
-        return (($authUser->role == User::ROLE_PRODUCER_ADMIN ||
-                    $authUser->role == User::ROLE_CUSTOMER_ADMIN) &&
-                $authUser->company_id == $user->company_id) ||
-            $authUser->id == $user->id;
+
     }
 
     /**

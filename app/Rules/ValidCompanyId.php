@@ -42,7 +42,7 @@ class ValidCompanyId implements Rule
 
         if ($this->request->role == User::ROLE_CUSTOMER_ADMIN) {
             $company        = Company::find($this->request->company_id);
-            $customer_admin = User::where('company_id', $this->request->company_id)->where('role', User::ROLE_PRODUCER_ADMIN)->get();
+            $customer_admin = User::where('company_id', $this->request->company_id)->where('role', User::ROLE_CUSTOMER_ADMIN)->get();
 
             if (!$company || $company->type != Company::TYPE_CUSTOMER || count($customer_admin)) {
                 return false;

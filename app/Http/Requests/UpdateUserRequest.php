@@ -62,7 +62,7 @@ class UpdateUserRequest extends FormRequest
 
     public function canAdminUpdateUser()
     {
-        if ($this->user->role == User::ROLE_ADMIN && ($this->role != User::ROLE_ADMIN || $this->company_id != $this->user->company_id)) {
+        if ($this->canAdminUpdateHimself()) {
             return false;
         }
 
@@ -71,28 +71,46 @@ class UpdateUserRequest extends FormRequest
 
     public function canProducerAdminUpdateUser()
     {
-        return (Auth::user()->id == $this->user->id && $this->role == $this->user->role && $this->company_id == $this->user->company_id) ||
-            ($this->user->role == User::ROLE_PRODUCER_USER && $this->role == User::ROLE_USER && $this->company_id == null);
+        return $this->isUserUpdatingHimself() || $this->isProducerAdminUpdatingProducerUser();
     }
 
     public function canCustomerAdminUpdateUser()
     {
-        return (Auth::user()->id == $this->user->id && $this->role == $this->user->role && $this->company_id == $this->user->company_id) ||
-            ($this->user->role == User::ROLE_CUSTOMER_USER && $this->role == User::ROLE_USER && $this->company_id == null);
+        return $this->isUserUpdatingHimself() || $this->isCustomerAdminUpdatingCustomerUser();
     }
 
     public function canProducerUserUpdateUser()
     {
-        return Auth::user()->id == $this->user->id && $this->role == $this->user->role && $this->company_id == $this->user->company_id;
+        return $this->isUserUpdatingHimself();
     }
 
     public function canCustomerUserUpdateUser()
     {
-        return Auth::user()->id == $this->user->id && $this->role == $this->user->role && $this->company_id == $this->user->company_id;
+        return $this->isUserUpdatingHimself();
     }
 
     public function canUserUpdateUser()
     {
+        return $this->isUserUpdatingHimself();
+    }
+
+    private function isUserUpdatingHimself()
+    {
         return Auth::user()->id == $this->user->id && $this->role == $this->user->role && $this->company_id == $this->user->company_id;
+    }
+
+    private function isProducerAdminUpdatingProducerUser()
+    {
+        return $this->user->role == User::ROLE_PRODUCER_USER && $this->role == User::ROLE_USER && $this->company_id == null;
+    }
+
+    private function isCustomerAdminUpdatingCustomerUser()
+    {
+        return $this->user->role == User::ROLE_CUSTOMER_USER && $this->role == User::ROLE_USER && $this->company_id == null;
+    }
+
+    private function canAdminUpdateHimself()
+    {
+        return $this->user->role == User::ROLE_ADMIN && ($this->role != User::ROLE_ADMIN || $this->company_id != $this->user->company_id);
     }
 }
