@@ -43,11 +43,11 @@ class CompanyService
     /**
      * @return mixed
      */
-    public function get()
+    public function getAll()
     {
         return $this->repository->scopeQuery(function ($query) {
             return $query->where('type', 'producer');
-        })->all();
+        });
     }
 
     /**
@@ -59,7 +59,8 @@ class CompanyService
      */
     public function update($request, $companyId)
     {
-        return $this->repository->update($request->all(), $companyId);
+        return $this->repository->update(
+            $request->all(), $companyId);
     }
 
     /**

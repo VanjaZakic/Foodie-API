@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ValidCompanyType;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -29,10 +30,13 @@ class UpdateCompanyRequest extends FormRequest
     {
         return [
             'name'    => 'required',
-            'phone'   => 'required|unique:companies',
+            'phone'   => 'required|unique:companies,phone,' . $this->route('company')->id,
             'address' => 'required',
-            'email'   => 'email|required|unique:companies',
+            'email'   => 'email|required|unique:companies,email,' . $this->route('company')->id,
             'image'   => 'required',
+            'type'    => ['required', new ValidCompanyType($this->company)],
+            'lat'     => 'sometimes|numeric|between:-90,90',
+            'lng'     => 'sometimes|numeric|between:-180,80'
         ];
     }
 }

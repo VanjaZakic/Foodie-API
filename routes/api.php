@@ -29,9 +29,9 @@ Route::prefix('v1')->group(/**
         Route::prefix('companies')->group(function () {
             Route::get('/', 'CompanyController@index');
             Route::get('{company}', 'CompanyController@show');
-            Route::post('/', 'CompanyController@store')->middleware('admin');
-            Route::patch('/{company}', 'CompanyController@update')->middleware('admin');
-            Route::delete('/{company}', 'CompanyController@destroy')->middleware('admin');
+            Route::post('/', 'CompanyController@store')->middleware('role:admin');
+            Route::put('/{company}', 'CompanyController@update')->middleware('role:admin');
+            Route::delete('/{company}', 'CompanyController@destroy')->middleware('role:admin');
         });
 
         Route::resource('users', 'UserController');
