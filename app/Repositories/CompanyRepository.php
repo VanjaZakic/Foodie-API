@@ -1,16 +1,16 @@
 <?php
 
+
 namespace App\Repositories;
 
+use App\Company;
 use Prettus\Repository\Eloquent\BaseRepository;
-use App\User;
 
 /**
- * Class UserRepositoryEloquent.
- *
- * @package namespace App\Repositories;
+ * Class CompanyRepository
+ * @package App\Repositories
  */
-class UserRepository extends BaseRepository
+class CompanyRepository extends BaseRepository
 {
     /**
      * Specify Model class name
@@ -19,6 +19,6 @@ class UserRepository extends BaseRepository
      */
     public function model()
     {
-        return User::class;
+        return Company::class;
     }
 }

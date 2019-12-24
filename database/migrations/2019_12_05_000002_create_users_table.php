@@ -37,8 +37,8 @@ class CreateUsersTable extends Migration
 
             $table->foreign('company_id')
                 ->references('id')->on('companies')
-                ->onDelete('restrict')
-                ->onUpdate('restrict');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

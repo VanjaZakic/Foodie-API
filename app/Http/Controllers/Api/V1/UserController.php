@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UserRequest;
 use App\Services\UserService;
 use App\Transformers\UserTransformer;
+use Illuminate\Http\Request;
 
 /**
- * Class RegisterController
+ * Class UserController
  * @package App\Http\Controllers\Api\V1
  */
-class RegisterController extends Controller
+class UserController extends Controller
 {
     /**
-     * @param RegisterRequest $request
-     * @param UserService     $userService
+     * Store a newly created resource in storage.
      *
-     * @return array
+     * @param UserRequest $request
+     *
+     * @param UserService $userService
+     *
+     * @return \Illuminate\Http\Response
      * @throws \Prettus\Validator\Exceptions\ValidatorException
      */
-    public function register(RegisterRequest $request, UserService $userService)
+    public function store(UserRequest $request, UserService $userService)
     {
         $user = $userService->save($request);
 
