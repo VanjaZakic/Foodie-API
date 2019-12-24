@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -13,23 +13,7 @@ use Laravel\Passport\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens, SoftDeletes;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'phone',
-        'address',
-        'email',
-        'password',
-        'role',
-        'company_id',
-    ];
+    use Notifiable, HasApiTokens;
 
     const ROLE_ADMIN = 'admin';
     const ROLE_PRODUCER_ADMIN = 'producer_admin';
@@ -50,6 +34,21 @@ class User extends Authenticatable
         User::ROLE_USER
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'phone',
+        'address',
+        'email',
+        'password',
+        'role',
+        'company_id',
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -69,7 +68,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function company()
     {

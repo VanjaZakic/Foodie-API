@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Company
@@ -10,6 +12,19 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Company extends Model
 {
+    use SoftDeletes;
+
+    const TYPE_PRODUCER = 'producer';
+    const TYPE_CUSTOMER = 'customer';
+
+    /**
+     * @var array
+     */
+    public static $types = [
+        Company::TYPE_PRODUCER,
+        Company::TYPE_CUSTOMER
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -26,20 +41,8 @@ class Company extends Model
         'lng'
     ];
 
-
-    const TYPE_PRODUCER = 'producer';
-    const TYPE_CUSTOMER = 'customer';
-
     /**
-     * @var array
-     */
-    public static $types = [
-        Company::TYPE_PRODUCER,
-        Company::TYPE_CUSTOMER
-    ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function users()
     {

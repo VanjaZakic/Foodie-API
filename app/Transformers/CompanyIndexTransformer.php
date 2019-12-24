@@ -21,6 +21,7 @@ class CompanyIndexTransformer extends TransformerAbstract
     public function transform(Company $company)
     {
         return [
+            'id'    => $company->id,
             'name'  => $company->name,
             'links' => [
                 [
@@ -28,6 +29,7 @@ class CompanyIndexTransformer extends TransformerAbstract
                     'uri' => '/companies/' . $company->id,
                 ]
             ],
+
         ];
     }
 }

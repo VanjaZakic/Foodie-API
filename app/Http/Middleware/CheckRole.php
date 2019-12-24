@@ -24,9 +24,11 @@ class CheckRole
      */
     public function handle($request, Closure $next, ...$roles)
     {
-        foreach ($roles as $role) {
-            if (Auth::user()->role == trim($role)) {
-                return $next($request);
+        if (Auth::check()) {
+            foreach ($roles as $role) {
+                if (Auth::user()->role == trim($role)) {
+                    return $next($request);
+                }
             }
         }
 

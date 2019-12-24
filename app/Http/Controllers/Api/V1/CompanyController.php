@@ -10,6 +10,7 @@ use App\Transformers\CompanyIndexTransformer;
 use App\Transformers\CompanyTransformer;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 
@@ -27,11 +28,13 @@ class CompanyController extends Controller
      */
     public function index(CompanyService $companyService)
     {
-        $producerCompanies = $companyService->get();
+        $producerCompanies           = $companyService->getAll()->paginate(5);
+        $producerCompaniesCollection = $producerCompanies->getCollection();
 
         return fractal()
-            ->collection($producerCompanies)
+            ->collection($producerCompaniesCollection)
             ->transformWith(new CompanyIndexTransformer())
+            ->paginateWith(new IlluminatePaginatorAdapter($producerCompanies))
             ->toArray();
     }
 

@@ -35,7 +35,9 @@ class StoreCompanyRequest extends FormRequest
             'address' => 'required',
             'email'   => 'email|required|unique:companies',
             'image'   => 'required',
-            'type'    => ['required', Rule::in([Company::TYPE_PRODUCER, Company::TYPE_CUSTOMER])]
+            'type'    => ['required', Rule::in([Company::TYPE_PRODUCER, Company::TYPE_CUSTOMER])],
+            'lat'     => 'sometimes|numeric|between:-90,90',
+            'lng'     => 'sometimes|numeric|between:-180,80'
         ];
     }
 }
