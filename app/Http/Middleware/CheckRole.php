@@ -6,6 +6,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class CheckRole
+ * @package App\Http\Middleware
+ */
 class CheckRole
 {
     /**
