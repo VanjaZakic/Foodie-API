@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\MealRequest;
 use App\Meal;
+use App\MealCategory;
 use App\Services\MealService;
 use App\Transformers\MealTransformer;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -18,11 +21,12 @@ class MealController extends Controller
      * Display a listing of the resource.
      *
      * @param MealService $mealService
+     * @param MealCategory $mealCategory
      * @return array
      */
-    public function index(MealService $mealService)
+    public function index(MealService $mealService, MealCategory $mealCategory)
     {
-        $meals = $mealService->showAll();
+        $meals = $mealService->showAll($mealCategory);
 
         return fractal()
             ->collection($meals)
@@ -72,9 +76,12 @@ class MealController extends Controller
      * @param Meal $meal
      * @param MealService $mealService
      * @return array
+     * @throws AuthorizationException
      */
     public function update(MealRequest $request, Meal $meal, MealService $mealService)
     {
+        $this->authorize('update', $meal);
+
         $mealService->update($meal, $request);
 
         return $this->show($meal, $mealService);
@@ -85,12 +92,17 @@ class MealController extends Controller
      *
      * @param Meal $meal
      * @param MealService $mealService
-     * @return array
+     * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function destroy(Meal $meal, MealService $mealService)
     {
+        $this->authorize('delete', $meal);
+
         $mealService->destroy($meal);
 
-        return $this->index($mealService);
+        return response()->json([
+            'Item is deleted.'
+        ]);
     }
 }

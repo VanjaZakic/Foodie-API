@@ -33,7 +33,7 @@ Route::prefix('v1')->group(function () {
         Route::put('meal-categories/{mealCategory}', 'MealCategoryController@update')->middleware('role:producer_admin');
         Route::delete('meal-categories/{mealCategory}', 'MealCategoryController@destroy')->middleware('role:producer_admin');
 
-        Route::get('meals', 'MealController@index');
+        Route::get('meal-categories/{mealCategory}/meals', 'MealController@index');
         Route::post('meals', 'MealController@store')->middleware('role:producer_admin');
         Route::get('meals/{meal}', 'MealController@show');
         Route::put('meals/{meal}', 'MealController@update')->middleware('role:producer_admin');

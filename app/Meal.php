@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Meal
@@ -21,4 +22,12 @@ class Meal extends Model
         'price',
         'meal_category_id',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function mealCategory()
+    {
+        return $this->belongsTo(MealCategory::class);
+    }
 }
