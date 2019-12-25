@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,8 +32,8 @@ Route::prefix('v1')->group(function () {
             Route::delete('{company}', 'CompanyController@destroy')->middleware('role:admin');
         });
 
-        Route::get('meal-categories', 'MealCategoryController@index');
-        Route::post('meal-categories', 'MealCategoryController@store')->middleware('role:producer_admin');
+        Route::get('companies/{company}/meal-categories', 'MealCategoryController@index');
+        Route::post('companies/{company}/meal-categories', 'MealCategoryController@store')->middleware('role:producer_admin');
         Route::get('meal-categories/{mealCategory}', 'MealCategoryController@show');
         Route::put('meal-categories/{mealCategory}', 'MealCategoryController@update')->middleware('role:producer_admin');
         Route::delete('meal-categories/{mealCategory}', 'MealCategoryController@destroy')->middleware('role:producer_admin');

@@ -28,9 +28,8 @@ class MealCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'       => 'required',
-            'image'      => 'required',
-            'company_id' => 'required',
+            'name'  => 'required',
+            'image' => 'required',
         ];
     }
 }

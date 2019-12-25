@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class MealCategory
@@ -20,4 +22,20 @@ class MealCategory extends Model
         'image',
         'company_id',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function meal()
+    {
+        return $this->hasMany(Meal::class);
+    }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Company;
 use App\Http\Requests\MealCategoryRequest;
 use App\MealCategory;
 use App\Repositories\MealCategoryRepository;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class MealCategoryService
@@ -28,21 +30,28 @@ class MealCategoryService
     }
 
     /**
+     * @param Company $company
      * @return mixed
      */
-    public function showAll()
+    public function showAll($company)
     {
+        $this->repository = MealCategory::where('company_id', $company->id)->get();
         return $this->repository->all();
     }
 
     /**
      * @param MealCategoryRequest $request
+     * @param Company $company
      * @return mixed
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws ValidatorException
      */
-    public function store($request)
+    public function store($request, $company)
     {
-        return $this->repository->create($request->all());
+        return $this->repository->create([
+            'name'       => $request->name,
+            'image'      => $request->image,
+            'company_id' => $company->id
+        ]);
     }
 
     /**

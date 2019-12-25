@@ -19,9 +19,10 @@ class MealCategoryTransformer extends TransformerAbstract
     public function transform(MealCategory $mealCategory)
     {
         return [
-            'id'    => $mealCategory->id,
-            'name'  => $mealCategory->name,
-            'image' => $mealCategory->image,
+            'id'         => $mealCategory->id,
+            'name'       => $mealCategory->name,
+            'image'      => $mealCategory->image,
+            'company_id' => $mealCategory->company_id,
         ];
     }
 }
