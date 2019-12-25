@@ -14,7 +14,6 @@ class UserPolicy
     public function __construct(Request $request)
     {
         $this->request = $request;
-        $request->get('nova_rola');
     }
 
     /**

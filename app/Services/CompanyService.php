@@ -30,6 +30,16 @@ class CompanyService
     }
 
     /**
+     * @return mixed
+     */
+    public function getAll()
+    {
+        return $this->repository->scopeQuery(function ($query) {
+            return $query->where('type', 'producer');
+        });
+    }
+    
+    /**
      * @param StoreCompanyRequest $request
      *
      * @return mixed
@@ -38,16 +48,6 @@ class CompanyService
     public function store(StoreCompanyRequest $request)
     {
         return $this->repository->create($request->all());
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAll()
-    {
-        return $this->repository->scopeQuery(function ($query) {
-            return $query->where('type', 'producer');
-        });
     }
 
     /**
@@ -68,7 +68,7 @@ class CompanyService
      *
      * @return int
      */
-    public function delete($companyId)
+    public function softDelete($companyId)
     {
         return $this->repository->delete($companyId);
     }

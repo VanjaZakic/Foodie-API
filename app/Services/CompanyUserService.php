@@ -2,11 +2,8 @@
 
 namespace App\Services;
 
-use App\Criteria\CompanyUsersCriteria;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\StoreCompanyUserRequest;
 use Prettus\Validator\Exceptions\ValidatorException;
-use Zend\Diactoros\ServerRequest;
 use App\Repositories\UserRepository;
 
 /**
@@ -37,14 +34,15 @@ class CompanyUserService
      */
     public function getAll($companyId)
     {
-        $users = $this->repository->getByCriteria(new CompanyUsersCriteria($companyId));
-        return $users;
+        return $this->repository->scopeQuery(function ($query) use ($companyId) {
+            return $query->where('company_id', $companyId);
+        });
     }
 
     /**
-     * @param RegisterRequest $request
+     * @param StoreCompanyUserRequest $request
      *
-     * @param                 $company
+     * @param                         $company
      *
      * @return mixed
      * @throws ValidatorException
@@ -60,28 +58,4 @@ class CompanyUserService
 
         return null;
     }
-
-    /**
-     * @param $request
-     * @param $id
-     *
-     * @return mixed
-     * @throws ValidatorException
-     */
-    public function update($request, $id)
-    {
-        return $this->repository->update($request->all(), $id);
-    }
-
-    /**
-     * @param $id
-     *
-     * @return int
-     */
-    public function delete($id)
-    {
-        return $this->repository->delete($id);
-    }
-
-
 }

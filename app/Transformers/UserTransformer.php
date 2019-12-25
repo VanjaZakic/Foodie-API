@@ -2,6 +2,7 @@
 
 namespace App\Transformers;
 
+use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use App\User;
 
@@ -28,7 +29,7 @@ class UserTransformer extends TransformerAbstract
     public function transform(User $user)
     {
         return [
-            'id'         => (int)$user->id,
+            'id'         => $user->id,
             'first_name' => $user->first_name,
             'last_name'  => $user->last_name,
             'phone'      => $user->phone,
@@ -43,7 +44,7 @@ class UserTransformer extends TransformerAbstract
      *
      * @param User $user
      *
-     * @return \League\Fractal\Resource\Item
+     * @return Item
      */
     public function includeCompany(User $user)
     {

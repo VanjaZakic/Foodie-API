@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Criteria\NotDeletedCriteria;
 use App\Http\Requests\LoginRequest;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Zend\Diactoros\ServerRequest;
@@ -52,17 +51,20 @@ class UserService
     }
 
     /**
-     * @param $companyId
-     *
      * @return mixed
      */
     public function getAll()
     {
-        $users = $this->repository->getByCriteria(new NotDeletedCriteria());
-        return $users;
+        return $this->repository->limit(5);
     }
 
-    public function save($request)
+    /**
+     * @param $request
+     *
+     * @return mixed
+     * @throws ValidatorException
+     */
+    public function store($request)
     {
         return $this->repository->create($request->all());
     }
@@ -79,12 +81,10 @@ class UserService
         return $this->repository->update($request->all(), $id);
     }
 
-
     /**
      * @param $id
      *
      * @return int
-     * @throws ValidatorException
      */
     public function softDelete($id)
     {

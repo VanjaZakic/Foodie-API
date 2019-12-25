@@ -10,6 +10,7 @@ use App\Transformers\UserTransformer;
 use App\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Response;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -27,11 +28,13 @@ class UserController extends Controller
      */
     public function index(UserService $userService)
     {
-        $users = $userService->getAll();
+        $users           = $userService->getAll()->paginate(5);
+        $usersCollection = $users->getCollection();
 
         return fractal()
-            ->collection($users)
+            ->collection($usersCollection)
             ->transformWith(new UserIndexTransformer())
+            ->paginateWith(new IlluminatePaginatorAdapter($users))
             ->toArray();
     }
 
@@ -43,10 +46,11 @@ class UserController extends Controller
      * @param UserService      $userService
      *
      * @return Response
+     * @throws ValidatorException
      */
     public function store(StoreUserRequest $request, UserService $userService)
     {
-        $user = $userService->save($request);
+        $user = $userService->store($request);
 
         return fractal()
             ->item($user)
