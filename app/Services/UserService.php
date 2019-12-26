@@ -51,11 +51,13 @@ class UserService
     }
 
     /**
+     * @param $limit
+     *
      * @return mixed
      */
-    public function getAll()
+    public function getPaginated($limit)
     {
-        return $this->repository->limit(5);
+        return $this->repository->paginate($limit);
     }
 
     /**

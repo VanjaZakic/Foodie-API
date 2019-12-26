@@ -30,13 +30,15 @@ class CompanyUserService
     /**
      * @param $companyId
      *
+     * @param $limit
+     *
      * @return mixed
      */
-    public function getAll($companyId)
+    public function getPaginated($companyId, $limit)
     {
         return $this->repository->scopeQuery(function ($query) use ($companyId) {
             return $query->where('company_id', $companyId);
-        });
+        })->paginate($limit);
     }
 
     /**

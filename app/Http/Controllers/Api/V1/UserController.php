@@ -28,7 +28,7 @@ class UserController extends Controller
      */
     public function index(UserService $userService)
     {
-        $users           = $userService->getAll()->paginate(5);
+        $users           = $userService->getPaginated(5);
         $usersCollection = $users->getCollection();
 
         return fractal()

@@ -27,7 +27,7 @@ class CompanyController extends Controller
      */
     public function index(CompanyService $companyService)
     {
-        $producerCompanies           = $companyService->getAll()->paginate(5);
+        $producerCompanies           = $companyService->getPaginated(5);
         $producerCompaniesCollection = $producerCompanies->getCollection();
 
         return fractal()

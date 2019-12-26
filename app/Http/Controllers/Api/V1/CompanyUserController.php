@@ -27,7 +27,7 @@ class CompanyUserController extends Controller
      */
     public function index(Company $company, CompanyUserService $companyUserService)
     {
-        $companyUsers           = $companyUserService->getAll($company->id)->paginate(5);
+        $companyUsers           = $companyUserService->getPaginated($company->id, 5);
         $companyUsersCollection = $companyUsers->getCollection();
 
         return fractal()
