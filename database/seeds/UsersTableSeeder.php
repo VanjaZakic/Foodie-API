@@ -26,7 +26,7 @@ class UsersTableSeeder extends Seeder
             'password' => $password
         ]);
 
-        for ($i = 0; $i < 50000; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $random_keys = array_rand($roles, 1);
             $tempUsers   = factory(User::class, 1)->raw([
                 'role'     => $roles[$random_keys],

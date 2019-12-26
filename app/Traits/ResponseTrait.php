@@ -8,7 +8,6 @@ use Illuminate\Http\JsonResponse;
 use ReflectionClass;
 use Illuminate\Support\Facades\Request;
 
-
 /**
  * Trait ResponseTrait
  * @package App\Traits

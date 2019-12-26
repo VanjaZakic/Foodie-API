@@ -2,7 +2,9 @@
 
 namespace App;
 
+use App\Traits\UpdateUserTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
@@ -13,7 +15,7 @@ use Laravel\Passport\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens;
+    use Notifiable, HasApiTokens, SoftDeletes, UpdateUserTrait;
 
     const ROLE_ADMIN = 'admin';
     const ROLE_PRODUCER_ADMIN = 'producer_admin';

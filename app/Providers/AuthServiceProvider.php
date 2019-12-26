@@ -7,7 +7,10 @@ use App\Meal;
 use App\MealCategory;
 use App\Policies\MealCategoryPolicy;
 use App\Policies\MealPolicy;
+use App\Policies\UserPolicy;
+use App\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
 
 /**
@@ -25,7 +28,9 @@ class AuthServiceProvider extends ServiceProvider
         Meal::class         => MealPolicy::class,
         MealCategory::class => MealCategoryPolicy::class,
         Company::class      => MealCategoryPolicy::class,
+        User::class         => UserPolicy::class,
     ];
+
 
     /**
      * Register any authentication / authorization services.
@@ -36,5 +41,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         Passport::routes();
+
+        Gate::before(function ($user) {
+            if ($user->role === User::ROLE_ADMIN) return true;
+        });
     }
 }
