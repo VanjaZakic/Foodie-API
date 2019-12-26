@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Company;
 use App\MealCategory;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -9,6 +10,18 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class MealCategoryPolicy
 {
     use HandlesAuthorization;
+
+    /**
+     * Determine whether the user can create meal categories.
+     *
+     * @param User $user
+     * @param Company $company
+     * @return mixed
+     */
+    public function create(User $user, Company $company)
+    {
+        return $company->id === $user->company_id;
+    }
 
     /**
      * Determine whether the user can update the meal category.

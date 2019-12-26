@@ -42,9 +42,12 @@ class MealCategoryController extends Controller
      * @param Company $company
      * @return array
      * @throws ValidatorException
+     * @throws AuthorizationException
      */
     public function store(MealCategoryRequest $request, MealCategoryService $mealCategoryService, Company $company)
     {
+        $this->authorize('create', $company)
+
         $mealCategory = $mealCategoryService->store($request, $company);
 
         return fractal()
