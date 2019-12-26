@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Rule;
  * Class ValidCompanyType
  * @package App\Rules
  */
-class ValidCompanyType implements Rule
+class ValidCompanyTypeRule implements Rule
 {
     /**
      * @var
