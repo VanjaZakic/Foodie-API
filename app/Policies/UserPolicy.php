@@ -2,37 +2,19 @@
 
 namespace App\Policies;
 
+use App\Http\Requests\UpdateUserRequest;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Http\Request;
 
 class UserPolicy
 {
     use HandlesAuthorization;
 
-
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * Determine whether the user can view any models.
-     *
-     * @param \App\User $user
-     *
-     * @return mixed
-     */
-    public function viewAny(User $user)
-    {
-        //
-    }
-
     /**
      * Determine whether the user can view the model.
      *
-     * @param \App\User $user
-     * @param \App\User $model
+     * @param User $authUser
+     * @param User $user
      *
      * @return mixed
      */
@@ -44,66 +26,31 @@ class UserPolicy
     }
 
     /**
-     * Determine whether the user can create models.
-     *
-     * @param \App\User $user
-     *
-     * @return mixed
-     */
-    public function create(User $user)
-    {
-        //
-    }
-
-    /**
      * Determine whether the user can update the model.
      *
-     * @param \App\User $user
-     * @param \App\User $model
+     * @param User              $authUser
+     * @param User              $user
+     * @param UpdateUserRequest $request
      *
      * @return mixed
      */
-    public function update(User $authUser, User $user)
+    public function update(User $authUser, User $user, UpdateUserRequest $request)
     {
-
-    }
-
-    /**
-     * Determine whether the user can delete the model.
-     *
-     * @param \App\User $user
-     * @param \App\User $model
-     *
-     * @return mixed
-     */
-    public function delete(User $authUser, User $user)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param \App\User $user
-     * @param \App\User $model
-     *
-     * @return mixed
-     */
-    public function restore(User $user, User $model)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param \App\User $user
-     * @param \App\User $model
-     *
-     * @return mixed
-     */
-    public function forceDelete(User $user, User $model)
-    {
-        //
+        switch ($authUser->role) {
+            case User::ROLE_ADMIN:
+                return $authUser->canAdminUpdateUser($user, $request->all());
+            case User::ROLE_PRODUCER_ADMIN:
+                return $authUser->canProducerAdminUpdateUser($user, $request->all());
+            case User::ROLE_CUSTOMER_ADMIN:
+                return $authUser->canCustomerAdminUpdateUser($user, $request->all());
+            case User::ROLE_PRODUCER_USER:
+                return $authUser->canProducerUserUpdateUser($user, $request->all());
+            case User::ROLE_CUSTOMER_USER:
+                return $authUser->canCustomerUserUpdateUser($user, $request->all());
+            case User::ROLE_USER:
+                return $authUser->canUserUpdateUser($user, $request->all());
+            default:
+                return false;
+        }
     }
 }

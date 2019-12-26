@@ -87,9 +87,12 @@ class UserController extends Controller
      *
      * @return void
      * @throws ValidatorException
+     * @throws AuthorizationException
      */
     public function update(UpdateUserRequest $request, UserService $userService, User $user)
     {
+        $this->authorize('update', [$user, $request]);
+
         $user = $userService->update($request, $user->id);
 
         return fractal()
@@ -106,7 +109,6 @@ class UserController extends Controller
      * @param UserService $userService
      *
      * @return Response
-     * @throws ValidatorException
      */
     public function destroy(User $user, UserService $userService)
     {

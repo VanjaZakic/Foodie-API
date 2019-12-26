@@ -3,63 +3,60 @@
 namespace App\Traits;
 
 use App\User;
-use Illuminate\Support\Facades\Auth;
 
 trait UpdateUserTrait
 {
-    public function canAdminUpdateUser($request)
+    public function canAdminUpdateUser($user, $input)
     {
-        if ($this->canAdminUpdateHimself($request)) {
+        if ($this->canAdminUpdateHimself($user, $input)) {
             return false;
         }
 
         return true;
     }
 
-    public function canProducerAdminUpdateUser($request)
+    public function canProducerAdminUpdateUser($user, $input)
     {
-        return ($this->isUserUpdatingHimself($request) || $this->isProducerAdminUpdatingProducerUser($request));
+        return ($this->isUserUpdatingHimself($user, $input) || $this->isProducerAdminUpdatingProducerUser($user, $input));
     }
 
-    public function canCustomerAdminUpdateUser($request)
+    public function canCustomerAdminUpdateUser($user, $input)
     {
-        return ($this->isUserUpdatingHimself($request) || $this->isCustomerAdminUpdatingCustomerUser($request));
+        return ($this->isUserUpdatingHimself($user, $input) || $this->isCustomerAdminUpdatingCustomerUser($user, $input));
     }
 
-    public function canProducerUserUpdateUser($request)
+    public function canProducerUserUpdateUser($user, $input)
     {
-        return $this->isUserUpdatingHimself($request);
+        return $this->isUserUpdatingHimself($user, $input);
     }
 
-    public function canCustomerUserUpdateUser($request)
+    public function canCustomerUserUpdateUser($user, $input)
     {
-        return $this->isUserUpdatingHimself($request);
+        return $this->isUserUpdatingHimself($user, $input);
     }
 
-    public function canUserUpdateUser($request)
+    public function canUserUpdateUser($user, $input)
     {
-        return $this->isUserUpdatingHimself($request);
+        return $this->isUserUpdatingHimself($user, $input);
     }
 
-    private function canAdminUpdateHimself($request)
+    private function canAdminUpdateHimself($user, $input)
     {
-        return $request->user->role == User::ROLE_ADMIN && ($request->role != User::ROLE_ADMIN || $request->company_id != $request->user->company_id);
+        return $user->role == User::ROLE_ADMIN && ($input['role'] != User::ROLE_ADMIN || $input['company_id'] != $user->company_id);
     }
 
-    private function isProducerAdminUpdatingProducerUser($request)
+    private function isProducerAdminUpdatingProducerUser($user, $input)
     {
-        return $request->user->role == User::ROLE_PRODUCER_USER && $request->role == User::ROLE_USER && $request->company_id == null;
+        return $user->role == User::ROLE_PRODUCER_USER && $input['role'] == User::ROLE_USER && $input['company_id'] == null;
     }
 
-    private function isCustomerAdminUpdatingCustomerUser($request)
+    private function isCustomerAdminUpdatingCustomerUser($user, $input)
     {
-        return $request->user->role == User::ROLE_CUSTOMER_USER && $request->role == User::ROLE_USER && $request->company_id == null;
+        return $user->role == User::ROLE_CUSTOMER_USER && $input['role'] == User::ROLE_USER && $input['company_id'] == null;
     }
 
-    private function isUserUpdatingHimself($request)
+    private function isUserUpdatingHimself($user, $input)
     {
-        return Auth::user()->id == $request->user->id && $request->role == $request->user->role && $request->company_id == $request->user->company_id;
+        return auth()->user()->id == $user->id && $input['role'] == $user->role && $input['company_id'] == $user->company_id;
     }
-
-
 }
