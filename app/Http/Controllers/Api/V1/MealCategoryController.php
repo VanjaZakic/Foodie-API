@@ -46,7 +46,7 @@ class MealCategoryController extends Controller
      */
     public function store(MealCategoryRequest $request, MealCategoryService $mealCategoryService, Company $company)
     {
-        $this->authorize('create', $company)
+        $this->authorize('create', $company);
 
         $mealCategory = $mealCategoryService->store($request, $company);
 

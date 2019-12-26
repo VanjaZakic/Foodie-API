@@ -31,7 +31,6 @@ class AuthServiceProvider extends ServiceProvider
         User::class         => UserPolicy::class,
     ];
 
-
     /**
      * Register any authentication / authorization services.
      *
@@ -43,7 +42,11 @@ class AuthServiceProvider extends ServiceProvider
         Passport::routes();
 
         Gate::before(function ($user) {
-            if ($user->role === User::ROLE_ADMIN) return true;
+            if ($user->role === User::ROLE_ADMIN) {
+                return true;
+            }
+
+            return false;
         });
     }
 }
