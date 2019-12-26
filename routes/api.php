@@ -22,7 +22,13 @@ Route::prefix('v1')->group(function () {
     Route::group(['namespace' => 'Api\\V1\\'], function () {
         Route::post('login', 'LoginController@login');
 
-        Route::resource('users', 'UserController');
+        Route::prefix('users')->group(function () {
+            Route::get('/', 'UserController@index')->middleware('role:admin');
+            Route::get('/{user}', 'UserController@show');
+            Route::post('/', 'UserController@store');
+            Route::put('/{user}', 'UserController@update');
+            Route::delete('/{user}', 'UserController@destroy')->middleware('role:admin');
+        });
 
         Route::prefix('companies')->group(function () {
             Route::get('/', 'CompanyController@index');
@@ -30,15 +36,20 @@ Route::prefix('v1')->group(function () {
             Route::post('/', 'CompanyController@store')->middleware('role:admin');
             Route::put('{company}', 'CompanyController@update')->middleware('role:admin');
             Route::delete('{company}', 'CompanyController@destroy')->middleware('role:admin');
+
+            Route::prefix('/{company}/users')->group(function () {
+                Route::get('/', 'CompanyUserController@index')->middleware('role:admin,producer_admin,customer_admin');
+                Route::post('/', 'CompanyUserController@store')->middleware('role:admin');
+            });
         });
+
+        Route::get('mealCategories', 'MealCategoryController@index');
+        Route::get('mealCategories/create', 'MealCategoryController@create');
+        Route::post('mealCategories', 'MealCategoryController@store')->middleware('role:producer_admin');
+        Route::get('mealCategories/{id}', 'MealCategoryController@show');
+        Route::get('mealCategories/{id}/edit', 'MealCategoryController@edit');
+        Route::put('mealCategories/{id}', 'MealCategoryController@update')->middleware('role:producer_admin');
+        Route::delete('mealCategories/{id}', 'MealCategoryController@destroy')->middleware('role:producer_admin');
+
     });
-
-    Route::get('mealCategories', 'MealCategoryController@index');
-    Route::get('mealCategories/create', 'MealCategoryController@create');
-    Route::post('mealCategories', 'MealCategoryController@store')->middleware('role:producer_admin');
-    Route::get('mealCategories/{id}', 'MealCategoryController@show');
-    Route::get('mealCategories/{id}/edit', 'MealCategoryController@edit');
-    Route::put('mealCategories/{id}', 'MealCategoryController@update')->middleware('role:producer_admin');
-    Route::delete('mealCategories/{id}', 'MealCategoryController@destroy')->middleware('role:producer_admin');
-
 });

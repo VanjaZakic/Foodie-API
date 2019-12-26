@@ -13,7 +13,6 @@ use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Prettus\Validator\Exceptions\ValidatorException;
 
-
 /**
  * Class CompanyController
  * @package App\Http\Controllers\Api\V1
@@ -28,7 +27,7 @@ class CompanyController extends Controller
      */
     public function index(CompanyService $companyService)
     {
-        $producerCompanies           = $companyService->getAll()->paginate(5);
+        $producerCompanies           = $companyService->getPaginated(5);
         $producerCompaniesCollection = $producerCompanies->getCollection();
 
         return fractal()
@@ -95,7 +94,7 @@ class CompanyController extends Controller
      */
     public function destroy(CompanyService $companyService, Company $company)
     {
-        $companyService->delete($company->id);
+        $companyService->softDelete($company->id);
 
         return response(null, 204);
     }

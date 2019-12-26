@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Criteria\ProducerCompaniesCriteria;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Repositories\CompanyRepository;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -30,6 +31,18 @@ class CompanyService
     }
 
     /**
+     * @param $limit
+     *
+     * @return mixed
+     */
+    public function getPaginated($limit)
+    {
+        return $this->repository->scopeQuery(function ($query) {
+            return $query->where('type', 'producer');
+        })->paginate($limit);
+    }
+
+    /**
      * @param StoreCompanyRequest $request
      *
      * @return mixed
@@ -38,16 +51,6 @@ class CompanyService
     public function store(StoreCompanyRequest $request)
     {
         return $this->repository->create($request->all());
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAll()
-    {
-        return $this->repository->scopeQuery(function ($query) {
-            return $query->where('type', 'producer');
-        });
     }
 
     /**
@@ -68,7 +71,7 @@ class CompanyService
      *
      * @return int
      */
-    public function delete($companyId)
+    public function softDelete($companyId)
     {
         return $this->repository->delete($companyId);
     }

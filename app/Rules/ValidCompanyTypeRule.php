@@ -4,8 +4,15 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class ValidCompanyType implements Rule
+/**
+ * Class ValidCompanyType
+ * @package App\Rules
+ */
+class ValidCompanyTypeRule implements Rule
 {
+    /**
+     * @var
+     */
     protected $company;
 
     /**

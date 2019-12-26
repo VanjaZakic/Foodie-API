@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
+use Prettus\Validator\Exceptions\ValidatorException;
 use Zend\Diactoros\ServerRequest;
 use App\Repositories\UserRepository;
 
@@ -29,17 +29,6 @@ class UserService
     }
 
     /**
-     * @param RegisterRequest $request
-     *
-     * @return mixed
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
-     */
-    public function save($request)
-    {
-        return $user = $this->repository->create($request->all());
-    }
-
-    /**
      * @param LoginRequest $request
      *
      * @return ServerRequest|null
@@ -60,4 +49,49 @@ class UserService
             return null;
         }
     }
+
+    /**
+     * @param $limit
+     *
+     * @return mixed
+     */
+    public function getPaginated($limit)
+    {
+        return $this->repository->paginate($limit);
+    }
+
+    /**
+     * @param $request
+     *
+     * @return mixed
+     * @throws ValidatorException
+     */
+    public function store($request)
+    {
+        return $this->repository->create($request->all());
+    }
+
+    /**
+     * @param $request
+     * @param $id
+     *
+     * @return mixed
+     * @throws ValidatorException
+     */
+    public function update($request, $id)
+    {
+        return $this->repository->update($request->all(), $id);
+    }
+
+    /**
+     * @param $id
+     *
+     * @return int
+     */
+    public function softDelete($id)
+    {
+        return $this->repository->delete($id);
+    }
+
+
 }
