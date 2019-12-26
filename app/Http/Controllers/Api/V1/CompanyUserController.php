@@ -7,7 +7,6 @@ use App\Http\Requests\StoreCompanyUserRequest;
 use App\Services\CompanyUserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
-use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Prettus\Validator\Exceptions\ValidatorException;
 
@@ -23,7 +22,7 @@ class CompanyUserController extends Controller
      * @param Company            $company
      * @param CompanyUserService $companyUserService
      *
-     * @return void
+     * @return array
      */
     public function index(Company $company, CompanyUserService $companyUserService)
     {
@@ -46,7 +45,7 @@ class CompanyUserController extends Controller
      *
      * @param CompanyUserService      $companyUserService
      *
-     * @return Response
+     * @return mixed
      * @throws ValidatorException
      */
     public function store(Company $company, StoreCompanyUserRequest $request, CompanyUserService $companyUserService)

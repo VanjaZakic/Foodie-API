@@ -1,10 +1,7 @@
 <?php
 
-
 namespace App\Services;
 
-
-use App\Criteria\ProducerCompaniesCriteria;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Repositories\CompanyRepository;
 use Prettus\Validator\Exceptions\ValidatorException;

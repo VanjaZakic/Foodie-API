@@ -18,7 +18,7 @@ class ValidCompanyTypeRule implements Rule
     /**
      * Create a new rule instance.
      *
-     * @return void
+     * @param $company
      */
     public function __construct($company)
     {

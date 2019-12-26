@@ -14,6 +14,7 @@ class MealTransformer extends TransformerAbstract
     /**
      * A Fractal transformer.
      *
+     * @param Meal $meal
      * @return array
      */
     public function transform(Meal $meal)

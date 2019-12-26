@@ -24,7 +24,7 @@ class UserController extends Controller
      *
      * @param UserService $userService
      *
-     * @return Response
+     * @return array
      */
     public function index(UserService $userService)
     {
@@ -45,7 +45,7 @@ class UserController extends Controller
      *
      * @param UserService      $userService
      *
-     * @return Response
+     * @return array
      * @throws ValidatorException
      */
     public function store(StoreUserRequest $request, UserService $userService)
@@ -64,7 +64,7 @@ class UserController extends Controller
      *
      * @param User $user
      *
-     * @return Response
+     * @return array
      * @throws AuthorizationException
      */
     public function show(User $user)
@@ -85,7 +85,7 @@ class UserController extends Controller
      * @param UserService       $userService
      * @param User              $user
      *
-     * @return void
+     * @return array
      * @throws ValidatorException
      * @throws AuthorizationException
      */
