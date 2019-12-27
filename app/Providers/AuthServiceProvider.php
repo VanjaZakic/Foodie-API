@@ -45,8 +45,6 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->role === User::ROLE_ADMIN) {
                 return true;
             }
-
-            return false;
         });
     }
 }
