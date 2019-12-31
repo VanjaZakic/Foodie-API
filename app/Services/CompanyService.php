@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Criteria\ProducerCompaniesCriteria;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Repositories\CompanyRepository;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -31,12 +33,12 @@ class CompanyService
      * @param $limit
      *
      * @return mixed
+     * @throws RepositoryException
      */
     public function getPaginated($limit)
     {
-        return $this->repository->scopeQuery(function ($query) {
-            return $query->where('type', 'producer');
-        })->paginate($limit);
+        $this->repository->pushCriteria(new ProducerCompaniesCriteria());
+        return $this->repository->paginate($limit);
     }
 
     /**

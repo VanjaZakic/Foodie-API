@@ -30,11 +30,11 @@ class StoreCompanyRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'    => 'required',
-            'phone'   => 'required|unique:companies',
+            'name'    => 'required|max:60',
+            'phone'   => 'required|unique:companies|max:20',
             'address' => 'required',
-            'email'   => 'email|required|unique:companies',
-            'image'   => 'required',
+            'email'   => 'email|required|unique:companies|max:60',
+            'image'   => 'required|image|mimes:jpeg,jpg,png,gif|max:10000',
             'type'    => ['required', Rule::in([Company::TYPE_PRODUCER, Company::TYPE_CUSTOMER])],
             'lat'     => 'sometimes|numeric|between:-90,90',
             'lng'     => 'sometimes|numeric|between:-180,80'

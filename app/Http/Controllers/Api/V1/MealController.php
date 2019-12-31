@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\MealRequest;
 use App\Meal;
-use App\MealCategory;
 use App\Services\MealService;
 use App\Transformers\MealTransformer;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -18,15 +18,30 @@ use Prettus\Validator\Exceptions\ValidatorException;
 class MealController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @var MealService
+     */
+    protected $mealService;
+
+    /**
+     * MealController constructor.
      *
      * @param MealService $mealService
-     * @param MealCategory $mealCategory
-     * @return array
      */
-    public function index(MealService $mealService, MealCategory $mealCategory)
+    public function __construct(MealService $mealService)
     {
-        $meals = $mealService->showAll($mealCategory);
+        $this->mealService = $mealService;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param int $mealCategoryId
+     * @return array
+     * @throws RepositoryException
+     */
+    public function index(int $mealCategoryId)
+    {
+        $meals = $this->mealService->showAll($mealCategoryId);
 
         return fractal()
             ->collection($meals)
@@ -38,13 +53,12 @@ class MealController extends Controller
      * Store a newly created resource in storage.
      *
      * @param MealRequest $request
-     * @param MealService $mealService
      * @return array
      * @throws ValidatorException
      */
-    public function store(MealRequest $request, MealService $mealService)
+    public function store(MealRequest $request)
     {
-        $meal = $mealService->store($request);
+        $meal = $this->mealService->store($request);
 
         return fractal()
             ->item($meal)
@@ -56,15 +70,12 @@ class MealController extends Controller
      * Display the specified resource.
      *
      * @param Meal $meal
-     * @param MealService $mealService
      * @return array
      */
-    public function show(Meal $meal, MealService $mealService)
+    public function show(Meal $meal)
     {
-        $meal = $mealService->show($meal);
-
         return fractal()
-            ->collection($meal)
+            ->item($meal)
             ->transformWith(new MealTransformer())
             ->toArray();
     }
@@ -74,35 +85,29 @@ class MealController extends Controller
      *
      * @param MealRequest $request
      * @param Meal $meal
-     * @param MealService $mealService
      * @return array
-     * @throws AuthorizationException
+     * @throws ValidatorException
      */
-    public function update(MealRequest $request, Meal $meal, MealService $mealService)
+    public function update(MealRequest $request, Meal $meal)
     {
-        $this->authorize('update', $meal);
+        $meal = $this->mealService->update($request, $meal->id);
 
-        $mealService->update($meal, $request);
-
-        return $this->show($meal, $mealService);
+        return fractal()
+            ->item($meal)
+            ->transformWith(new MealTransformer())
+            ->toArray();
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Meal $meal
-     * @param MealService $mealService
-     * @return JsonResponse
-     * @throws AuthorizationException
+     * @return ResponseFactory|Response
      */
-    public function destroy(Meal $meal, MealService $mealService)
+    public function destroy(Meal $meal)
     {
-        $this->authorize('delete', $meal);
+        $this->mealService->destroy($meal->id);
 
-        $mealService->destroy($meal);
-
-        return response()->json([
-            'Item is deleted.'
-        ]);
+        return response(null, 204);
     }
 }

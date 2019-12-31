@@ -28,9 +28,9 @@ class MealRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'             => 'required',
-            'image'            => 'required',
-            'price'            => 'required',
+            'name'             => 'required|max:255',
+            'image'            => 'required|image|mimes:jpeg,png,jpg,gif|max:10000',
+            'price'            => 'required|numeric|not_in:0',
             'meal_category_id' => 'required',
         ];
     }

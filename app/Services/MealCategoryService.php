@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
-use App\Company;
+use App\Criteria\MealCategoryCriteria;
 use App\Http\Requests\MealCategoryRequest;
-use App\MealCategory;
 use App\Repositories\MealCategoryRepository;
+use Illuminate\Support\Facades\Auth;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -30,55 +31,47 @@ class MealCategoryService
     }
 
     /**
-     * @param Company $company
+     * @param int $companyId
      * @return mixed
+     * @throws RepositoryException
      */
-    public function showAll($company)
+    public function showAll($companyId)
     {
-        $this->repository = MealCategory::where('company_id', $company->id)->get();
+        $this->repository->pushCriteria(new MealCategoryCriteria($companyId));
         return $this->repository->all();
     }
 
     /**
      * @param MealCategoryRequest $request
-     * @param Company $company
      * @return mixed
      * @throws ValidatorException
      */
-    public function store($request, $company)
+    public function store($request)
     {
         return $this->repository->create([
             'name'       => $request->name,
             'image'      => $request->image,
-            'company_id' => $company->id
+            'company_id' => Auth::user()->company_id
         ]);
     }
 
     /**
-     * @param MealCategory $mealCategory
-     * @return mixed
-     */
-    public function show($mealCategory)
-    {
-        return $this->repository->find($mealCategory);
-    }
-
-    /**
-     * @param MealCategory $mealCategory
+     * @param int $mealCategoryId
      * @param MealCategoryRequest $request
      * @return mixed
+     * @throws ValidatorException
      */
-    public function update($mealCategory, $request)
+    public function update($request, $mealCategoryId)
     {
-        return $this->repository->find($mealCategory)->first()->fill($request->all())->save();
+        return $this->repository->update($request->all(), $mealCategoryId);
     }
 
     /**
-     * @param MealCategory $mealCategory
+     * @param int $mealCategoryId
      * @return mixed
      */
-    public function destroy($mealCategory)
+    public function destroy($mealCategoryId)
     {
-        return $this->repository->find($mealCategory)->each->delete();
+        return $this->repository->delete($mealCategoryId);
     }
 }

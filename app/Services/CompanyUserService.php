@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Criteria\CompanyUsersCriteria;
 use App\Http\Requests\StoreCompanyUserRequest;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use App\Repositories\UserRepository;
 
@@ -28,17 +30,16 @@ class CompanyUserService
     }
 
     /**
-     * @param $companyId
-     *
+     * @param $company
      * @param $limit
      *
      * @return mixed
+     * @throws RepositoryException
      */
-    public function getPaginated($companyId, $limit)
+    public function getPaginated($company, $limit)
     {
-        return $this->repository->scopeQuery(function ($query) use ($companyId) {
-            return $query->where('company_id', $companyId);
-        })->paginate($limit);
+        $this->repository->pushCriteria(new CompanyUsersCriteria($company));
+        return $this->repository->paginate($limit);
     }
 
     /**

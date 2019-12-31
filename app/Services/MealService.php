@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use App\Criteria\MealCriteria;
 use App\Http\Requests\MealRequest;
-use App\Meal;
-use App\MealCategory;
 use App\Repositories\MealRepository;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -30,12 +30,13 @@ class MealService
     }
 
     /**
-     * @param MealCategory $mealCategory
+     * @param int $mealCategoryId
      * @return mixed
+     * @throws RepositoryException
      */
-    public function showAll(MealCategory $mealCategory)
+    public function showAll(int $mealCategoryId)
     {
-        $this->repository = Meal::where('meal_category_id', $mealCategory->id)->get();
+        $this->repository->pushCriteria(new MealCriteria($mealCategoryId));
         return $this->repository->all();
     }
 
@@ -50,30 +51,22 @@ class MealService
     }
 
     /**
-     * @param Meal $meal
-     * @return mixed
-     */
-    public function show($meal)
-    {
-        return $this->repository->find($meal);
-    }
-
-    /**
-     * @param Meal $meal
+     * @param int $mealId
      * @param MealRequest $request
      * @return mixed
+     * @throws ValidatorException
      */
-    public function update($meal, $request)
+    public function update($request, $mealId)
     {
-        return $this->repository->find($meal)->first()->fill($request->all())->save();
+        return $this->repository->update($request->all(), $mealId);
     }
 
     /**
-     * @param Meal $meal
+     * @param int $mealId
      * @return mixed
      */
-    public function destroy($meal)
+    public function destroy($mealId)
     {
-        return $this->repository->find($meal)->each->delete();
+        return $this->repository->delete($mealId);
     }
 }
