@@ -14,14 +14,16 @@ class MealCategoryTransformer extends TransformerAbstract
     /**
      * A Fractal transformer.
      *
+     * @param MealCategory $mealCategory
      * @return array
      */
     public function transform(MealCategory $mealCategory)
     {
         return [
-            'id'    => (int)$mealCategory->id,
-            'name'  => $mealCategory->name,
-            'image' => $mealCategory->image,
+            'id'         => $mealCategory->id,
+            'name'       => $mealCategory->name,
+            'image'      => $mealCategory->image,
+            'company_id' => $mealCategory->company_id,
         ];
     }
 }

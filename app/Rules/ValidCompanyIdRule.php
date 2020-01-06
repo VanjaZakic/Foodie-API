@@ -31,12 +31,12 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
     /**
      * ValidCompanyIdRule constructor.
      *
-     * @param UserRepository    $userRepository
+     * @param UserRepository $userRepository
      * @param CompanyRepository $companyRepository
      */
     public function __construct(UserRepository $userRepository, CompanyRepository $companyRepository)
     {
-        $this->userRepository    = $userRepository;
+        $this->userRepository = $userRepository;
         $this->companyRepository = $companyRepository;
     }
 
@@ -55,7 +55,7 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
      * Determine if the validation rule passes.
      *
      * @param string $attribute
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return bool
      */
@@ -63,12 +63,21 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
     {
         if (auth()->user()->role == User::ROLE_ADMIN) {
 
-            $company = $this->companyRepository->find($this->input['company_id']);
+            if ($this->input['company_id'] != null) {
+                $company = $this->companyRepository->find($this->input['company_id']);
+            }
+
+            if ($this->input['role'] == User::ROLE_ADMIN) {
+                if ($value != null) {
+                    return false;
+                }
+            }
 
             if ($this->input['role'] == User::ROLE_PRODUCER_ADMIN) {
                 $producer_admin = $this->userRepository->findWhere([
                     'company_id' => $this->input['company_id'],
-                    'role'       => User::ROLE_PRODUCER_ADMIN
+                    'role'       => User::ROLE_PRODUCER_ADMIN,
+                    ['id', '!=', $this->input['id']]
                 ]);
 
                 if (!$company || $company->type != Company::TYPE_PRODUCER || count($producer_admin)) {
@@ -79,7 +88,8 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
             if ($this->input['role'] == User::ROLE_CUSTOMER_ADMIN) {
                 $customer_admin = $this->userRepository->findWhere([
                     'company_id' => $this->input['company_id'],
-                    'role'       => User::ROLE_CUSTOMER_ADMIN
+                    'role'       => User::ROLE_CUSTOMER_ADMIN,
+                    ['id', '!=', $this->input['id']]
                 ]);
 
                 if (!$company || $company->type != Company::TYPE_CUSTOMER || count($customer_admin)) {
@@ -98,6 +108,13 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
                     return false;
                 }
             }
+
+            if ($this->input['role'] == User::ROLE_USER) {
+                if ($value != null) {
+                    return false;
+                }
+            }
+
         }
 
         return true;

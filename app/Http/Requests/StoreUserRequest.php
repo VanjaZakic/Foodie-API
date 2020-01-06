@@ -31,11 +31,11 @@ class StoreUserRequest extends FormRequest
     {
         $self = $this;
         return [
-            'first_name' => 'required',
-            'last_name'  => 'required',
-            'phone'      => 'required',
+            'first_name' => 'required|max:60',
+            'last_name'  => 'required|max:60',
+            'phone'      => 'required|max:20',
             'address'    => 'required',
-            'email'      => 'email|required|unique:users',
+            'email'      => 'email|required||max:60|unique:users',
             'password'   => 'required|confirmed',
             'role'       => ['required', Rule::in([User::ROLE_PRODUCER_USER, User::ROLE_CUSTOMER_USER, User::ROLE_USER])],
             'company_id' => Rule::requiredIf(function () use ($self) {

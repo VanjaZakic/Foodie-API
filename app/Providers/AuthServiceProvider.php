@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Company;
+use App\Meal;
+use App\MealCategory;
+use App\Policies\MealCategoryPolicy;
+use App\Policies\MealPolicy;
 use App\Policies\UserPolicy;
 use App\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -20,7 +25,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        User::class => UserPolicy::class,
+        Meal::class         => MealPolicy::class,
+        MealCategory::class => MealCategoryPolicy::class,
+        Company::class      => MealCategoryPolicy::class,
+        User::class         => UserPolicy::class,
     ];
 
     /**
@@ -34,7 +42,9 @@ class AuthServiceProvider extends ServiceProvider
         Passport::routes();
 
         Gate::before(function ($user) {
-            if ($user->role === User::ROLE_ADMIN) return true;
+            if ($user->role === User::ROLE_ADMIN) {
+                return true;
+            }
         });
     }
 }

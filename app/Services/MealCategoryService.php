@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Criteria\MealCategoryCriteria;
 use App\Http\Requests\MealCategoryRequest;
-use App\MealCategory;
 use App\Repositories\MealCategoryRepository;
+use Illuminate\Support\Facades\Auth;
+use Prettus\Repository\Exceptions\RepositoryException;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
  * Class MealCategoryService
@@ -28,48 +31,47 @@ class MealCategoryService
     }
 
     /**
+     * @param int $companyId
      * @return mixed
+     * @throws RepositoryException
      */
-    public function showAll()
+    public function showAll($companyId)
     {
+        $this->repository->pushCriteria(new MealCategoryCriteria($companyId));
         return $this->repository->all();
     }
 
     /**
      * @param MealCategoryRequest $request
      * @return mixed
-     * @throws \Prettus\Validator\Exceptions\ValidatorException
+     * @throws ValidatorException
      */
-    public function store(MealCategoryRequest $request)
+    public function store($request)
     {
-        return $this->repository->create($request->all());
+        return $this->repository->create([
+            'name'       => $request->name,
+            'image'      => $request->image,
+            'company_id' => Auth::user()->company_id
+        ]);
     }
 
     /**
-     * @param MealCategory $id
-     * @return mixed
-     */
-    public function show(MealCategory $id)
-    {
-        return $this->repository->find($id);
-    }
-
-    /**
-     * @param MealCategory $id
+     * @param int $mealCategoryId
      * @param MealCategoryRequest $request
      * @return mixed
+     * @throws ValidatorException
      */
-    public function update(MealCategory $id, MealCategoryRequest $request)
+    public function update($request, $mealCategoryId)
     {
-        return $this->repository->find($id)->first()->fill($request->all())->save();
+        return $this->repository->update($request->all(), $mealCategoryId);
     }
 
     /**
-     * @param MealCategory $id
+     * @param int $mealCategoryId
      * @return mixed
      */
-    public function destroy(MealCategory $id)
+    public function destroy($mealCategoryId)
     {
-        return $this->repository->find($id)->each->delete();
+        return $this->repository->delete($mealCategoryId);
     }
 }
