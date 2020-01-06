@@ -13,23 +13,31 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  */
 class CompanyUsersCriteria implements CriteriaInterface
 {
-    protected $companyId;
-    
+    /**
+     * @var Company
+     */
+    protected $company;
+
+    /**
+     * CompanyUsersCriteria constructor
+     *
+     * @param Company $company
+     */
     public function __construct(Company $company)
     {
-        $this->companyId = $company->id;
+        $this->company = $company;
     }
 
     /**
      * Apply criteria in query repository
      *
-     * @param string              $model
+     * @param string $model
      * @param RepositoryInterface $repository
      *
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where('company_id', '=', $this->companyId);
+        return $model->where('company_id', '=', $this->company->id);
     }
 }

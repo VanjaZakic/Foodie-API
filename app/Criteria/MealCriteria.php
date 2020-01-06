@@ -2,6 +2,7 @@
 
 namespace App\Criteria;
 
+use App\MealCategory;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
@@ -12,18 +13,18 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 class MealCriteria implements CriteriaInterface
 {
     /**
-     * @var int
+     * @var MealCategory
      */
-    protected $mealCategoryId;
+    protected $mealCategory;
 
     /**
      * MealCriteria constructor
      *
-     * @param int $mealCategoryId
+     * @param MealCategory $mealCategory
      */
-    public function __construct(int $mealCategoryId)
+    public function __construct(MealCategory $mealCategory)
     {
-        $this->mealCategoryId = $mealCategoryId;
+        $this->mealCategory = $mealCategory;
     }
 
     /**
@@ -35,7 +36,6 @@ class MealCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        $model = $model->where('meal_category_id', '=', $this->mealCategoryId);
-        return $model;
+        return $model->where('meal_category_id', '=', $this->mealCategory->id);
     }
 }
