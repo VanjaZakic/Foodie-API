@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Criteria\MealCriteria;
 use App\Http\Requests\MealRequest;
+use App\MealCategory;
 use App\Repositories\MealRepository;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -30,13 +31,13 @@ class MealService
     }
 
     /**
-     * @param int $mealCategoryId
+     * @param MealCategory $mealCategory
      * @return mixed
      * @throws RepositoryException
      */
-    public function showAll(int $mealCategoryId)
+    public function showAll(MealCategory $mealCategory)
     {
-        $this->repository->pushCriteria(new MealCriteria($mealCategoryId));
+        $this->repository->pushCriteria(new MealCriteria($mealCategory));
         return $this->repository->all();
     }
 

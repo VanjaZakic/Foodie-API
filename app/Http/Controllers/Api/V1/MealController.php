@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\MealRequest;
 use App\Meal;
+use App\MealCategory;
 use App\Services\MealService;
 use App\Transformers\MealTransformer;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -35,13 +36,13 @@ class MealController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param int $mealCategoryId
+     * @param MealCategory $mealCategory
      * @return array
      * @throws RepositoryException
      */
-    public function index(int $mealCategoryId)
+    public function index(MealCategory $mealCategory)
     {
-        $meals = $this->mealService->showAll($mealCategoryId);
+        $meals = $this->mealService->showAll($mealCategory);
 
         return fractal()
             ->collection($meals)
