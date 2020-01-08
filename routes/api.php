@@ -58,5 +58,7 @@ Route::prefix('v1')->group(function () {
             Route::delete('{meal}', 'MealController@destroy')->middleware(['role:producer_admin', 'can:delete,meal']);
         });
 
+        Route::middleware('auth:api')->resource('payment-methods', 'PaymentMethodController');
+        Route::middleware('auth:api')->resource('checkout', 'CheckoutController');
     });
 });
