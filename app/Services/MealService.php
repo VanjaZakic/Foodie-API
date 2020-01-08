@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Criteria\MealCriteria;
+use App\Criteria\MealCategoryCriteria;
 use App\Http\Requests\MealRequest;
 use App\MealCategory;
 use App\Repositories\MealRepository;
@@ -37,7 +37,7 @@ class MealService
      */
     public function showAll(MealCategory $mealCategory)
     {
-        $this->repository->pushCriteria(new MealCriteria($mealCategory));
+        $this->repository->pushCriteria(new MealCategoryCriteria($mealCategory));
         return $this->repository->all();
     }
 
