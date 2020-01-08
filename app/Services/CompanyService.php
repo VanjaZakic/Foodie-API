@@ -35,10 +35,10 @@ class CompanyService
      * @return mixed
      * @throws RepositoryException
      */
-    public function getPaginated($limit)
+    public function getPaginated()
     {
         $this->repository->pushCriteria(new ProducerCompaniesCriteria());
-        return $this->repository->paginate($limit);
+        return $this->repository->paginate();
     }
 
     /**

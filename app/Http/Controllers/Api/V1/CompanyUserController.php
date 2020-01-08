@@ -44,7 +44,7 @@ class CompanyUserController extends Controller
     {
         $limit = config('fractal.pagination.default');
 
-        $companyUsers           = $this->companyUserService->getPaginated($company, $limit);
+        $companyUsers           = $this->companyUserService->getPaginated($company);
         $companyUsersCollection = $companyUsers->getCollection();
 
         return fractal()

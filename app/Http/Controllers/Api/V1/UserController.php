@@ -42,9 +42,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $limit = config('fractal.pagination.default');
-
-        $users           = $this->userService->getPaginated($limit);
+        $users           = $this->userService->getPaginated();
         $usersCollection = $users->getCollection();
 
         return fractal()

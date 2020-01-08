@@ -43,7 +43,7 @@ class CompanyController extends Controller
     {
         $limit = config('fractal.pagination.default');
 
-        $producerCompanies           = $this->companyService->getPaginated($limit);
+        $producerCompanies           = $this->companyService->getPaginated();
         $producerCompaniesCollection = $producerCompanies->getCollection();
 
         return fractal()

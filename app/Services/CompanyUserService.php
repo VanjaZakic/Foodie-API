@@ -36,10 +36,10 @@ class CompanyUserService
      * @return mixed
      * @throws RepositoryException
      */
-    public function getPaginated($company, $limit)
+    public function getPaginated($company)
     {
         $this->repository->pushCriteria(new CompanyCriteria($company));
-        return $this->repository->paginate($limit);
+        return $this->repository->paginate();
     }
 
     /**
