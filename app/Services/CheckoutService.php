@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\User;
+use Illuminate\Http\Request;
+
 /**
  * Class CheckoutService
  * @package App\Services
@@ -9,16 +12,18 @@ namespace App\Services;
 class CheckoutService
 {
     /**
-     * @var mixed
+     * @var User user
      */
     private $user;
 
     /**
      * CheckoutService constructor.
+     *
+     * @param Request $request
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
-        $this->user = request()->user();
+        $this->user = $request->user();
     }
 
     /**

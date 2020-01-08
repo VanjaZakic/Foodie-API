@@ -18,6 +18,7 @@ class CheckoutController extends Controller
 
     /**
      * CheckoutController constructor.
+     *
      * @param CheckoutService $checkoutService
      */
     public function __construct(CheckoutService $checkoutService)
@@ -30,7 +31,7 @@ class CheckoutController extends Controller
      */
     public function store(Request $request)
     {
-        $amount = $request->get('amount');
+        $amount          = $request->get('amount');
         $paymentMethodId = $request->get('paymentMethodId');
         $this->checkoutService->charge($amount, $paymentMethodId);
     }

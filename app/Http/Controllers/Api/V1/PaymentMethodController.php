@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Requests\PaymentMethodStoreRequest;
 use App\Services\PaymentMethodService;
 use App\Transformers\PaymentMethodTransformer;
+use App\User;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 /**
@@ -15,7 +17,7 @@ use Illuminate\Http\Response;
 class PaymentMethodController extends Controller
 {
     /**
-     * @var mixed
+     * @var User $user
      */
     private $user;
 
@@ -28,10 +30,11 @@ class PaymentMethodController extends Controller
      * PaymentMethodController constructor.
      *
      * @param PaymentMethodService $paymentMethodService
+     * @param Request              $request
      */
-    public function __construct(PaymentMethodService $paymentMethodService)
+    public function __construct(PaymentMethodService $paymentMethodService, Request $request)
     {
-        $this->user                 = request()->user();
+        $this->user                 = $request->user();
         $this->paymentMethodService = $paymentMethodService;
     }
 
@@ -41,7 +44,7 @@ class PaymentMethodController extends Controller
     public function index()
     {
         $paymentMethods = $this->paymentMethodService->getAll();
-        
+
         return fractal()
             ->collection($paymentMethods)
             ->transformWith(new PaymentMethodTransformer())
@@ -77,7 +80,7 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * @param $paymentMethodId
+     * @param string $paymentMethodId
      *
      * @return ResponseFactory|Response
      */

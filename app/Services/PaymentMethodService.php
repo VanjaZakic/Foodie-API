@@ -3,7 +3,8 @@
 namespace App\Services;
 
 use App\Http\Requests\PaymentMethodStoreRequest;
-use Illuminate\Support\Collection;
+use App\User;
+use Illuminate\Http\Request;
 
 /**
  * Class PaymentMethodService
@@ -12,25 +13,27 @@ use Illuminate\Support\Collection;
 class PaymentMethodService
 {
     /**
-     * @var mixed
+     * @var User $user
      */
     private $user;
 
     /**
      * PaymentMethodService constructor.
+     *
+     * @param Request $request
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
-        $this->user = request()->user();
+        $this->user = $request->user();
     }
 
     /**
-     * @return Collection
+     * @return array
      */
     public function getAll()
     {
         if (!$this->user->hasPaymentMethod()) {
-            return new Collection();
+            return [];
         }
 
         return $this->user->paymentMethods();
