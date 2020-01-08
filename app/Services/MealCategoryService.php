@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Company;
 use App\Criteria\MealCategoryCriteria;
 use App\Http\Requests\MealCategoryRequest;
 use App\Repositories\MealCategoryRepository;
@@ -31,13 +32,13 @@ class MealCategoryService
     }
 
     /**
-     * @param int $companyId
+     * @param Company $company
      * @return mixed
      * @throws RepositoryException
      */
-    public function showAll($companyId)
+    public function showAll($company)
     {
-        $this->repository->pushCriteria(new MealCategoryCriteria($companyId));
+        $this->repository->pushCriteria(new MealCategoryCriteria($company));
         return $this->repository->all();
     }
 

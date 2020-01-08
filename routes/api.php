@@ -42,7 +42,7 @@ Route::prefix('v1')->group(function () {
             });
         });
 
-        Route::get('companies/{companyId}/meal-categories', 'MealCategoryController@index');
+        Route::get('companies/{company}/meal-categories', 'MealCategoryController@index');
         Route::prefix('meal-categories')->group(function () {
             Route::post('/', 'MealCategoryController@store')->middleware('role:producer_admin');
             Route::get('{mealCategory}', 'MealCategoryController@show');
@@ -50,7 +50,7 @@ Route::prefix('v1')->group(function () {
             Route::delete('{mealCategory}', 'MealCategoryController@destroy')->middleware(['role:producer_admin', 'can:delete,mealCategory']);
         });
 
-        Route::get('meal-categories/{mealCategoryId}/meals', 'MealController@index');
+        Route::get('meal-categories/{mealCategory}/meals', 'MealController@index');
         Route::prefix('meals')->group(function () {
             Route::post('/', 'MealController@store')->middleware('role:producer_admin');
             Route::get('{meal}', 'MealController@show');

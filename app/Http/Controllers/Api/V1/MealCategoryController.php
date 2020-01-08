@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Company;
 use App\Http\Requests\MealCategoryRequest;
 use App\MealCategory;
 use App\Services\MealCategoryService;
@@ -35,13 +36,13 @@ class MealCategoryController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param int $companyId
+     * @param Company $company
      * @return array
      * @throws RepositoryException
      */
-    public function index(int $companyId)
+    public function index(Company $company)
     {
-        $mealCategories = $this->mealCategoryService->showAll($companyId);
+        $mealCategories = $this->mealCategoryService->showAll($company);
 
         return fractal()
             ->collection($mealCategories)
