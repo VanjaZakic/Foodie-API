@@ -39,9 +39,4 @@ return [
          */
         'request_key' => 'include',
     ],
-
-    'pagination' => [
-        'default' => env('DEFAULT_PAGINATION'),
-    ],
-
 ];
