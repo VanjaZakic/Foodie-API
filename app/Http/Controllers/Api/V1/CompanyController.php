@@ -11,7 +11,6 @@ use App\Transformers\CompanyTransformer;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
-use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -37,11 +36,10 @@ class CompanyController extends Controller
 
     /**
      * @return array
-     * @throws RepositoryException
      */
     public function index()
     {
-        $producerCompanies           = $this->companyService->getPaginated(5);
+        $producerCompanies = $this->companyService->getPaginated(5);
         $producerCompaniesCollection = $producerCompanies->getCollection();
 
         return fractal()
@@ -83,7 +81,7 @@ class CompanyController extends Controller
     /**
      * @param UpdateCompanyRequest $request
      *
-     * @param Company              $company
+     * @param Company $company
      *
      * @return array
      * @throws ValidatorException

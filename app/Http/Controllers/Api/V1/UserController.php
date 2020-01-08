@@ -38,11 +38,11 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return array
      */
     public function index()
     {
-        $users           = $this->userService->getPaginated(5);
+        $users = $this->userService->getPaginated(5);
         $usersCollection = $users->getCollection();
 
         return fractal()
@@ -57,7 +57,7 @@ class UserController extends Controller
      *
      * @param StoreUserRequest $request
      *
-     * @return Response
+     * @return array
      * @throws ValidatorException
      */
     public function store(StoreUserRequest $request)
@@ -76,8 +76,7 @@ class UserController extends Controller
      *
      * @param User $user
      *
-     * @return Response
-     * @throws AuthorizationException
+     * @return array
      */
     public function show(User $user)
     {
@@ -92,16 +91,16 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param UpdateUserRequest $request
-     * @param User              $user
+     * @param User $user
      *
-     * @return void
+     * @return array
      * @throws AuthorizationException
      * @throws ValidatorException
      */
     public function update(UpdateUserRequest $request, User $user)
     {
         $this->authorize('update', [$user, $request]);
-        
+
         $user = $this->userService->update($request, $user->id);
 
         return fractal()

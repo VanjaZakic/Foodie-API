@@ -19,19 +19,18 @@ class ValidCompanyTypeRule implements Rule
     /**
      * Create a new rule instance.
      *
-     * @param $company
+     * @param Company $company
      */
     public function __construct(Company $company)
     {
         $this->company = $company;
     }
 
-
     /**
      * Determine if the validation rule passes.
      *
      * @param string $attribute
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return bool
      */

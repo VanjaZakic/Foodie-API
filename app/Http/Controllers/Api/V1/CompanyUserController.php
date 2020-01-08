@@ -7,9 +7,7 @@ use App\Http\Requests\StoreCompanyUserRequest;
 use App\Services\CompanyUserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
-use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
-use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -38,12 +36,11 @@ class CompanyUserController extends Controller
      *
      * @param Company $company
      *
-     * @return void
-     * @throws RepositoryException
+     * @return array
      */
     public function index(Company $company)
     {
-        $companyUsers           = $this->companyUserService->getPaginated($company, 5);
+        $companyUsers = $this->companyUserService->getPaginated($company, 5);
         $companyUsersCollection = $companyUsers->getCollection();
 
         return fractal()
@@ -56,11 +53,11 @@ class CompanyUserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Company                 $company
+     * @param Company $company
      *
      * @param StoreCompanyUserRequest $request
      *
-     * @return Response
+     * @return mixed
      * @throws ValidatorException
      */
     public function store(Company $company, StoreCompanyUserRequest $request)

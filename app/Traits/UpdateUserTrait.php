@@ -11,7 +11,7 @@ use App\User;
 trait UpdateUserTrait
 {
     /**
-     * @param $user
+     * @param User $user
      * @param $input
      *
      * @return bool
@@ -26,7 +26,7 @@ trait UpdateUserTrait
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param $input
      *
      * @return bool
@@ -37,7 +37,7 @@ trait UpdateUserTrait
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param $input
      *
      * @return bool
@@ -48,7 +48,7 @@ trait UpdateUserTrait
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param $input
      *
      * @return bool
@@ -59,7 +59,7 @@ trait UpdateUserTrait
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param $input
      *
      * @return bool
@@ -70,7 +70,7 @@ trait UpdateUserTrait
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param $input
      *
      * @return bool
@@ -81,7 +81,7 @@ trait UpdateUserTrait
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param $input
      *
      * @return bool
@@ -92,7 +92,7 @@ trait UpdateUserTrait
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param $input
      *
      * @return bool
@@ -103,7 +103,7 @@ trait UpdateUserTrait
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param $input
      *
      * @return bool
@@ -114,7 +114,7 @@ trait UpdateUserTrait
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param $input
      *
      * @return bool

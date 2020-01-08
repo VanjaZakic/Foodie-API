@@ -20,7 +20,7 @@ class LoginController extends AccessTokenController
      * @param LoginRequest $request
      * @param UserService  $userService
      *
-     * @return \Illuminate\Http\JsonResponse|mixed
+     * @return mixed
      */
     public function login(LoginRequest $request, UserService $userService)
     {

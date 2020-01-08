@@ -4,13 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class MealCategory
+ * Class Meal
  * @package App
  */
-class MealCategory extends Model
+class Meal extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -20,22 +19,15 @@ class MealCategory extends Model
     protected $fillable = [
         'name',
         'image',
-        'company_id',
+        'price',
+        'meal_category_id',
     ];
 
     /**
      * @return BelongsTo
      */
-    public function company()
+    public function mealCategory()
     {
-        return $this->belongsTo(Company::class);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function meal()
-    {
-        return $this->hasMany(Meal::class);
+        return $this->belongsTo(MealCategory::class);
     }
 }

@@ -2,30 +2,29 @@
 
 namespace App\Criteria;
 
-use App\Company;
+use App\MealCategory;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Class CompanyUsersCriteria.
- *
- * @package namespace App\Criteria;
+ * Class MealCriteria
+ * @package
  */
-class CompanyUsersCriteria implements CriteriaInterface
+class MealCriteria implements CriteriaInterface
 {
     /**
-     * @var Company
+     * @var MealCategory
      */
-    protected $company;
+    protected $mealCategory;
 
     /**
-     * CompanyUsersCriteria constructor
+     * MealCriteria constructor
      *
-     * @param Company $company
+     * @param MealCategory $mealCategory
      */
-    public function __construct(Company $company)
+    public function __construct(MealCategory $mealCategory)
     {
-        $this->company = $company;
+        $this->mealCategory = $mealCategory;
     }
 
     /**
@@ -33,11 +32,10 @@ class CompanyUsersCriteria implements CriteriaInterface
      *
      * @param string $model
      * @param RepositoryInterface $repository
-     *
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where('company_id', '=', $this->company->id);
+        return $model->where('meal_category_id', '=', $this->mealCategory->id);
     }
 }

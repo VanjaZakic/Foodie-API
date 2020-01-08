@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Requests\LoginRequest;
+use Exception;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Zend\Diactoros\ServerRequest;
 use App\Repositories\UserRepository;
@@ -36,16 +37,14 @@ class UserService
     public function login(LoginRequest $request)
     {
         try {
-            $tokenRequest = (new ServerRequest())->withParsedBody([
+            return (new ServerRequest())->withParsedBody([
                 'grant_type'    => config('auth.passport.grant_type', 'password'),
                 'client_id'     => config('auth.passport.client_id'),
                 'client_secret' => config('auth.passport.client_secret'),
                 'username'      => $request->get('email'),
                 'password'      => $request->get('password'),
             ]);
-
-            return $tokenRequest;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return null;
         }
     }

@@ -30,8 +30,7 @@ class CompanyUserService
     }
 
     /**
-     * @param $companyId
-     *
+     * @param $company
      * @param $limit
      *
      * @return mixed

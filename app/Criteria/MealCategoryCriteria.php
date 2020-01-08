@@ -7,11 +7,10 @@ use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Class CompanyUsersCriteria.
- *
- * @package namespace App\Criteria;
+ * Class MealCategoryCriteria
+ * @package
  */
-class CompanyUsersCriteria implements CriteriaInterface
+class MealCategoryCriteria implements CriteriaInterface
 {
     /**
      * @var Company
@@ -19,7 +18,7 @@ class CompanyUsersCriteria implements CriteriaInterface
     protected $company;
 
     /**
-     * CompanyUsersCriteria constructor
+     * MealCategoryCriteria constructor
      *
      * @param Company $company
      */
@@ -33,7 +32,6 @@ class CompanyUsersCriteria implements CriteriaInterface
      *
      * @param string $model
      * @param RepositoryInterface $repository
-     *
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)

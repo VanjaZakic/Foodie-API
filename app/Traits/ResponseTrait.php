@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Prettus\Repository\Transformer\ModelTransformer as Transformer;
+use ReflectionException;
 use Spatie\Fractal\Fractal;
 use Illuminate\Http\JsonResponse;
 use ReflectionClass;
@@ -82,7 +83,7 @@ trait ResponseTrait
      * @param array $headers
      * @param int   $options
      *
-     * @return  \Illuminate\Http\JsonResponse
+     * @return  JsonResponse
      */
     public function json($message, $status = 200, array $headers = [], $options = 0)
     {
@@ -108,7 +109,7 @@ trait ResponseTrait
      * @param array $headers
      * @param int   $options
      *
-     * @return  \Illuminate\Http\JsonResponse
+     * @return  JsonResponse
      */
     public function accepted($message = null, $status = 202, array $headers = [], $options = 0)
     {
@@ -119,7 +120,7 @@ trait ResponseTrait
      * @param null $responseArray
      *
      * @return JsonResponse
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function deleted($responseArray = null)
     {
@@ -138,7 +139,7 @@ trait ResponseTrait
     /**
      * @param int $status
      *
-     * @return  \Illuminate\Http\JsonResponse
+     * @return  JsonResponse
      */
     public function noContent($status = 204)
     {

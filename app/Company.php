@@ -48,4 +48,12 @@ class Company extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    /**
+     * @return HasMany
+     */
+    public function mealCategory()
+    {
+        return $this->hasMany(MealCategory::class);
+    }
 }

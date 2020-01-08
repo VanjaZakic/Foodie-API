@@ -31,12 +31,12 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
     /**
      * ValidCompanyIdRule constructor.
      *
-     * @param UserRepository    $userRepository
+     * @param UserRepository $userRepository
      * @param CompanyRepository $companyRepository
      */
     public function __construct(UserRepository $userRepository, CompanyRepository $companyRepository)
     {
-        $this->userRepository    = $userRepository;
+        $this->userRepository = $userRepository;
         $this->companyRepository = $companyRepository;
     }
 
@@ -55,7 +55,7 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
      * Determine if the validation rule passes.
      *
      * @param string $attribute
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return bool
      */
