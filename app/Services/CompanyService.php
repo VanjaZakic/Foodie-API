@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Criteria\ProducerCompaniesCriteria;
-use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\CompanyStoreRequest;
 use App\Repositories\CompanyRepository;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -42,12 +42,12 @@ class CompanyService
     }
 
     /**
-     * @param StoreCompanyRequest $request
+     * @param CompanyStoreRequest $request
      *
      * @return mixed
      * @throws ValidatorException
      */
-    public function store(StoreCompanyRequest $request)
+    public function store(CompanyStoreRequest $request)
     {
         return $this->repository->create($request->all());
     }

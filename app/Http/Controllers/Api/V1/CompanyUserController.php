@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Company;
-use App\Http\Requests\StoreCompanyUserRequest;
+use App\Http\Requests\CompanyUserStoreRequest;
 use App\Services\CompanyUserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -37,10 +38,13 @@ class CompanyUserController extends Controller
      * @param Company $company
      *
      * @return array
+     * @throws RepositoryException
      */
     public function index(Company $company)
     {
-        $companyUsers = $this->companyUserService->getPaginated($company, 5);
+        $limit = config('fractal.pagination.default');
+
+        $companyUsers           = $this->companyUserService->getPaginated($company, $limit);
         $companyUsersCollection = $companyUsers->getCollection();
 
         return fractal()
@@ -53,14 +57,14 @@ class CompanyUserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Company $company
+     * @param Company                 $company
      *
-     * @param StoreCompanyUserRequest $request
+     * @param CompanyUserStoreRequest $request
      *
      * @return mixed
      * @throws ValidatorException
      */
-    public function store(Company $company, StoreCompanyUserRequest $request)
+    public function store(Company $company, CompanyUserStoreRequest $request)
     {
         $user = $this->companyUserService->store($request, $company);
 

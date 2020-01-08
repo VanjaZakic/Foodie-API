@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -30,11 +30,11 @@ class UserPolicy
      *
      * @param User              $authUser
      * @param User              $user
-     * @param UpdateUserRequest $request
+     * @param UserUpdateRequest $request
      *
      * @return mixed
      */
-    public function update(User $authUser, User $user, UpdateUserRequest $request)
+    public function update(User $authUser, User $user, UserUpdateRequest $request)
     {
         switch ($authUser->role) {
             case User::ROLE_ADMIN:

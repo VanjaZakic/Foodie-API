@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Company;
-use App\Http\Requests\StoreCompanyRequest;
-use App\Http\Requests\UpdateCompanyRequest;
+use App\Http\Requests\CompanyStoreRequest;
+use App\Http\Requests\CompanyUpdateRequest;
 use App\Services\CompanyService;
 use App\Transformers\CompanyIndexTransformer;
 use App\Transformers\CompanyTransformer;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -36,10 +37,13 @@ class CompanyController extends Controller
 
     /**
      * @return array
+     * @throws RepositoryException
      */
     public function index()
     {
-        $producerCompanies = $this->companyService->getPaginated(5);
+        $limit = config('fractal.pagination.default');
+
+        $producerCompanies           = $this->companyService->getPaginated($limit);
         $producerCompaniesCollection = $producerCompanies->getCollection();
 
         return fractal()
@@ -50,12 +54,12 @@ class CompanyController extends Controller
     }
 
     /**
-     * @param StoreCompanyRequest $request
+     * @param CompanyStoreRequest $request
      *
      * @return array
      * @throws ValidatorException
      */
-    public function store(StoreCompanyRequest $request)
+    public function store(CompanyStoreRequest $request)
     {
         $company = $this->companyService->store($request);
 
@@ -79,14 +83,14 @@ class CompanyController extends Controller
     }
 
     /**
-     * @param UpdateCompanyRequest $request
+     * @param CompanyUpdateRequest $request
      *
-     * @param Company $company
+     * @param Company              $company
      *
      * @return array
      * @throws ValidatorException
      */
-    public function update(UpdateCompanyRequest $request, Company $company)
+    public function update(CompanyUpdateRequest $request, Company $company)
     {
         $company = $this->companyService->update($request, $company->id);
 

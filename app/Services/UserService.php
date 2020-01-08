@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use Exception;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Zend\Diactoros\ServerRequest;
@@ -60,24 +62,24 @@ class UserService
     }
 
     /**
-     * @param $request
+     * @param UserStoreRequest $request
      *
      * @return mixed
      * @throws ValidatorException
      */
-    public function store($request)
+    public function store(UserStoreRequest $request)
     {
         return $this->repository->create($request->all());
     }
 
     /**
-     * @param $request
-     * @param $id
+     * @param UserUpdateRequest $request
+     * @param                   $id
      *
      * @return mixed
      * @throws ValidatorException
      */
-    public function update($request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
         return $this->repository->update($request->all(), $id);
     }
