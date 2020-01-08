@@ -11,6 +11,7 @@ use App\Transformers\CompanyTransformer;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -19,15 +20,28 @@ use Prettus\Validator\Exceptions\ValidatorException;
  */
 class CompanyController extends Controller
 {
+    /**
+     * @var CompanyService
+     */
+    private $companyService;
 
     /**
-     * @param CompanyService $companyService
+     * CompanyController constructor.
      *
-     * @return array
+     * @param CompanyService $companyService
      */
-    public function index(CompanyService $companyService)
+    public function __construct(CompanyService $companyService)
     {
-        $producerCompanies           = $companyService->getPaginated(5);
+        $this->companyService = $companyService;
+    }
+
+    /**
+     * @return array
+     * @throws RepositoryException
+     */
+    public function index()
+    {
+        $producerCompanies           = $this->companyService->getPaginated(5);
         $producerCompaniesCollection = $producerCompanies->getCollection();
 
         return fractal()
@@ -39,14 +53,13 @@ class CompanyController extends Controller
 
     /**
      * @param StoreCompanyRequest $request
-     * @param CompanyService      $companyService
      *
      * @return array
      * @throws ValidatorException
      */
-    public function store(StoreCompanyRequest $request, CompanyService $companyService)
+    public function store(StoreCompanyRequest $request)
     {
-        $company = $companyService->store($request);
+        $company = $this->companyService->store($request);
 
         return fractal()
             ->item($company)
@@ -70,15 +83,14 @@ class CompanyController extends Controller
     /**
      * @param UpdateCompanyRequest $request
      *
-     * @param CompanyService       $companyService
      * @param Company              $company
      *
      * @return array
      * @throws ValidatorException
      */
-    public function update(UpdateCompanyRequest $request, CompanyService $companyService, Company $company)
+    public function update(UpdateCompanyRequest $request, Company $company)
     {
-        $company = $companyService->update($request, $company->id);
+        $company = $this->companyService->update($request, $company->id);
 
         return fractal()
             ->item($company)
@@ -87,14 +99,13 @@ class CompanyController extends Controller
     }
 
     /**
-     * @param CompanyService $companyService
-     * @param Company        $company
+     * @param Company $company
      *
      * @return ResponseFactory|Response
      */
-    public function destroy(CompanyService $companyService, Company $company)
+    public function destroy(Company $company)
     {
-        $companyService->softDelete($company->id);
+        $this->companyService->softDelete($company->id);
 
         return response(null, 204);
     }

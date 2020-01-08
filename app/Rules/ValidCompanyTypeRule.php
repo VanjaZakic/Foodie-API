@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Company;
 use Illuminate\Contracts\Validation\Rule;
 
 /**
@@ -18,9 +19,9 @@ class ValidCompanyTypeRule implements Rule
     /**
      * Create a new rule instance.
      *
-     * @return void
+     * @param $company
      */
-    public function __construct($company)
+    public function __construct(Company $company)
     {
         $this->company = $company;
     }

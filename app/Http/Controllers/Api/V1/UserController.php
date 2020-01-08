@@ -19,16 +19,30 @@ use Prettus\Validator\Exceptions\ValidatorException;
  */
 class UserController extends Controller
 {
+
+    /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * UserController constructor.
+     *
+     * @param UserService $userService
+     */
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @param UserService $userService
-     *
      * @return Response
      */
-    public function index(UserService $userService)
+    public function index()
     {
-        $users           = $userService->getPaginated(5);
+        $users           = $this->userService->getPaginated(5);
         $usersCollection = $users->getCollection();
 
         return fractal()
@@ -43,14 +57,12 @@ class UserController extends Controller
      *
      * @param StoreUserRequest $request
      *
-     * @param UserService      $userService
-     *
      * @return Response
      * @throws ValidatorException
      */
-    public function store(StoreUserRequest $request, UserService $userService)
+    public function store(StoreUserRequest $request)
     {
-        $user = $userService->store($request);
+        $user = $this->userService->store($request);
 
         return fractal()
             ->item($user)
@@ -69,8 +81,6 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $this->authorize('view', $user);
-
         return fractal()
             ->item($user)
             ->parseIncludes('company')
@@ -82,18 +92,17 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param UpdateUserRequest $request
-     * @param UserService       $userService
      * @param User              $user
      *
      * @return void
-     * @throws ValidatorException
      * @throws AuthorizationException
+     * @throws ValidatorException
      */
-    public function update(UpdateUserRequest $request, UserService $userService, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         $this->authorize('update', [$user, $request]);
-
-        $user = $userService->update($request, $user->id);
+        
+        $user = $this->userService->update($request, $user->id);
 
         return fractal()
             ->item($user)
@@ -105,14 +114,13 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param User        $user
-     * @param UserService $userService
+     * @param User $user
      *
      * @return Response
      */
-    public function destroy(User $user, UserService $userService)
+    public function destroy(User $user)
     {
-        $userService->softDelete($user->id);
+        $this->userService->softDelete($user->id);
 
         return response(null, 204);
     }

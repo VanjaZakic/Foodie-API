@@ -24,7 +24,7 @@ Route::prefix('v1')->group(function () {
 
         Route::prefix('users')->group(function () {
             Route::get('/', 'UserController@index')->middleware('role:admin');
-            Route::get('/{user}', 'UserController@show');
+            Route::get('/{user}', 'UserController@show')->middleware('can:view,user');
             Route::post('/', 'UserController@store');
             Route::put('/{user}', 'UserController@update');
             Route::delete('/{user}', 'UserController@destroy')->middleware('role:admin');

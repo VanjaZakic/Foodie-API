@@ -9,6 +9,7 @@ use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
 use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
@@ -18,16 +19,31 @@ use Prettus\Validator\Exceptions\ValidatorException;
 class CompanyUserController extends Controller
 {
     /**
+     * @var CompanyUserService
+     */
+    private $companyUserService;
+
+    /**
+     * CompanyUserController constructor.
+     *
+     * @param CompanyUserService $companyUserService
+     */
+    public function __construct(CompanyUserService $companyUserService)
+    {
+        $this->companyUserService = $companyUserService;
+    }
+
+    /**
      * Display a listing of the resource.
      *
-     * @param Company            $company
-     * @param CompanyUserService $companyUserService
+     * @param Company $company
      *
      * @return void
+     * @throws RepositoryException
      */
-    public function index(Company $company, CompanyUserService $companyUserService)
+    public function index(Company $company)
     {
-        $companyUsers           = $companyUserService->getPaginated($company->id, 5);
+        $companyUsers           = $this->companyUserService->getPaginated($company, 5);
         $companyUsersCollection = $companyUsers->getCollection();
 
         return fractal()
@@ -44,14 +60,12 @@ class CompanyUserController extends Controller
      *
      * @param StoreCompanyUserRequest $request
      *
-     * @param CompanyUserService      $companyUserService
-     *
      * @return Response
      * @throws ValidatorException
      */
-    public function store(Company $company, StoreCompanyUserRequest $request, CompanyUserService $companyUserService)
+    public function store(Company $company, StoreCompanyUserRequest $request)
     {
-        $user = $companyUserService->store($request, $company);
+        $user = $this->companyUserService->store($request, $company);
 
         if (!$user) {
             return response('Not Acceptable', 406);

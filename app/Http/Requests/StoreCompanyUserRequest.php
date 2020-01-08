@@ -30,11 +30,11 @@ class StoreCompanyUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required',
-            'last_name'  => 'required',
-            'phone'      => 'required',
+            'first_name' => 'required|max:60',
+            'last_name'  => 'required|max:60',
+            'phone'      => 'required|max:20',
             'address'    => 'required',
-            'email'      => 'email|required|unique:users',
+            'email'      => 'email|required|unique:users|max:60',
             'password'   => 'required|confirmed',
             'role'       => ['required', Rule::in([User::ROLE_PRODUCER_ADMIN, User::ROLE_CUSTOMER_ADMIN])]
         ];
