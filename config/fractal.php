@@ -39,4 +39,8 @@ return [
          */
         'request_key' => 'include',
     ],
+
+    'pagination' => [
+        'max_limit' => env('PAGINATION_MAX_LIMIT'),
+    ],
 ];

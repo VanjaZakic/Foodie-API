@@ -35,10 +35,16 @@ class CompanyService
      * @return mixed
      * @throws RepositoryException
      */
-    public function getPaginated()
+    public function getPaginated($limit)
     {
+        $maxLimit = config('fractal.pagination.max_limit');
+
+        if ($limit > $maxLimit) {
+            $limit = $maxLimit;
+        }
+
         $this->repository->pushCriteria(new ProducerCompaniesCriteria());
-        return $this->repository->paginate();
+        return $this->repository->paginate($limit);
     }
 
     /**

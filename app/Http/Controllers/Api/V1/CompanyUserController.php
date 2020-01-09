@@ -10,6 +10,7 @@ use App\Transformers\UserTransformer;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
+use Illuminate\Http\Request;
 
 /**
  * Class CompanyUserController
@@ -35,16 +36,15 @@ class CompanyUserController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @param Company $company
      *
      * @return array
      * @throws RepositoryException
      */
-    public function index(Company $company)
+    public function index(Request $request, Company $company)
     {
-        $limit = config('fractal.pagination.default');
-
-        $companyUsers           = $this->companyUserService->getPaginated($company);
+        $companyUsers           = $this->companyUserService->getPaginated($request->limit, $company);
         $companyUsersCollection = $companyUsers->getCollection();
 
         return fractal()

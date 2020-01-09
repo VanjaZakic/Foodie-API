@@ -9,6 +9,7 @@ use App\Services\CompanyService;
 use App\Transformers\CompanyIndexTransformer;
 use App\Transformers\CompanyTransformer;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Prettus\Repository\Exceptions\RepositoryException;
@@ -36,14 +37,14 @@ class CompanyController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return array
      * @throws RepositoryException
      */
-    public function index()
+    public function index(Request $request)
     {
-        $limit = config('fractal.pagination.default');
-
-        $producerCompanies           = $this->companyService->getPaginated();
+        $producerCompanies           = $this->companyService->getPaginated($request->limit);
         $producerCompaniesCollection = $producerCompanies->getCollection();
 
         return fractal()

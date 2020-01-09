@@ -9,6 +9,7 @@ use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
 use App\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -38,11 +39,13 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
+     *
      * @return array
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users           = $this->userService->getPaginated();
+        $users           = $this->userService->getPaginated($request->limit);
         $usersCollection = $users->getCollection();
 
         return fractal()
