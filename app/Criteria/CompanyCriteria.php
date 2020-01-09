@@ -27,11 +27,11 @@ class CompanyCriteria implements CriteriaInterface
     {
         $this->company = $company;
     }
-
+    
     /**
      * Apply criteria in query repository
      *
-     * @param string              $model
+     * @param                     $model
      * @param RepositoryInterface $repository
      *
      * @return mixed

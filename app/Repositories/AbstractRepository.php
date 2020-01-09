@@ -11,6 +11,13 @@ use Prettus\Repository\Eloquent\BaseRepository;
  */
 abstract class AbstractRepository extends BaseRepository
 {
+    /**
+     * @param null   $limit
+     * @param array  $columns
+     * @param string $method
+     *
+     * @return mixed
+     */
     public function paginate($limit = null, $columns = ['*'], $method = "paginate")
     {
         $limit = ($limit > config('fractal.pagination.max_limit', 50)) ? config('fractal.pagination.max_limit', 50) : $limit;

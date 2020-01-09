@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Company;
+use App\Exceptions\AdminUserForCompanyAlreadyExistsException;
+use App\Exceptions\InvalidUserRoleForCompanyException;
 use App\Http\Requests\CompanyUserStoreRequest;
+use App\Services\CompanyService;
 use App\Services\CompanyUserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
@@ -61,16 +64,17 @@ class CompanyUserController extends Controller
      *
      * @param CompanyUserStoreRequest $request
      *
+     * @param CompanyService          $companyService
+     *
      * @return mixed
      * @throws ValidatorException
+     * @throws AdminUserForCompanyAlreadyExistsException
+     * @throws InvalidUserRoleForCompanyException
      */
-    public function store(Company $company, CompanyUserStoreRequest $request)
+    public function store(Company $company, CompanyUserStoreRequest $request, CompanyService $companyService)
     {
-        $user = $this->companyUserService->store($request, $company);
-
-        if (!$user) {
-            return response('Not Acceptable', 406);
-        }
+        $company = $companyService->get($company->id);
+        $user    = $this->companyUserService->store($request, $company);
 
         return fractal()
             ->item($user)

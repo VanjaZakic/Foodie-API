@@ -74,4 +74,9 @@ class CompanyService
     {
         return $this->repository->delete($companyId);
     }
+
+    public function get($companyId)
+    {
+        return $this->repository->find($companyId);
+    }
 }
