@@ -56,7 +56,7 @@ class UserService
      *
      * @return mixed
      */
-    public function getPaginated($limit)
+    public function getPaginated($limit = null)
     {
         return $this->repository->paginate($limit);
     }
