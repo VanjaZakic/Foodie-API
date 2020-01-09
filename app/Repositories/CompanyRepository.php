@@ -10,7 +10,7 @@ use Prettus\Repository\Eloquent\BaseRepository;
  * Class CompanyRepository
  * @package App\Repositories
  */
-class CompanyRepository extends BaseRepository
+class CompanyRepository extends AbstractRepository
 {
     /**
      * Specify Model class name

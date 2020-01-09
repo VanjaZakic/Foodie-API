@@ -10,7 +10,7 @@ use App\User;
  *
  * @package namespace App\Repositories;
  */
-class UserRepository extends BaseRepository
+class UserRepository extends AbstractRepository
 {
     /**
      * Specify Model class name

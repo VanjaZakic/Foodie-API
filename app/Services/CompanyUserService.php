@@ -38,12 +38,6 @@ class CompanyUserService
      */
     public function getPaginated($limit, $company)
     {
-        $maxLimit = config('fractal.pagination.max_limit');
-
-        if ($limit > $maxLimit) {
-            $limit = $maxLimit;
-        }
-
         $this->repository->pushCriteria(new CompanyCriteria($company));
         return $this->repository->paginate($limit);
     }

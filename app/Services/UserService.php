@@ -58,12 +58,6 @@ class UserService
      */
     public function getPaginated($limit)
     {
-        $maxLimit = config('fractal.pagination.max_limit');
-
-        if ($limit > $maxLimit) {
-            $limit = $maxLimit;
-        }
-
         return $this->repository->paginate($limit);
     }
 
