@@ -56,18 +56,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof AdminUserForCompanyAlreadyExistsException) {
-            if ($request->expectsJson()) {
-                return response()->json(['error' => 'Admin user already exists.'], 406);
-            }
-        }
-
-        if ($exception instanceof InvalidUserRoleForCompanyException) {
-            if ($request->expectsJson()) {
-                return response()->json(['error' => 'Invalid user role for that company.'], 406);
-            }
-        }
-
         return parent::render($request, $exception);
     }
+
 }
