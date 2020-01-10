@@ -102,8 +102,6 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user)
     {
-        $this->authorize('update', [$user, $request]);
-
         $user = $this->userService->update($request, $user->id);
 
         return fractal()

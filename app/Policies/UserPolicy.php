@@ -34,21 +34,21 @@ class UserPolicy
      *
      * @return mixed
      */
-    public function update(User $authUser, User $user, UserUpdateRequest $request)
+    public function update(User $authUser, User $user)
     {
         switch ($authUser->role) {
             case User::ROLE_ADMIN:
-                return $authUser->canAdminUpdateUser($user, $request->all());
+                return $authUser->canAdminUpdateUser($user, request()->all());
             case User::ROLE_PRODUCER_ADMIN:
-                return $authUser->canProducerAdminUpdateUser($user, $request->all());
+                return $authUser->canProducerAdminUpdateUser($user, request()->all());
             case User::ROLE_CUSTOMER_ADMIN:
-                return $authUser->canCustomerAdminUpdateUser($user, $request->all());
+                return $authUser->canCustomerAdminUpdateUser($user, request()->all());
             case User::ROLE_PRODUCER_USER:
-                return $authUser->canProducerUserUpdateUser($user, $request->all());
+                return $authUser->canProducerUserUpdateUser($user, request()->all());
             case User::ROLE_CUSTOMER_USER:
-                return $authUser->canCustomerUserUpdateUser($user, $request->all());
+                return $authUser->canCustomerUserUpdateUser($user, request()->all());
             case User::ROLE_USER:
-                return $authUser->canUserUpdateUser($user, $request->all());
+                return $authUser->canUserUpdateUser($user, request()->all());
             default:
                 return false;
         }
