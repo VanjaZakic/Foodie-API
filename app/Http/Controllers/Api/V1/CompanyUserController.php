@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Company;
-use App\Http\Requests\StoreCompanyUserRequest;
+use App\Exceptions\AlreadyExistsException;
+use App\Exceptions\InvalidUserRoleException;
+use App\Http\Requests\CompanyUserStoreRequest;
+use App\Services\CompanyService;
 use App\Services\CompanyUserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
+use Illuminate\Http\Request;
 
 /**
  * Class CompanyUserController
@@ -34,13 +39,15 @@ class CompanyUserController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @param Company $company
      *
      * @return array
+     * @throws RepositoryException
      */
-    public function index(Company $company)
+    public function index(Request $request, Company $company)
     {
-        $companyUsers = $this->companyUserService->getPaginated($company, 5);
+        $companyUsers           = $this->companyUserService->getPaginated($request->limit, $company);
         $companyUsersCollection = $companyUsers->getCollection();
 
         return fractal()
@@ -53,20 +60,21 @@ class CompanyUserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Company $company
+     * @param Company                 $company
      *
-     * @param StoreCompanyUserRequest $request
+     * @param CompanyUserStoreRequest $request
+     *
+     * @param CompanyService          $companyService
      *
      * @return mixed
      * @throws ValidatorException
+     * @throws AlreadyExistsException
+     * @throws InvalidUserRoleException
      */
-    public function store(Company $company, StoreCompanyUserRequest $request)
+    public function store(Company $company, CompanyUserStoreRequest $request, CompanyService $companyService)
     {
-        $user = $this->companyUserService->store($request, $company);
-
-        if (!$user) {
-            return response('Not Acceptable', 406);
-        }
+        $company = $companyService->get($company->id);
+        $user    = $this->companyUserService->store($request, $company);
 
         return fractal()
             ->item($user)

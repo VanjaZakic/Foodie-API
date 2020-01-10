@@ -15,7 +15,7 @@ class ProducerCompaniesCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository
      *
-     * @param string              $model
+     * @param                     $model
      * @param RepositoryInterface $repository
      *
      * @return mixed

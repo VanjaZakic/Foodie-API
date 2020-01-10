@@ -2,14 +2,15 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\ValidCompanyTypeRule;
+use App\Company;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
- * Class UpdateCompanyRequest
+ * Class CompanyStoreRequest
  * @package App\Http\Requests
  */
-class UpdateCompanyRequest extends FormRequest
+class CompanyStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,11 +31,11 @@ class UpdateCompanyRequest extends FormRequest
     {
         return [
             'name'    => 'required|max:60',
-            'phone'   => 'required|max:20|unique:companies,phone,' . $this->route('company')->id,
+            'phone'   => 'required|unique:companies|max:20',
             'address' => 'required',
-            'email'   => 'email|required|max:60|unique:companies,email,' . $this->route('company')->id,
+            'email'   => 'email|required|unique:companies|max:60',
             'image'   => 'required|image|mimes:jpeg,jpg,png,gif|max:10000',
-            'type'    => ['required', new ValidCompanyTypeRule($this->company)],
+            'type'    => ['required', Rule::in([Company::TYPE_PRODUCER, Company::TYPE_CUSTOMER])],
             'lat'     => 'sometimes|numeric|between:-90,90',
             'lng'     => 'sometimes|numeric|between:-180,80'
         ];

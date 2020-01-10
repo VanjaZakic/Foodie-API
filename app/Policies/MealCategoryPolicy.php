@@ -17,8 +17,9 @@ class MealCategoryPolicy
     /**
      * Determine whether the user can update the meal category.
      *
-     * @param User $user
+     * @param User         $user
      * @param MealCategory $mealCategory
+     *
      * @return mixed
      */
     public function update(User $user, MealCategory $mealCategory)
@@ -29,8 +30,9 @@ class MealCategoryPolicy
     /**
      * Determine whether the user can delete the meal category.
      *
-     * @param User $user
+     * @param User         $user
      * @param MealCategory $mealCategory
+     *
      * @return mixed
      */
     public function delete(User $user, MealCategory $mealCategory)

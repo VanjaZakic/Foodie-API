@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
-use App\Criteria\CompanyUsersCriteria;
-use App\Http\Requests\StoreCompanyUserRequest;
+use App\Company;
+use App\Criteria\CompanyCriteria;
+use App\Exceptions\AlreadyExistsException;
+use App\Exceptions\InvalidUserRoleException;
+use App\Http\Requests\CompanyUserStoreRequest;
+use App\User;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use App\Repositories\UserRepository;
@@ -36,29 +40,46 @@ class CompanyUserService
      * @return mixed
      * @throws RepositoryException
      */
-    public function getPaginated($company, $limit)
+    public function getPaginated($limit = null, $company)
     {
-        $this->repository->pushCriteria(new CompanyUsersCriteria($company));
+        $this->repository->pushCriteria(new CompanyCriteria($company));
         return $this->repository->paginate($limit);
     }
 
     /**
-     * @param StoreCompanyUserRequest $request
-     *
+     * @param CompanyUserStoreRequest $request
      * @param                         $company
      *
      * @return mixed
      * @throws ValidatorException
+     * @throws AlreadyExistsException
+     * @throws InvalidUserRoleException
      */
     public function store($request, $company)
     {
-        $user = $this->repository->findByField('company_id', $company->id);
+        $user = $this->repository->findWhere(['company_id' => $company->id, 'role' => $request->role]);
 
-        if (!count($user)) {
-            $request = array_merge($request->all(), ['company_id' => $company->id]);
-            return $this->repository->create($request);
+        if (count($user) != 0) {
+            throw new AlreadyExistsException();
         }
 
-        return null;
+        if (!$this->isCompanyTypeCompatible($request, $company)) {
+            throw new InvalidUserRoleException();
+        }
+
+        return $this->repository->create(array_merge($request->all(), ['company_id' => $company->id]));
     }
+
+    /**
+     * @param $request
+     * @param $company
+     *
+     * @return bool
+     */
+    private function isCompanyTypeCompatible($request, $company)
+    {
+        return (($company->type == Company::TYPE_PRODUCER && $request->role == User::ROLE_PRODUCER_ADMIN) ||
+            ($company->type == Company::TYPE_CUSTOMER && $request->role == User::ROLE_CUSTOMER_ADMIN));
+    }
+
 }
