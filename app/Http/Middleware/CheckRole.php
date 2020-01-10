@@ -34,6 +34,6 @@ class CheckRole
 
         return response()->json([
             'Unauthorized'
-        ]);
+        ], 401);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Cashier\Cashier;
 use Stripe\Stripe;
 
 /**
@@ -19,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        //Cashier::ignoreMigrations();
     }
 
     /**

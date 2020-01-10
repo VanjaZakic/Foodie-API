@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Zend\Diactoros\ServerRequest;
 use App\Repositories\UserRepository;
@@ -38,11 +39,13 @@ class UserService
      */
     public function login(LoginRequest $request)
     {
+        $client       = DB::table('oauth_clients')->where('id', 2)->first();
+        $clientSecret = $client->secret;
         try {
             return (new ServerRequest())->withParsedBody([
                 'grant_type'    => config('auth.passport.grant_type', 'password'),
-                'client_id'     => config('auth.passport.client_id'),
-                'client_secret' => config('auth.passport.client_secret'),
+                'client_id'     => 2,
+                'client_secret' => $clientSecret,
                 'username'      => $request->get('email'),
                 'password'      => $request->get('password'),
             ]);
