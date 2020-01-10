@@ -66,9 +66,8 @@ class CompanyUserService
         if (!$this->isCompanyTypeCompatible($request, $company)) {
             throw new InvalidUserRoleForCompanyException();
         }
-
-        $request = array_merge($request->all(), ['company_id' => $company->id]);
-        return $this->repository->create($request);
+        
+        return $this->repository->create(array_merge($request->all(), ['company_id' => $company->id]));
     }
 
     /**

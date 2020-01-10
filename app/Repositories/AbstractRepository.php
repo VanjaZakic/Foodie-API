@@ -20,7 +20,7 @@ abstract class AbstractRepository extends BaseRepository
      */
     public function paginate($limit = null, $columns = ['*'], $method = "paginate")
     {
-        $limit = ($limit > config('fractal.pagination.max_limit', 50)) ? config('fractal.pagination.max_limit', 50) : $limit;
+        $limit = ($limit > config('repository.pagination.max_limit', 50)) ? config('repository.pagination.max_limit', 50) : $limit;
         return parent::paginate($limit, $columns, $method);
     }
 }
