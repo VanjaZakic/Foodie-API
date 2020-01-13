@@ -52,8 +52,16 @@ class Company extends Model
     /**
      * @return HasMany
      */
-    public function mealCategory()
+    public function mealCategories()
     {
         return $this->hasMany(MealCategory::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

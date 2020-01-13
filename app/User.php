@@ -4,6 +4,7 @@ namespace App;
 
 use App\Traits\UpdateUserTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -75,5 +76,13 @@ class User extends Authenticatable
     public function company()
     {
         return $this->belongsTo(Company::Class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

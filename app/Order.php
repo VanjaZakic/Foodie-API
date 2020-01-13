@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class Meal
+ * Class Order
  * @package App
  */
-class Meal extends Model
+class Order extends Model
 {
     use SoftDeletes;
 
@@ -21,26 +21,34 @@ class Meal extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'image',
         'price',
-        'meal_category_id',
+        'delivery_datetime',
+        'user_id',
+        'company_id',
     ];
 
     /**
      * @return BelongsTo
      */
-    public function mealCategory()
+    public function user()
     {
-        return $this->belongsTo(MealCategory::class);
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     /**
      * @return BelongsToMany
      */
-    public function orders()
+    public function meals()
     {
-        return $this->belongsToMany(Order::class)
+        return $this->belongsToMany(Meal::class)
                     ->using(MealOrder::class)
                     ->withPivot([
                         'price',
