@@ -8,7 +8,6 @@ use App\Http\Requests\OrderRequest;
 use App\Meal;
 use App\Order;
 use App\Repositories\OrderRepository;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Auth;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -39,10 +38,35 @@ class OrderService
      * @return mixed
      * @throws RepositoryException
      */
-    public function showAll($company)
+    public function producerShowAll($company)
     {
         $this->repository->pushCriteria(new CompanyCriteria($company));
         return $this->repository->all();
+    }
+
+    /**
+     * @param Company $company
+     * @return mixed
+     */
+    public function customerShowAll($company)
+    {
+        return $company->users()->with('orders')->getResults();
+    }
+
+    /**
+     * @param Company $company
+     * @return mixed
+     */
+    public function totalPrice($company)
+    {
+        $price = 0;
+        foreach ($company->users as $user) {
+            $orders = $user->orders;
+            foreach ($orders as $order) {
+                $price += $order['price'];
+            }
+        }
+        return $price;
     }
 
     /**
@@ -56,7 +80,7 @@ class OrderService
         foreach ($request->meals as $m) {
             $meal = new Meal();
             $meal = $meal->find($m['meal_id']);
-            $price += $meal->price*$m['quantity'];
+            $price += $meal->price * $m['quantity'];
         }
 
         $order = $this->repository->create([

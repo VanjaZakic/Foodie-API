@@ -59,6 +59,7 @@ Route::prefix('v1')->group(function () {
         });
 
         Route::get('companies/{company}/producerOrders', 'OrderController@producerIndex')->middleware(['role:producer_admin,producer_user', 'can:showAll,company']);
+        Route::get('companies/{company}/customerOrders', 'OrderController@customerIndex')->middleware(['role:customer_admin', 'can:showAll,company']);
         Route::prefix('orders')->group(function () {
             Route::post('/', 'OrderController@store');
             Route::get('{order}', 'OrderController@show')->middleware('can:show,order');

@@ -7,6 +7,7 @@ use App\Http\Requests\OrderRequest;
 use App\Order;
 use App\Services\OrderService;
 use App\Transformers\OrderTransformer;
+use App\Transformers\UserOrdersTransformer;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -43,12 +44,32 @@ class OrderController extends Controller
      */
     public function producerIndex(Company $company)
     {
-        $orders = $this->orderService->showAll($company);
+        $orders = $this->orderService->producerShowAll($company);
 
         return fractal()
             ->collection($orders)
             ->transformWith(new OrderTransformer())
             ->toArray();
+    }
+
+    /**
+     * Display a listing of the resource with price.
+     *
+     * @param Company $company
+     * @return array
+     */
+    public function customerIndex(Company $company)
+    {
+        $userOrders = $this->orderService->customerShowAll($company);
+        $totalPrice = $this->orderService->totalPrice($company);
+
+        return [
+            fractal()
+                ->collection($userOrders)
+                ->transformWith(new UserOrdersTransformer())
+                ->toArray(),
+            $totalPrice
+        ];
     }
 
     /**
