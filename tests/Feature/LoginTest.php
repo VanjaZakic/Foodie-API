@@ -13,14 +13,11 @@ class LoginTest extends TestCase
 
     protected $admin;
 
-    public function setUp() :void
+    public function setUp(): void
     {
         parent::setUp();
-        Artisan::call('passport:install',['-vvv' => true]);
-        $this->admin = factory(User::class)->create([
-            'role'     => User::ROLE_ADMIN,
-            'password' => '123456'
-        ]);
+        Artisan::call('passport:install', ['-vvv' => true]);
+        $this->admin = factory(User::class)->states('admin')->create();
     }
 
     public function test_it_requires_an_email()
@@ -38,7 +35,7 @@ class LoginTest extends TestCase
     public function test_it_returns_a_bad_request_if_credentials_dont_match()
     {
         $this->json('POST', 'api/v1/login', [
-            'email' => $this->admin->email,
+            'email'    => $this->admin->email,
             'password' => 'wrongPassword'
         ])
             ->assertStatus(400);
@@ -47,18 +44,18 @@ class LoginTest extends TestCase
     public function test_it_returns_a_token_if_credentials_do_match()
     {
         $this->json('POST', 'api/v1/login', [
-            'email' => $this->admin->email,
+            'email'    => $this->admin->email,
             'password' => '123456'
         ])
             ->assertJsonStructure([
                 'access_token'
-                ]);
+            ]);
     }
 
     public function test_it_returns_a_user_type_if_credentials_do_match()
     {
         $this->json('POST', 'api/v1/login', [
-            'email' => $this->admin->email,
+            'email'    => $this->admin->email,
             'password' => '123456'
         ])
             ->assertJsonFragment([

@@ -22,8 +22,7 @@ class UserIndexTest extends TestCase
     private function do_test_it_shows_unauthorized_if_not_admin($role)
     {
         $user = factory(User::class)->create([
-            'role'     => $role,
-            'password' => '123456'
+            'role' => $role,
         ]);
 
         $this->actingAs($user)
@@ -33,15 +32,8 @@ class UserIndexTest extends TestCase
 
     public function test_it_returns_a_collection_of_users()
     {
-        $admin = factory(User::class)->create([
-            'role'     => User::ROLE_ADMIN,
-            'password' => '123456'
-        ]);
-
-        $users = factory(User::class, 2)->create([
-            'role'     => User::ROLE_PRODUCER_USER,
-            'password' => '123456'
-        ]);
+        $admin = factory(User::class)->states('admin')->create();
+        $users = factory(User::class, 2)->states('producer_admin')->create();
 
         $response = $this->actingAs($admin)->json('GET', 'api/v1/users');
 
@@ -54,10 +46,7 @@ class UserIndexTest extends TestCase
 
     public function test_it_has_paginated_data()
     {
-        $admin = factory(User::class)->create([
-            'role'     => User::ROLE_ADMIN,
-            'password' => '123456'
-        ]);
+        $admin = factory(User::class)->states('admin')->create();
 
         $this->actingAs($admin)->json('GET', 'api/v1/users')
             ->assertJsonStructure([
