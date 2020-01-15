@@ -14,12 +14,14 @@ $factory->define(User::class, function (Faker $faker) {
         'phone'      => $faker->e164PhoneNumber,
         'address'    => $faker->address,
         'email'      => $faker->unique()->safeEmail,
-        'password'   => '123456'
+        'password'   => '123456',
+        'role'       => USER::ROLE_USER
     ];
 });
 
 $factory->state(User::class, 'admin', [
-    'role' => USER::ROLE_ADMIN,
+    'role'       => USER::ROLE_ADMIN,
+    'company_id' => null
 ]);
 
 $factory->state(User::class, 'producer_admin', [
@@ -51,5 +53,6 @@ $factory->state(User::class, 'customer_user', [
 ]);
 
 $factory->state(User::class, 'user', [
-    'role' => USER::ROLE_USER,
+    'role'       => USER::ROLE_USER,
+    'company_id' => null
 ]);
