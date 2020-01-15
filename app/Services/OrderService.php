@@ -91,6 +91,13 @@ class OrderService
             $price += $meal->price * $m['quantity'];
         }
 
+        if (Auth::user()->company_id == $request->company_id) {
+            $company = new Company();
+            $company = $company->find($request->company_id);
+            $discount = $company->discount;
+            $price = $price * $discount;
+        }
+
         $order = $this->repository->create([
             'price'             => $price,
             'delivery_datetime' => $request->delivery_datetime,
@@ -128,6 +135,11 @@ class OrderService
             $meal = new Meal();
             $meal = $meal->find($m['meal_id']);
             $price += $meal->price * $m['quantity'];
+        }
+
+        if (Auth::user()->company_id == $order->company_id) {
+            $discount = $order->company()->getResults()->discount;
+            $price = $price * $discount;
         }
 
         $order = $this->repository->update(

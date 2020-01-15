@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeColumnOrdersTable extends Migration
+class DropColumnToOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,7 @@ class ChangeColumnOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
-
-        Schema::table('orders', function (Blueprint $table) {
-            $table->enum('status', ['ordered', 'cancelled', 'processing', 'deliverded'])->default('ordered');
+            $table->dropColumn('discount');
         });
     }
 
@@ -30,10 +26,7 @@ class ChangeColumnOrdersTable extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
-        Schema::table('orders', function (Blueprint $table) {
-            $table->enum('status', ['ordered', 'cancelled', 'processing', 'deliverded']);
+            $table->decimal('discount', 3, 2)->nullable()->default('1.00');
         });
     }
 }
