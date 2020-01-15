@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Company;
-use App\Exceptions\AdminUserForCompanyAlreadyExistsException;
-use App\Exceptions\InvalidUserRoleForCompanyException;
+use App\Exceptions\AlreadyExistsException;
+use App\Exceptions\InvalidUserRoleException;
 use App\Http\Requests\CompanyUserStoreRequest;
 use App\Services\CompanyService;
 use App\Services\CompanyUserService;
@@ -68,8 +68,8 @@ class CompanyUserController extends Controller
      *
      * @return mixed
      * @throws ValidatorException
-     * @throws AdminUserForCompanyAlreadyExistsException
-     * @throws InvalidUserRoleForCompanyException
+     * @throws AlreadyExistsException
+     * @throws InvalidUserRoleException
      */
     public function store(Company $company, CompanyUserStoreRequest $request, CompanyService $companyService)
     {

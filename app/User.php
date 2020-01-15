@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Traits\UpdateUserTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,7 +15,7 @@ use Laravel\Passport\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens, SoftDeletes, UpdateUserTrait, Billable;
+    use Notifiable, HasApiTokens, SoftDeletes, Billable;
 
     const ROLE_ADMIN = 'admin';
     const ROLE_PRODUCER_ADMIN = 'producer_admin';
@@ -36,6 +35,17 @@ class User extends Authenticatable
         User::ROLE_CUSTOMER_USER,
         User::ROLE_USER
     ];
+
+    /**
+     * @return array
+     */
+    public static function rolesWithoutAdmin()
+    {
+        $roles = User::$roles;
+        $key   = array_search(User::ROLE_ADMIN, $roles);
+        unset($roles[$key]);
+        return $roles;
+    }
 
     /**
      * The attributes that are mass assignable.

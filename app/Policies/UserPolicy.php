@@ -2,13 +2,35 @@
 
 namespace App\Policies;
 
-use App\Http\Requests\UserUpdateRequest;
+use App\Permissions\AdminPermission;
+use App\Permissions\CompanyAdminsPermission;
+use App\Permissions\PermissionFactory;
+use App\Permissions\UsersPermission;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class UserPolicy
+ * @package App\Policies
+ */
 class UserPolicy
 {
     use HandlesAuthorization;
+
+    /**
+     * @var AdminPermission|CompanyAdminsPermission|UsersPermission|bool
+     */
+    private $permission;
+
+    /**
+     * UserPolicy constructor.
+     *
+     * @param PermissionFactory $permissionFactory
+     */
+    public function __construct(PermissionFactory $permissionFactory)
+    {
+        $this->permission = $permissionFactory->getPermission();
+    }
 
     /**
      * Determine whether the user can view the model.
@@ -20,37 +42,19 @@ class UserPolicy
      */
     public function view(User $authUser, User $user)
     {
-        return $authUser->id == $user->id ||
-            ($authUser->role == User::ROLE_PRODUCER_ADMIN && $authUser->company_id == $user->company_id) ||
-            ($authUser->role == User::ROLE_CUSTOMER_ADMIN && $authUser->company_id == $user->company_id);
+        return $this->permission->canView($user);
     }
 
     /**
      * Determine whether the user can update the model.
      *
-     * @param User              $authUser
-     * @param User              $user
-     * @param UserUpdateRequest $request
+     * @param User $authUser
+     * @param User $user
      *
      * @return mixed
      */
-    public function update(User $authUser, User $user, UserUpdateRequest $request)
+    public function update(User $authUser, User $user)
     {
-        switch ($authUser->role) {
-            case User::ROLE_ADMIN:
-                return $authUser->canAdminUpdateUser($user, $request->all());
-            case User::ROLE_PRODUCER_ADMIN:
-                return $authUser->canProducerAdminUpdateUser($user, $request->all());
-            case User::ROLE_CUSTOMER_ADMIN:
-                return $authUser->canCustomerAdminUpdateUser($user, $request->all());
-            case User::ROLE_PRODUCER_USER:
-                return $authUser->canProducerUserUpdateUser($user, $request->all());
-            case User::ROLE_CUSTOMER_USER:
-                return $authUser->canCustomerUserUpdateUser($user, $request->all());
-            case User::ROLE_USER:
-                return $authUser->canUserUpdateUser($user, $request->all());
-            default:
-                return false;
-        }
+        return $this->permission->canUpdate($user, request()->input());
     }
 }
