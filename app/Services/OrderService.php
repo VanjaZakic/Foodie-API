@@ -76,6 +76,14 @@ class OrderService
      */
     public function store($request)
     {
+        foreach ($request->meals as $m) {
+            $meal = new Meal();
+            $meal = $meal->find($m['meal_id']);
+            if ($meal->mealCategory->company_id != $request->company_id) {
+                return false;
+            }
+        }
+
         $price = 0;
         foreach ($request->meals as $m) {
             $meal = new Meal();
@@ -100,14 +108,60 @@ class OrderService
     }
 
     /**
-     * @param int $orderId
+     * @param Order $order
      * @param OrderRequest $request
      * @return mixed
      * @throws ValidatorException
      */
-    public function update($request, $orderId)
+    public function update($request, $order)
     {
-        return $this->repository->update($request->all(), $orderId);
+        foreach ($request->meals as $m) {
+            $meal = new Meal();
+            $meal = $meal->find($m['meal_id']);
+            if ($meal->mealCategory->company_id != $order->company_id) {
+                return false;
+            }
+        }
+
+        $price = 0;
+        foreach ($request->meals as $m) {
+            $meal = new Meal();
+            $meal = $meal->find($m['meal_id']);
+            $price += $meal->price * $m['quantity'];
+        }
+
+        $order = $this->repository->update(
+            [
+                'price'             => $price,
+                'delivery_datetime' => $request->delivery_datetime
+            ],
+            $order->id
+        );
+
+        $order->meals()->detach();
+        foreach ($request->meals as $m) {
+            $meal = new Meal();
+            $meal = $meal->find($m['meal_id']);
+            $order->meals()->attach($meal->id, ['price' => $meal->price, 'quantity' => $m['quantity']]);
+        }
+
+        return $order;
+    }
+
+    /**
+     * @param Order $order
+     * @return mixed
+     * @throws ValidatorException
+     */
+    public function producerUpdateStatus($order)
+    {
+        if ($order->status == 'processing') {
+            return $this->repository->update(['status' => 'delivered'], $order->id);
+        }
+        if ($order->status == 'ordered') {
+            return $this->repository->update(['status' => 'processing'], $order->id);
+        }
+        return false;
     }
 
     /**
@@ -117,8 +171,7 @@ class OrderService
      */
     public function cancel($order)
     {
-        $order->status = 'cancelled';
-        return $this->repository->update(['status' => $order->status], $order->id);
+        return $this->repository->update(['status' => 'cancelled'], $order->id);
     }
 
     /**

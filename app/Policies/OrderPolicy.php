@@ -48,7 +48,21 @@ class OrderPolicy
      */
     public function update(User $user, Order $order)
     {
-        return $order->user_id === $user->id;
+        if ($order->status == 'ordered') {
+            return $order->user_id === $user->id;
+        }
+    }
+
+    /**
+     * Determine whether the user can update status to order.
+     *
+     * @param User $user
+     * @param Order $order
+     * @return mixed
+     */
+    public function producerUpdateStatus(User $user, Order $order)
+    {
+        return $order->company_id === $user->company_id;
     }
 
     /**
@@ -60,11 +74,6 @@ class OrderPolicy
      */
     public function cancel(User $user, Order $order)
     {
-//        if ($order->status == 'ordered') {
-//            return $order->user_id === $user->id;
-//        }
-// producer treba da moze da cancel ako je ordered iako nije isti id
-
         if ($order->status == 'ordered') {
             if ($order->user_id === $user->id) {
                 return true;

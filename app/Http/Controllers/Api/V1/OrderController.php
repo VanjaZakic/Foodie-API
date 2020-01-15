@@ -9,7 +9,6 @@ use App\Services\OrderService;
 use App\Transformers\OrderTransformer;
 use App\Transformers\UserOrdersTransformer;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -76,13 +75,16 @@ class OrderController extends Controller
      * Store a newly created resource in storage.
      *
      * @param OrderRequest $request
-     * @return array
+     * @return mixed
      * @throws ValidatorException
      */
     public function store(OrderRequest $request)
     {
         $order = $this->orderService->store($request);
 
+        if (!$order) {
+            return response('Meals must be from the same company.', 400);
+        }
         return fractal()
             ->item($order)
             ->transformWith(new OrderTransformer())
@@ -108,13 +110,16 @@ class OrderController extends Controller
      *
      * @param OrderRequest $request
      * @param Order $order
-     * @return array
+     * @return mixed
      * @throws ValidatorException
      */
     public function update(OrderRequest $request, Order $order)
     {
-        $order = $this->orderService->update($request, $order->id);
+        $order = $this->orderService->update($request, $order);
 
+        if (!$order) {
+            return response('Meals must be from the same company.', 400);
+        }
         return fractal()
             ->item($order)
             ->transformWith(new OrderTransformer())
@@ -122,19 +127,34 @@ class OrderController extends Controller
     }
 
     /**
+     * Update status to specified resource in storage.
+     *
+     * @param Order $order
+     * @return ResponseFactory|Response
+     * @throws ValidatorException
+     */
+    public function producerUpdateStatus(Order $order)
+    {
+        $status = $this->orderService->producerUpdateStatus($order);
+
+        if (!$status) {
+            return response('Status can not be changed.', 400);
+        }
+        return response('Status changed.', 200);
+    }
+
+    /**
      * Cancel the specified resource in storage.
      *
      * @param Order $order
-     * @return JsonResponse
+     * @return ResponseFactory|Response
      * @throws ValidatorException
      */
     public function cancel(Order $order)
     {
         $this->orderService->cancel($order);
 
-        return response()->json([
-            'Item is cancelled.'
-        ]);
+        return response('Item is cancelled.', 200);
     }
 
     /**

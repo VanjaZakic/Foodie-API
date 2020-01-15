@@ -25,6 +25,7 @@ class Order extends Model
         'delivery_datetime',
         'user_id',
         'company_id',
+        'status',
     ];
 
     /**

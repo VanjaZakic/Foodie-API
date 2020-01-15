@@ -29,7 +29,7 @@ class OrderRequest extends FormRequest
     {
         return [
             'delivery_datetime' => 'required',
-            'company_id'        => 'required',
+            'company_id'        => 'sometimes',
             'meals'             => 'required',
         ];
     }
