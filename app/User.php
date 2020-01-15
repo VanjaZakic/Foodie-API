@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 use Laravel\Passport\HasApiTokens;
 
 /**
@@ -16,7 +17,7 @@ use Laravel\Passport\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens, SoftDeletes, UpdateUserTrait;
+    use Notifiable, HasApiTokens, SoftDeletes, UpdateUserTrait, Billable;
 
     const ROLE_ADMIN = 'admin';
     const ROLE_PRODUCER_ADMIN = 'producer_admin';

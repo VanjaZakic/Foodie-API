@@ -15,7 +15,8 @@ return [
     |
     */
     'pagination' => [
-        'limit' => 15
+        'limit'     => 15,
+        'max_limit' => env('PAGINATION_MAX_LIMIT'),
     ],
 
     /*
@@ -109,7 +110,7 @@ return [
             ]
         ],
 
-        'params'     => [
+        'params'  => [
             /*
             |--------------------------------------------------------------------------
             | Skip Cache Params
@@ -137,7 +138,7 @@ return [
        |
        | 'except'  =>['find'],
        */
-        'allowed'    => [
+        'allowed' => [
             'only'   => null,
             'except' => null
         ]
@@ -226,10 +227,10 @@ return [
     |
     */
     'generator'  => [
-        'basePath'      => app()->path(),
-        'rootNamespace' => 'App\\',
+        'basePath'          => app()->path(),
+        'rootNamespace'     => 'App\\',
         'stubsOverridePath' => app()->path(),
-        'paths'         => [
+        'paths'             => [
             'models'       => 'Entities',
             'repositories' => 'Repositories',
             'interfaces'   => 'Repositories',

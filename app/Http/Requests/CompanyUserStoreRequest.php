@@ -7,10 +7,10 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Class StoreUserRequest
+ * Class CompanyUserStoreRequest
  * @package App\Http\Requests
  */
-class StoreUserRequest extends FormRequest
+class CompanyUserStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,18 +29,14 @@ class StoreUserRequest extends FormRequest
      */
     public function rules()
     {
-        $self = $this;
         return [
             'first_name' => 'required|max:60',
             'last_name'  => 'required|max:60',
             'phone'      => 'required|max:20',
             'address'    => 'required',
-            'email'      => 'email|required||max:60|unique:users',
+            'email'      => 'email|required|unique:users|max:60',
             'password'   => 'required|confirmed',
-            'role'       => ['required', Rule::in([User::ROLE_PRODUCER_USER, User::ROLE_CUSTOMER_USER, User::ROLE_USER])],
-            'company_id' => Rule::requiredIf(function () use ($self) {
-                return $self->role == User::ROLE_PRODUCER_USER || $self->role == User::ROLE_CUSTOMER_USER;
-            })
+            'role'       => ['required', Rule::in([User::ROLE_PRODUCER_ADMIN, User::ROLE_CUSTOMER_ADMIN])]
         ];
     }
 }

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Services\UserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
 use App\User;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -38,11 +39,13 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
+     *
      * @return array
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->userService->getPaginated(5);
+        $users           = $this->userService->getPaginated($request->limit);
         $usersCollection = $users->getCollection();
 
         return fractal()
@@ -55,12 +58,12 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreUserRequest $request
+     * @param UserStoreRequest $request
      *
      * @return array
      * @throws ValidatorException
      */
-    public function store(StoreUserRequest $request)
+    public function store(UserStoreRequest $request)
     {
         $user = $this->userService->store($request);
 
@@ -90,17 +93,15 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateUserRequest $request
-     * @param User $user
+     * @param UserUpdateRequest $request
+     * @param User              $user
      *
      * @return array
      * @throws AuthorizationException
      * @throws ValidatorException
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        $this->authorize('update', [$user, $request]);
-
         $user = $this->userService->update($request, $user->id);
 
         return fractal()

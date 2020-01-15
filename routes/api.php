@@ -25,7 +25,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/', 'UserController@index')->middleware('role:admin');
             Route::get('/{user}', 'UserController@show')->middleware('can:view,user');
             Route::post('/', 'UserController@store');
-            Route::put('/{user}', 'UserController@update');
+            Route::put('/{user}', 'UserController@update')->middleware('can:update:user');
             Route::delete('/{user}', 'UserController@destroy')->middleware('role:admin');
         });
 
@@ -68,5 +68,7 @@ Route::prefix('v1')->group(function () {
             Route::delete('{order}', 'OrderController@destroy')->middleware(['role:producer_admin', 'can:delete,order']);
         });
 
+        Route::middleware('auth:api')->resource('payment-methods', 'PaymentMethodController');
+        Route::middleware('auth:api')->resource('checkout', 'CheckoutController');
     });
 });
