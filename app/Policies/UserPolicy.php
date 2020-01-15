@@ -2,7 +2,10 @@
 
 namespace App\Policies;
 
+use App\Permissions\AdminPermission;
+use App\Permissions\CompanyAdminsPermission;
 use App\Permissions\PermissionFactory;
+use App\Permissions\UsersPermission;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -15,7 +18,7 @@ class UserPolicy
     use HandlesAuthorization;
 
     /**
-     * @var \App\Permissions\AdminPermission|\App\Permissions\CompanyAdminsPermission|\App\Permissions\UsersPermission|bool
+     * @var AdminPermission|CompanyAdminsPermission|UsersPermission|bool
      */
     private $permission;
 

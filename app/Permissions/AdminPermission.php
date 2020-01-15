@@ -2,19 +2,23 @@
 
 namespace App\Permissions;
 
+use App\User;
+use Illuminate\Http\Request;
+
 /**
  * Class AdminPermission
  * @package App\Permissions
  */
-class AdminPermission implements IPermission
+class AdminPermission implements Permissionable
 {
     /**
-     * @var mixed
+     * @var User $authUser
      */
     private $authUser;
 
     /**
      * AdminPermission constructor.
+     *
      */
     public function __construct()
     {
@@ -52,6 +56,6 @@ class AdminPermission implements IPermission
     {
         return
             !($this->authUser->id == $user->id &&
-                ($input['role'] != $user->role || $input['company_id'] != null));
+                ($input['role'] != $user->role || $input['company_id']));
     }
 }

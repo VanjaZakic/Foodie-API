@@ -8,10 +8,10 @@ use App\User;
  * Class CompanyAdminsPermission
  * @package App\Permissions
  */
-class CompanyAdminsPermission implements IPermission
+class CompanyAdminsPermission implements Permissionable
 {
     /**
-     * @var mixed
+     * @var User $authUser
      */
     private $authUser;
 

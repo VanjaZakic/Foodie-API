@@ -2,14 +2,16 @@
 
 namespace App\Permissions;
 
+use App\User;
+
 /**
  * Class UsersPermission
  * @package App\Permissions
  */
-class UsersPermission implements IPermission
+class UsersPermission implements Permissionable
 {
     /**
-     * @var mixed
+     * @var User $authUser
      */
     private $authUser;
 
