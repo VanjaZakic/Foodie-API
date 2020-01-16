@@ -34,10 +34,10 @@ class UserStoreTest extends TestCase
 
     public function test_it_requires_unique_email()
     {
-        $user = factory(User::class)->states('admin')->create();
+        $admin = factory(User::class)->states('admin')->create();
 
         $this->json('POST', 'api/v1/users', [
-            'email' => $user->email
+            'email' => $admin->email,
         ])
             ->assertJsonValidationErrors(['email']);
     }

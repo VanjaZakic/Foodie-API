@@ -62,6 +62,11 @@ class UserPolicy
      */
     public function update(User $authUser, User $user)
     {
-        return $this->permission->canUpdate($user, (object)$this->request->input());
+        $input = (object)$this->request->input();
+
+//        $input->role       = $this->request->role ?: $user->role;
+//        $input->company_id = $this->request->company_id ?: null;
+
+        return $this->permission->canUpdate($user, $input);
     }
 }

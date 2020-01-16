@@ -62,11 +62,11 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
     public function passes($attribute, $value)
     {
         if (request()->user()->role == User::ROLE_ADMIN) {
-            
+
             switch ($this->input['role']) {
-                case User::ROLE_ADMIN:
-                case User::ROLE_USER:
-                    return !($value != null);
+//                case User::ROLE_ADMIN:
+//                case User::ROLE_USER:
+//                    return !($value != null);
                 case User::ROLE_PRODUCER_USER:
                 case User::ROLE_CUSTOMER_USER:
                     return $this->validRoleForCompanyUsers();

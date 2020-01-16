@@ -17,18 +17,62 @@ class UserUpdateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->withExceptionHandling();
+        //$this->withoutExceptionHandling();
     }
 
-    //    public function test_it_stores_data()
-//    {
-//        $admin = factory(User::class)->states('admin')->create();
-//
-//        $this->actingAs($admin)->json('PUT', "api/v1/users/{$admin->id}", [
-//            'first_name' => '',
-//        ])
-//            ->assertJsonValidationErrors(['first_name']);
-//    }
+    public function test_it_stores_data()
+    {
+        $admin = factory(User::class)->states('admin')->create();
+
+        $this->actingAs($admin)->json('PUT', "api/v1/users/{$admin->id}")
+            ->assertJsonValidationErrors(['first_name', 'last_name', 'phone', 'address', 'email', 'role', 'company_id']);
+    }
+
+    public function test_it_returns_validation_error_if_over_max_length()
+    {
+        $admin = factory(User::class)->states('admin')->create();
+
+        $this->actingAs($admin)->json('PUT', "api/v1/users/{$admin->id}", [
+            'first_name' => 'firstnamefirstnamefirstnamefirstnamefirstnamefirstnamefirstnamefirstnamefirstnamefirstname',
+            'last_name'  => 'lastnamelastnamelastnamelastnamelastnamelastnamelastnamelastnamelastnamelastnamelastname',
+            'phone'      => '012345678901234567890123456789',
+            'email'      => 'emailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemail@gmail.com'
+        ])
+            ->assertJsonValidationErrors(['first_name', 'last_name', 'phone', 'email']);
+    }
+
+    public function test_it_requires_unique_email_and_phone()
+    {
+        $user1 = factory(User::class)->states('user')->create();
+        $user2 = factory(User::class)->states('user')->create();
+
+        $this->actingAs($user1)->json('PUT', "api/v1/users/{$user1->id}", [
+            'first_name' => $user1->first_name,
+            'last_name'  => $user1->last_name,
+            'phone'      => $user2->phone,
+            'address'    => $user1->address,
+            'email'      => $user2->email,
+            'role'       => $user1->role,
+            'company_id' => $user1->company_id
+        ])
+            ->assertJsonValidationErrors(['email', 'phone']);
+    }
+
+    public function test_it_returns_validation_error_if_not_valid_role()
+    {
+        $user = factory(User::class)->states('user')->create();
+
+        $this->actingAs($user)->json('PUT', "api/v1/users/{$user->id}", [
+            'first_name' => $user->first_name,
+            'last_name'  => $user->last_name,
+            'phone'      => $user->phone,
+            'address'    => $user->address,
+            'email'      => $user->email,
+            'role'       => 'wrongRole',
+            'company_id' => $user->company_id
+        ])
+            ->assertJsonValidationErrors(['role']);
+    }
 
     public function test_user_can_update_self()
     {
@@ -40,32 +84,34 @@ class UserUpdateTest extends TestCase
             $this->actingAs($user)->json('PUT', "api/v1/users/{$user->id}", [
                 "first_name" => $firstname = "newFirstName",
                 "last_name"  => $lastname = "newLastName",
-                "phone"      => $phone = "0123456789",
+                "phone"      => $phone = rand(111111111, 999999999),
                 "address"    => $address = "newAddress",
-                "email"      => $email = "newemail@gmail.com",
-                "role"       => $role = $user->role,
+                "email"      => $email = "{$role}@gmail.com",
+                "role"       => $newRole = $user->role,
                 "company_id" => $company_id = $user->company_id
             ]);
 
-
             $this->assertDatabaseHas('users', [
+                'id'         => $user->id,
                 'first_name' => $firstname,
                 'last_name'  => $lastname,
                 'phone'      => $phone,
                 'address'    => $address,
                 'email'      => $email,
-//                'role'       => $role,
-//                'company_id' => $company_id
+                'role'       => $newRole,
+                'company_id' => $company_id
             ]);
         }
     }
 
     public function test_users_cant_update_self_role()
     {
-        $roles = User::$roles;
+        $roles = User::rolesWithoutAdmin();
 
         foreach ($roles as $role) {
             $user = factory(User::class)->states($role)->create();
+
+            $role == User::ROLE_USER ? $newRole = User::ROLE_ADMIN : $newRole = User::ROLE_USER;
 
             $this->actingAs($user)->json('PUT', "api/v1/users/{$user->id}", [
                 "first_name" => "newFirstName",
@@ -73,8 +119,8 @@ class UserUpdateTest extends TestCase
                 "phone"      => "0123456789",
                 "address"    => "newAddress",
                 "email"      => "newemail@gmail.com",
-                "role"       => "invalidRole",
-                "company_id" => $user->company_id
+                "role"       => $newRole,
+                "company_id" => null
             ])
                 ->assertStatus(403);
         }
@@ -94,13 +140,13 @@ class UserUpdateTest extends TestCase
                 "address"    => "newAddress",
                 "email"      => "newemail@gmail.com",
                 "role"       => $user->role,
-                "company_id" => "invalidCompanyId"
+                "company_id" => 10000
             ])
                 ->assertStatus(403);
         }
     }
 
-    public function test_company_admins_can_downgrade_self_company_user()
+    public function test_producer_admin_can_downgrade_self_producer_user()
     {
         $producer_admin = factory(User::class)->states('producer_admin')->create();
         $producer_user  = factory(User::class)->states('producer_user')->create([
@@ -108,26 +154,77 @@ class UserUpdateTest extends TestCase
         ]);
 
         $this->actingAs($producer_admin)->json('PUT', "api/v1/users/{$producer_user->id}", [
-            "first_name" => $firstname = "newFirstName",
-            "last_name"  => $lastname = "newLastName",
-            "phone"      => $phone = "0123456789",
-            "address"    => $address = "newAddress",
-            "email"      => $email = "newemail@gmail.com",
+            "id"         => $producer_user->id,
+            "first_name" => $producer_user->first_name,
+            "last_name"  => $producer_user->last_name,
+            "phone"      => $producer_user->phone,
+            "address"    => $producer_user->address,
+            "email"      => $producer_user->email,
             "role"       => $role = 'user',
             "company_id" => $company_id = null
         ]);
 
 
         $this->assertDatabaseHas('users', [
-            'first_name' => $firstname,
-            'last_name'  => $lastname,
-            'phone'      => $phone,
-            'address'    => $address,
-            'email'      => $email,
+            "id"         => $producer_user->id,
+            "first_name" => $producer_user->first_name,
+            "last_name"  => $producer_user->last_name,
+            "phone"      => $producer_user->phone,
+            "address"    => $producer_user->address,
+            "email"      => $producer_user->email,
             'role'       => $role,
             'company_id' => $company_id
         ]);
+    }
 
+    public function test_producer_admin_cant_update_other_users()
+    {
+        $producer_admin = factory(User::class)->states('producer_admin')->create();
 
+        $roles = User::$roles;
+
+        foreach ($roles as $role) {
+            $user = factory(User::class)->states($role)->create();
+            $this->actingAs($producer_admin)->json('PUT', "api/v1/users/{$user->id}", [
+                "first_name" => "newFirstName",
+                "last_name"  => "newLastName",
+                "phone"      => rand(111111111, 999999999),
+                "address"    => "newAddress",
+                "email"      => "{$role}@gmail.com",
+                "role"       => $user->role,
+                "company_id" => $user->company_id
+            ])
+                ->assertStatus(403);
+        }
+    }
+
+    public function test_admin_can_update_other_users()
+    {
+        $admin = factory(User::class)->states('admin')->create();
+
+        $roles = User::rolesWithoutAdmin();
+        foreach ($roles as $role) {
+            $user = factory(User::class)->states($role)->create();
+            $this->actingAs($admin)->json('PUT', "api/v1/users/{$user->id}", [
+                "first_name" => $first_name = "newFirstName",
+                "last_name"  => $last_name = "newLastName",
+                "phone"      => $phone = rand(111111111, 999999999),
+                "address"    => $address = "newAddress",
+                "email"      => $email = "{$role}@gmail.com",
+                "role"       => $newRole = User::ROLE_USER,
+                "company_id" => $company_id = null
+            ]);
+
+            $this->assertDatabaseHas('users', [
+                "id"         => $user->id,
+                "first_name" => $first_name,
+                "last_name"  => $last_name,
+                "phone"      => $phone,
+                "address"    => $address,
+                "email"      => $email,
+                'role'       => $newRole,
+                'company_id' => $company_id
+            ]);
+        }
     }
 }

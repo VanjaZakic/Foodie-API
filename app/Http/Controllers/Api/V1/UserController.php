@@ -97,9 +97,12 @@ class UserController extends Controller
      *
      * @return array
      * @throws ValidatorException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(UserUpdateRequest $request, User $user)
     {
+        $this->authorize('update', $user);
+
         $user = $this->userService->update($request, $user->id);
 
         return fractal()
