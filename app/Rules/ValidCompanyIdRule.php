@@ -62,7 +62,7 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
     public function passes($attribute, $value)
     {
         if (request()->user()->role == User::ROLE_ADMIN) {
-            
+
             switch ($this->input['role']) {
                 case User::ROLE_ADMIN:
                 case User::ROLE_USER:
@@ -113,14 +113,14 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
      */
     private function validRoleForCompanyAdmins($role)
     {
-        $company       = $this->findCompany();
-        $company_admin = $this->userRepository->findWhere([
+        $company      = $this->findCompany();
+        $companyAdmin = $this->userRepository->findWhere([
             'company_id' => $this->input['company_id'],
             'role'       => $role,
             ['id', '!=', $this->input['id']]
         ]);
 
-        return !($company->type != $this->companyType($role) || count($company_admin));
+        return !($company->type != $this->companyType($role) || count($companyAdmin));
     }
 
     /**
@@ -129,8 +129,7 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
     private function findCompany()
     {
         if ($this->input['company_id'] != null) {
-            $company = $this->companyRepository->find($this->input['company_id']);
-            return $company;
+            return $this->companyRepository->find($this->input['company_id']);
         }
     }
 
