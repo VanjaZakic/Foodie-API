@@ -6,6 +6,10 @@ use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Class UserIndexTest
+ * @package Tests\Feature
+ */
 class UserIndexTest extends TestCase
 {
     use RefreshDatabase;

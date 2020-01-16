@@ -7,6 +7,10 @@ use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Class UserStoreTest
+ * @package Tests\Feature
+ */
 class UserStoreTest extends TestCase
 {
     use RefreshDatabase;
@@ -61,7 +65,7 @@ class UserStoreTest extends TestCase
                 ->assertJsonValidationErrors(['company_id']);
         }
     }
-    
+
     public function test_it_stores_a_user()
     {
         $user = factory(User::class)->create([

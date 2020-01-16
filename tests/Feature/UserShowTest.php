@@ -6,6 +6,10 @@ use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Class UserShowTest
+ * @package Tests\Feature
+ */
 class UserShowTest extends TestCase
 
 {

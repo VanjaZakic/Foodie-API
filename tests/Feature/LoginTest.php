@@ -7,10 +7,17 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
+/**
+ * Class LoginTest
+ * @package Tests\Feature
+ */
 class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * @var User $admin
+     */
     protected $admin;
 
     public function setUp(): void
