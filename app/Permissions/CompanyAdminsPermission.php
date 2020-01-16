@@ -17,10 +17,12 @@ class CompanyAdminsPermission implements Permissionable
 
     /**
      * CompanyAdminsPermission constructor.
+     *
+     * @param User $authUser
      */
-    public function __construct()
+    public function __construct(User $authUser)
     {
-        $this->authUser = request()->user();
+        $this->authUser = $authUser;
     }
 
     /**
@@ -54,8 +56,8 @@ class CompanyAdminsPermission implements Permissionable
     {
         return
             $this->authUser->id == $user->id &&
-            $input['role'] == $user->role &&
-            $input['company_id'] == $user->company_id;
+            $input->role == $user->role &&
+            $input->company_id == $user->company_id;
     }
 
     /**
@@ -68,7 +70,12 @@ class CompanyAdminsPermission implements Permissionable
     {
         return
             $this->authUser->company_id == $user->company_id &&
-            $input['role'] == User::ROLE_USER &&
-            $input['company_id'] == null;
+            $input->first_name == $user->first_name &&
+            $input->last_name == $user->last_name &&
+            $input->phone == $user->phone &&
+            $input->address == $user->address &&
+            $input->email == $user->email &&
+            $input->role == User::ROLE_USER &&
+            $input->company_id == null;
     }
 }

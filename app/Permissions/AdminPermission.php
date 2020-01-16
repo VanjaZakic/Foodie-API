@@ -3,7 +3,6 @@
 namespace App\Permissions;
 
 use App\User;
-use Illuminate\Http\Request;
 
 /**
  * Class AdminPermission
@@ -19,10 +18,11 @@ class AdminPermission implements Permissionable
     /**
      * AdminPermission constructor.
      *
+     * @param User $authUser
      */
-    public function __construct()
+    public function __construct(User $authUser)
     {
-        $this->authUser = request()->user();
+        $this->authUser = $authUser;
     }
 
     /**
@@ -56,6 +56,6 @@ class AdminPermission implements Permissionable
     {
         return
             !($this->authUser->id == $user->id &&
-                ($input['role'] != $user->role || $input['company_id']));
+                ($input->role != $user->role || $input->company_id));
     }
 }

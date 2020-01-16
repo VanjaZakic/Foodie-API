@@ -11,33 +11,22 @@ use App\User;
 class PermissionFactory
 {
     /**
-     * @var mixed
-     */
-    private $authUser;
-
-    /**
-     * PermissionFactory constructor.
-     */
-    public function __construct()
-    {
-        $this->authUser = request()->user();
-    }
-
-    /**
+     * @param $authUser
+     *
      * @return AdminPermission|CompanyAdminsPermission|UsersPermission|bool
      */
-    public function getPermission()
+    public function getPermission(User $authUser)
     {
-        switch ($this->authUser->role) {
+        switch ($authUser->role) {
             case User::ROLE_ADMIN:
-                return new AdminPermission();
+                return new AdminPermission($authUser);
             case User::ROLE_PRODUCER_ADMIN:
             case User::ROLE_CUSTOMER_ADMIN:
-                return new CompanyAdminsPermission();
+                return new CompanyAdminsPermission($authUser);
             case User::ROLE_PRODUCER_USER:
             case User::ROLE_CUSTOMER_USER:
             case User::ROLE_USER:
-                return new UsersPermission();
+                return new UsersPermission($authUser);
             default:
                 return false;
         }
