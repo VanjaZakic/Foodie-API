@@ -17,10 +17,12 @@ class UsersPermission implements Permissionable
 
     /**
      * UsersPermission constructor.
+     *
+     * @param User $authUser
      */
-    public function __construct()
+    public function __construct(User $authUser)
     {
-        $this->authUser = request()->user();
+        $this->authUser = $authUser;
     }
 
     /**
@@ -54,7 +56,7 @@ class UsersPermission implements Permissionable
     {
         return
             $this->authUser->id == $user->id &&
-            $input['role'] == $user->role &&
-            $input['company_id'] == $user->company_id;
+            $input->role == $user->role &&
+            $input->company_id == $user->company_id;
     }
 }

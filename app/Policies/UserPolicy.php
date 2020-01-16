@@ -8,6 +8,7 @@ use App\Permissions\PermissionFactory;
 use App\Permissions\UsersPermission;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Http\Request;
 
 /**
  * Class UserPolicy
@@ -21,15 +22,21 @@ class UserPolicy
      * @var AdminPermission|CompanyAdminsPermission|UsersPermission|bool
      */
     private $permission;
+    /**
+     * @var Request
+     */
+    private $request;
 
     /**
      * UserPolicy constructor.
      *
      * @param PermissionFactory $permissionFactory
+     * @param Request           $request
      */
-    public function __construct(PermissionFactory $permissionFactory)
+    public function __construct(PermissionFactory $permissionFactory, Request $request)
     {
-        $this->permission = $permissionFactory->getPermission();
+        $this->permission = $permissionFactory->getPermission($request->user('api'));
+        $this->request    = $request;
     }
 
     /**
@@ -55,6 +62,6 @@ class UserPolicy
      */
     public function update(User $authUser, User $user)
     {
-        return $this->permission->canUpdate($user, request()->input());
+        return $this->permission->canUpdate($user, (object)$this->request->input());
     }
 }
