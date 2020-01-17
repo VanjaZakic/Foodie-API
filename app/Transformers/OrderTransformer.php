@@ -28,7 +28,6 @@ class OrderTransformer extends TransformerAbstract
             'user_id'           => $order->user_id,
             'company_id'        => $order->company_id,
             'meals'             => $order->meals()->getResults(),
-//            'meals'             => $order->meals()->allRelatedIds(),
         ];
     }
 }

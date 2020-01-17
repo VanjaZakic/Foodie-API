@@ -21,6 +21,16 @@ class Order extends Model
     const STATUS_DELIVERED = 'delivered';
 
     /**
+     * @var array
+     */
+    public static $statuses = [
+        Order::STATUS_ORDERED,
+        Order::STATUS_CANCELLED,
+        Order::STATUS_PROCESSING,
+        Order::STATUS_DELIVERED
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

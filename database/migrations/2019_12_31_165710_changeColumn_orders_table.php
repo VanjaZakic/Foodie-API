@@ -1,11 +1,13 @@
 <?php
 
+use App\Order;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class ChangeColumnOrdersTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -18,7 +20,7 @@ class ChangeColumnOrdersTable extends Migration
         });
 
         Schema::table('orders', function (Blueprint $table) {
-            $table->enum('status', ['ordered', 'cancelled', 'processing', 'delivered'])->default('ordered');
+            $table->enum('status', Order::$statuses)->default(Order::STATUS_ORDERED);
         });
     }
 
@@ -33,7 +35,7 @@ class ChangeColumnOrdersTable extends Migration
             $table->dropColumn('status');
         });
         Schema::table('orders', function (Blueprint $table) {
-            $table->enum('status', ['ordered', 'cancelled', 'processing', 'delivered']);
+            $table->enum('status', Order::$statuses);
         });
     }
 }
