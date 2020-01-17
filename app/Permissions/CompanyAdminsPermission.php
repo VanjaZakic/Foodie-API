@@ -26,7 +26,7 @@ class CompanyAdminsPermission implements Permissionable
     }
 
     /**
-     * @param $user
+     * @param User $user
      *
      * @return bool
      */
@@ -36,8 +36,8 @@ class CompanyAdminsPermission implements Permissionable
     }
 
     /**
-     * @param $user
-     * @param $input
+     * @param User   $user
+     * @param object $input
      *
      * @return bool
      */
@@ -47,8 +47,8 @@ class CompanyAdminsPermission implements Permissionable
     }
 
     /**
-     * @param $user
-     * @param $input
+     * @param User   $user
+     * @param object $input
      *
      * @return bool
      */
@@ -61,8 +61,8 @@ class CompanyAdminsPermission implements Permissionable
     }
 
     /**
-     * @param $user
-     * @param $input
+     * @param User $user
+     * @param      $input
      *
      * @return bool
      */

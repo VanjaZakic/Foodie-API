@@ -88,10 +88,10 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
      */
     private function companyType($role)
     {
-        if ($role == User::ROLE_PRODUCER_USER) {
+        if ($role == User::ROLE_PRODUCER_ADMIN || $role == User::ROLE_PRODUCER_USER) {
             return Company::TYPE_PRODUCER;
         }
-        if ($role == User::ROLE_CUSTOMER_USER) {
+        if ($role == User::ROLE_CUSTOMER_ADMIN || $role == User::ROLE_CUSTOMER_USER) {
             return Company::TYPE_CUSTOMER;
         }
     }
@@ -113,14 +113,14 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
      */
     private function validRoleForCompanyAdmins($role)
     {
-        $company       = $this->findCompany();
-        $company_admin = $this->userRepository->findWhere([
+        $company      = $this->findCompany();
+        $companyAdmin = $this->userRepository->findWhere([
             'company_id' => $this->input['company_id'],
             'role'       => $role,
             ['id', '!=', $this->input['id']]
         ]);
 
-        return !($company->type != $this->companyType($role) || count($company_admin));
+        return !($company->type != $this->companyType($role) || count($companyAdmin));
     }
 
     /**
@@ -129,8 +129,7 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
     private function findCompany()
     {
         if ($this->input['company_id'] != null) {
-            $company = $this->companyRepository->find($this->input['company_id']);
-            return $company;
+            return $this->companyRepository->find($this->input['company_id']);
         }
     }
 
