@@ -4,10 +4,15 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Pipes\UpdateAuthorization;
+use App\Pipes\UpdateRequestBusinessValidation;
+use App\Pipes\UpdateRequestValidation;
 use App\Services\UserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
 use App\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Pipeline;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -19,7 +24,6 @@ use Prettus\Validator\Exceptions\ValidatorException;
  */
 class UserController extends Controller
 {
-
     /**
      * @var UserService
      */
@@ -100,6 +104,19 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user)
     {
+        $pipeline = app(Pipeline::class)
+            ->send($request)
+            ->through([
+                UpdateRequestValidation::class,
+                UpdateAuthorization::class,
+                UpdateRequestBusinessValidation::class
+            ])
+            ->thenReturn($request);
+
+        if ($pipeline instanceof JsonResponse) {
+            return $pipeline;
+        }
+
         $user = $this->userService->update($request, $user->id);
 
         return fractal()

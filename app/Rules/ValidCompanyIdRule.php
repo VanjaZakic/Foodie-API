@@ -88,10 +88,10 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
      */
     private function companyType($role)
     {
-        if ($role == User::ROLE_PRODUCER_USER) {
+        if ($role == User::ROLE_PRODUCER_ADMIN || $role == User::ROLE_PRODUCER_USER) {
             return Company::TYPE_PRODUCER;
         }
-        if ($role == User::ROLE_CUSTOMER_USER) {
+        if ($role == User::ROLE_CUSTOMER_ADMIN || $role == User::ROLE_CUSTOMER_USER) {
             return Company::TYPE_CUSTOMER;
         }
     }
