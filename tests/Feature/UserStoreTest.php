@@ -32,14 +32,15 @@ class UserStoreTest extends TestCase
             ->assertJsonValidationErrors(['first_name', 'last_name', 'phone', 'email']);
     }
 
-    public function test_it_requires_unique_email()
+    public function test_it_requires_unique_email_and_phone()
     {
-        $admin = factory(User::class)->states('admin')->create();
+        $admin = factory(User::class)->states(USER::ROLE_ADMIN)->create();
 
         $this->json('POST', 'api/v1/users', [
             'email' => $admin->email,
+            'phone' => $admin->phone
         ])
-            ->assertJsonValidationErrors(['email']);
+            ->assertJsonValidationErrors(['email', 'phone']);
     }
 
     public function test_it_returns_validation_error_if_not_valid_role()
@@ -69,67 +70,65 @@ class UserStoreTest extends TestCase
     public function test_it_stores_a_user()
     {
         $user = factory(User::class)->create([
-            'first_name' => $firstname = 'firstname',
-            'last_name'  => $lastname = 'lastname',
-            'phone'      => $phone = '123456789',
+            'first_name' => 'firstname',
+            'last_name'  => 'lastname',
+            'phone'      => '123456789',
             'password'   => '123456',
-            'address'    => $address = 'address',
-            'role'       => $role = User::ROLE_USER,
-            'company_id' => $company_id = null
+            'address'    => 'address',
+            'role'       => User::ROLE_USER,
+            'company_id' => null
         ]);
 
         $this->assertDatabaseHas('users', [
-            'first_name' => $firstname,
-            'last_name'  => $lastname,
-            'phone'      => $phone,
-            'address'    => $address,
-            'role'       => $role,
-            'company_id' => $company_id
+            'first_name' => 'firstname',
+            'last_name'  => 'lastname',
+            'phone'      => '123456789',
+            'address'    => 'address',
+            'role'       => User::ROLE_USER,
+            'company_id' => null
         ]);
     }
 
     public function test_it_stores_a_producer_user()
     {
         $user = factory(User::class)->create([
-            'first_name' => $firstname = 'firstname',
-            'last_name'  => $lastname = 'lastname',
-            'phone'      => $phone = '123456789',
+            'first_name' => 'firstname',
+            'last_name'  => 'lastname',
+            'phone'      => '123456789',
             'password'   => '123456',
-            'address'    => $address = 'address',
-            'role'       => $role = User::ROLE_PRODUCER_USER,
+            'address'    => 'address',
+            'role'       => User::ROLE_PRODUCER_USER,
             'company_id' => $company_id = (factory(Company::class)->states('producer')->create())->id
         ]);
 
         $this->assertDatabaseHas('users', [
-            'first_name' => $firstname,
-            'last_name'  => $lastname,
-            'phone'      => $phone,
-            'address'    => $address,
-            'role'       => $role,
+            'first_name' => 'firstname',
+            'last_name'  => 'lastname',
+            'phone'      => '123456789',
+            'address'    => 'address',
+            'role'       => User::ROLE_PRODUCER_USER,
             'company_id' => $company_id
         ]);
     }
 
     public function test_it_stores_a_customer_user()
     {
-        $company = factory(Company::class)->states('customer')->create();
-
         $user = factory(User::class)->create([
-            'first_name' => $firstname = 'firstname',
-            'last_name'  => $lastname = 'lastname',
-            'phone'      => $phone = '123456789',
+            'first_name' => 'firstname',
+            'last_name'  => 'lastname',
+            'phone'      => '123456789',
             'password'   => '123456',
-            'address'    => $address = 'address',
-            'role'       => $role = User::ROLE_CUSTOMER_USER,
-            'company_id' => $company_id = (factory(Company::class)->states('customer')->create())->id
+            'address'    => 'address',
+            'role'       => User::ROLE_CUSTOMER_USER,
+            'company_id' => $company_id = (factory(Company::class)->states(COMPANY::TYPE_CUSTOMER)->create())->id
         ]);
 
         $this->assertDatabaseHas('users', [
-            'first_name' => $firstname,
-            'last_name'  => $lastname,
-            'phone'      => $phone,
-            'address'    => $address,
-            'role'       => $role,
+            'first_name' => 'firstname',
+            'last_name'  => 'lastname',
+            'phone'      => '123456789',
+            'address'    => 'address',
+            'role'       => User::ROLE_CUSTOMER_USER,
             'company_id' => $company_id
         ]);
     }

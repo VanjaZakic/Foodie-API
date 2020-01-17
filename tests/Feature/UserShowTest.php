@@ -17,7 +17,7 @@ class UserShowTest extends TestCase
 
     public function test_it_fails_if_a_user_cant_be_found()
     {
-        $admin = factory(User::class)->states('admin')->create();
+        $admin = factory(User::class)->states(USER::ROLE_ADMIN)->create();
 
         $this->actingAs($admin)->json('GET', '/api/v1/users/nouser')
             ->assertStatus(404);
@@ -36,9 +36,22 @@ class UserShowTest extends TestCase
             ]);
     }
 
-    public function test_admin_can_see_users()
+    public function test_users_cant_see_other_users()
     {
-        $admin = factory(User::Class)->states('admin')->create();
+        $user1 = factory(User::class)->states(USER::ROLE_USER)->create();
+
+        $roles = USER::availableRoles($user1->role);
+        foreach ($roles as $role) {
+            $user2 = factory(User::class)->states($role)->create();
+
+            $this->actingAs($user1)->json('GET', "api/v1/users/{$user2->id}")
+                ->assertStatus(403);
+        }
+    }
+
+    public function test_admin_can_see_all_users()
+    {
+        $admin = factory(User::Class)->states(USER::ROLE_ADMIN)->create();
 
         $roles = USER::$roles;
         foreach ($roles as $role) {
@@ -51,10 +64,10 @@ class UserShowTest extends TestCase
         }
     }
 
-    public function test_company_admins_can_see_company_users()
+    public function test_company_admins_can_see_self_company_users()
     {
-        $producer_admin = factory(User::class)->states('producer_admin')->create();
-        $producer_user  = factory(User::class)->states('producer_user')->create([
+        $producer_admin = factory(User::class)->states(USER::ROLE_PRODUCER_ADMIN)->create();
+        $producer_user  = factory(User::class)->states(USER::ROLE_PRODUCER_USER)->create([
             'company_id' => $producer_admin->company_id
         ]);
 
@@ -66,35 +79,14 @@ class UserShowTest extends TestCase
 
     public function test_company_admins_cant_see_other_users()
     {
-        $producer_admin = factory(User::class)->states('producer_admin')->create();
+        $producer_admin = factory(User::class)->states(USER::ROLE_PRODUCER_ADMIN)->create();
 
-        $roles = [User::ROLE_ADMIN, User::ROLE_CUSTOMER_ADMIN, User::ROLE_PRODUCER_USER, User::ROLE_CUSTOMER_USER, User::ROLE_USER];
+        $roles = User::availableRoles($producer_admin);
         foreach ($roles as $role) {
             $user = factory(User::class)->states($role)->create();
 
             $this->actingAs($producer_admin)->json('GET', "api/v1/users/{$user->id}")
                 ->assertStatus(403);
         }
-    }
-
-    public function test_users_cant_see_other_users()
-    {
-        $authUser = factory(User::class)->states('user')->create();
-
-        $roles = $this->rolesWithoutSelf($authUser->role);
-        foreach ($roles as $role) {
-            $user = factory(User::class)->states($role)->create();
-
-            $this->actingAs($authUser)->json('GET', "api/v1/users/{$user->id}")
-                ->assertStatus(403);
-        }
-    }
-
-    public static function rolesWithoutSelf($role)
-    {
-        $roles = User::$roles;
-        $key   = array_search($role, $roles);
-        unset($roles[$key]);
-        return $roles;
     }
 }

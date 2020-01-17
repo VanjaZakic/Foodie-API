@@ -18,10 +18,10 @@ $factory->define(Company::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(App\Company::class, 'producer', [
+$factory->state(App\Company::class, COMPANY::TYPE_PRODUCER, [
     'type' => COMPANY::TYPE_PRODUCER,
 ]);
 
-$factory->state(App\Company::class, 'customer', [
+$factory->state(App\Company::class, COMPANY::TYPE_CUSTOMER, [
     'type' => COMPANY::TYPE_CUSTOMER,
 ]);

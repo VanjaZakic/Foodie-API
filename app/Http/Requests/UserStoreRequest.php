@@ -33,7 +33,7 @@ class UserStoreRequest extends FormRequest
         return [
             'first_name' => 'required|max:60',
             'last_name'  => 'required|max:60',
-            'phone'      => 'required|max:20',
+            'phone'      => 'required|max:20|unique:users',
             'address'    => 'required',
             'email'      => 'email|required||max:60|unique:users',
             'password'   => 'required|confirmed',

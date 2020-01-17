@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $roles = User::rolesWithoutAdmin();
+        $roles = User::availableRoles(USER::ROLE_ADMIN);
 
         $password = bcrypt('123456');
 

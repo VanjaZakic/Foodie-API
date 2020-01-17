@@ -45,7 +45,7 @@ class UserPolicy
      * @param User $authUser
      * @param User $user
      *
-     * @return mixed
+     * @return bool
      */
     public function view(User $authUser, User $user)
     {
@@ -58,14 +58,11 @@ class UserPolicy
      * @param User $authUser
      * @param User $user
      *
-     * @return mixed
+     * @return bool
      */
     public function update(User $authUser, User $user)
     {
         $input = (object)$this->request->input();
-
-//        $input->role       = $this->request->role ?: $user->role;
-//        $input->company_id = $this->request->company_id ?: null;
 
         return $this->permission->canUpdate($user, $input);
     }

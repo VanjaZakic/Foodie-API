@@ -44,7 +44,6 @@ class UserUpdateRequest extends FormRequest
     public function authorize()
     {
         return true;
-        //return $this->user('api')->can('update', $this->user);
     }
 
     /**
@@ -90,7 +89,6 @@ class UserUpdateRequest extends FormRequest
         return [
             'phone'      => 'unique:users,phone,' . $this->route('user')->id,
             'email'      => 'unique:users,email,' . $this->route('user')->id,
-            'role'       => ['required', Rule::in(User::$roles)],
             'company_id' => [$this->validCompanyIdRule->setRequest($this->input())],
         ];
     }
