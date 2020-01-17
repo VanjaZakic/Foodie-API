@@ -53,11 +53,13 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $self = $this;
         return [
         ];
     }
 
+    /**
+     * @return array
+     */
     public function requestRules()
     {
         $self = $this;
@@ -79,6 +81,9 @@ class UserUpdateRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array
+     */
     public function businessRequestRules()
     {
         return [
