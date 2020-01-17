@@ -15,6 +15,11 @@ class Order extends Model
 {
     use SoftDeletes;
 
+    const STATUS_ORDERED = 'ordered';
+    const STATUS_CANCELLED = 'cancelled';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_DELIVERED = 'delivered';
+
     /**
      * The attributes that are mass assignable.
      *

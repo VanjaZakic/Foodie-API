@@ -18,9 +18,9 @@ class OrderPolicy
     /**
      * Determine whether the user can show all orders from the company.
      *
-     * @param User $user
+     * @param User    $user
      * @param Company $company
-     * @return mixed
+     * @return bool
      */
     public function showAll(User $user, Company $company)
     {
@@ -30,9 +30,9 @@ class OrderPolicy
     /**
      * Determine whether the user can show the order.
      *
-     * @param User $user
+     * @param User  $user
      * @param Order $order
-     * @return mixed
+     * @return bool
      */
     public function show(User $user, Order $order)
     {
@@ -42,25 +42,23 @@ class OrderPolicy
     /**
      * Determine whether the user can update the order.
      *
-     * @param User $user
+     * @param User  $user
      * @param Order $order
-     * @return mixed
+     * @return bool
      */
     public function update(User $user, Order $order)
     {
-        if ($order->status == 'ordered') {
-            return $order->user_id === $user->id;
-        }
+        return $order->status == Order::STATUS_ORDERED ? $order->user_id === $user->id : false;
     }
 
     /**
-     * Determine whether the user can update status to order.
+     * Determine whether the user can update status or delete the order.
      *
-     * @param User $user
+     * @param User  $user
      * @param Order $order
-     * @return mixed
+     * @return bool
      */
-    public function producerUpdateStatus(User $user, Order $order)
+    public function ifCompanyId(User $user, Order $order)
     {
         return $order->company_id === $user->company_id;
     }
@@ -68,31 +66,17 @@ class OrderPolicy
     /**
      * Determine whether the user can cancel the order.
      *
-     * @param User $user
+     * @param User  $user
      * @param Order $order
-     * @return mixed
+     * @return bool
      */
     public function cancel(User $user, Order $order)
     {
-        if ($order->status == 'ordered') {
+        if ($order->status == Order::STATUS_ORDERED) {
             if ($order->user_id === $user->id) {
                 return true;
             }
         }
-        if ($user->role == 'producer_admin' || $user->role == 'producer_user') {
-            return $order->company_id === $user->company_id;
-        }
-    }
-
-    /**
-     * Determine whether the user can delete the order.
-     *
-     * @param User $user
-     * @param Order $order
-     * @return mixed
-     */
-    public function delete(User $user, Order $order)
-    {
-        return $order->company_id === $user->company_id;
+        return $user->role == User::ROLE_PRODUCER_ADMIN || $user->role == User::ROLE_PRODUCER_USER ? $order->company_id === $user->company_id : false;
     }
 }

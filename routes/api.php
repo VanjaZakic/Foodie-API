@@ -46,16 +46,16 @@ Route::prefix('v1')->group(function () {
         Route::prefix('meal-categories')->group(function () {
             Route::post('/', 'MealCategoryController@store')->middleware('role:producer_admin');
             Route::get('{mealCategory}', 'MealCategoryController@show');
-            Route::put('{mealCategory}', 'MealCategoryController@update')->middleware(['role:producer_admin', 'can:update,mealCategory']);
-            Route::delete('{mealCategory}', 'MealCategoryController@destroy')->middleware(['role:producer_admin', 'can:delete,mealCategory']);
+            Route::put('{mealCategory}', 'MealCategoryController@update')->middleware(['role:producer_admin', 'can:ifCompanyId,mealCategory']);
+            Route::delete('{mealCategory}', 'MealCategoryController@destroy')->middleware(['role:producer_admin', 'can:ifCompanyId,mealCategory']);
         });
 
         Route::get('meal-categories/{mealCategory}/meals', 'MealController@index');
         Route::prefix('meals')->group(function () {
             Route::post('/', 'MealController@store')->middleware('role:producer_admin');
             Route::get('{meal}', 'MealController@show');
-            Route::put('{meal}', 'MealController@update')->middleware(['role:producer_admin', 'can:update,meal']);
-            Route::delete('{meal}', 'MealController@destroy')->middleware(['role:producer_admin', 'can:delete,meal']);
+            Route::put('{meal}', 'MealController@update')->middleware(['role:producer_admin', 'can:ifCompanyId,meal']);
+            Route::delete('{meal}', 'MealController@destroy')->middleware(['role:producer_admin', 'can:ifCompanyId,meal']);
         });
 
         Route::get('companies/{company}/producerOrders', 'OrderController@producerIndex')->middleware(['role:producer_admin,producer_user', 'can:showAll,company']);
@@ -64,9 +64,9 @@ Route::prefix('v1')->group(function () {
             Route::post('/', 'OrderController@store');
             Route::get('{order}', 'OrderController@show')->middleware('can:show,order');
             Route::put('{order}', 'OrderController@update')->middleware('can:update,order');
-            Route::put('producer-update-status/{order}', 'OrderController@producerUpdateStatus')->middleware('role:producer_admin,producer_user', 'can:producerUpdateStatus,order');
+            Route::put('producer-update-status/{order}', 'OrderController@producerUpdateStatus')->middleware('role:producer_admin,producer_user', 'can:ifCompanyId,order');
             Route::put('cancel/{order}', 'OrderController@cancel')->middleware('can:cancel,order');
-            Route::delete('{order}', 'OrderController@destroy')->middleware(['role:producer_admin', 'can:delete,order']);
+            Route::delete('{order}', 'OrderController@destroy')->middleware(['role:producer_admin', 'can:ifCompanyId,order']);
         });
 
         Route::middleware('auth:api')->resource('payment-methods', 'PaymentMethodController');

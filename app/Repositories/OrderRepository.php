@@ -5,6 +5,10 @@ namespace App\Repositories;
 use App\Order;
 use Prettus\Repository\Eloquent\BaseRepository;
 
+/**
+ * Class OrderRepository
+ * @package App\Repositories
+ */
 class OrderRepository extends BaseRepository
 {
     /**
