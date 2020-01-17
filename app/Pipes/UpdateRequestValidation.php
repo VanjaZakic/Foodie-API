@@ -2,13 +2,25 @@
 
 namespace App\Pipes;
 
+use App\Http\Requests\UserUpdateRequest;
 use Closure;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Class UpdateRequestValidation
+ * @package App\Pipes
+ */
 class UpdateRequestValidation
 {
-    public function handle($request, Closure $next)
+    /**
+     * @param UserUpdateRequest $request
+     * @param Closure           $next
+     *
+     * @return mixed
+     * @throws ValidationException
+     */
+    public function handle(UserUpdateRequest $request, Closure $next)
     {
         $validator = Validator::make($request->all(), $request->requestRules());
         if ($validator->fails()) {
