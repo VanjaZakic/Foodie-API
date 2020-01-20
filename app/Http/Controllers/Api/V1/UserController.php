@@ -8,7 +8,6 @@ use App\Services\UserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
 use App\User;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -97,7 +96,6 @@ class UserController extends Controller
      * @param User              $user
      *
      * @return array
-     * @throws AuthorizationException
      * @throws ValidatorException
      */
     public function update(UserUpdateRequest $request, User $user)
