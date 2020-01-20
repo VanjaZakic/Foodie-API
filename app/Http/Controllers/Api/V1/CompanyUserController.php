@@ -45,7 +45,6 @@ class CompanyUserController extends Controller
      *
      * @return array
      * @throws RepositoryException
-     * @throws AuthorizationException
      */
     public function index(Request $request, Company $company)
     {
