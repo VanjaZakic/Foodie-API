@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Company;
 use App\Order;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -14,18 +13,6 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class OrderPolicy
 {
     use HandlesAuthorization;
-
-    /**
-     * Determine whether the user can show all orders from the company.
-     *
-     * @param User    $user
-     * @param Company $company
-     * @return bool
-     */
-    public function showAll(User $user, Company $company)
-    {
-        return $company->id === $user->company_id;
-    }
 
     /**
      * Determine whether the user can show the order.
