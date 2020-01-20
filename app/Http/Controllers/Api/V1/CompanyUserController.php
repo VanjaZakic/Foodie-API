@@ -10,6 +10,7 @@ use App\Services\CompanyService;
 use App\Services\CompanyUserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
+use Illuminate\Auth\Access\AuthorizationException;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
