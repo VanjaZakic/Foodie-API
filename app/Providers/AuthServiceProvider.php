@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Company;
 use App\Meal;
 use App\MealCategory;
+use App\Policies\CompanyPolicy;
 use App\Policies\MealCategoryPolicy;
 use App\Policies\MealPolicy;
 use App\Policies\UserPolicy;
@@ -26,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Meal::class         => MealPolicy::class,
         MealCategory::class => MealCategoryPolicy::class,
-        Company::class      => MealCategoryPolicy::class,
+        Company::class      => CompanyPolicy::class,
         User::class         => UserPolicy::class,
     ];
 
