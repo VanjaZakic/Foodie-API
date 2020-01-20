@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Class OrderRequest
@@ -28,9 +29,23 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'delivery_datetime' => 'required',
-            'company_id'        => 'sometimes',
-            'meals'             => 'required',
+            'delivery_datetime' => 'required|after:1 hour',
+            'company_id'        => ['sometimes',
+                Rule::exists('companies', 'id')->where(function ($query) {
+                    $query->where('type', 'producer');
+                }),
+            ],
+            'meals.*.meal_id' => ['required',
+                Rule::exists('meal_categories')->where(function ($query) {
+                    $query->where('company_id', 1);
+                }),
+            ],
+//             'meals.*.meal_id' => ['required',
+//                 Rule::exists('meals', 'id')->where(function ($query) {
+//                     $query->where(Meal::with('mealCategory')->where('company_id')->get(), 1);
+//                 }),
+//             ],
+            'meals.*.quantity' => 'required|integer',
         ];
     }
 }

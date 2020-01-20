@@ -8,7 +8,6 @@ use App\Http\Requests\OrderRequest;
 use App\Meal;
 use App\Order;
 use App\Repositories\OrderRepository;
-use Illuminate\Support\Facades\Auth;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
@@ -76,24 +75,21 @@ class OrderService
      */
     public function store($request)
     {
-        foreach ($request->meals as $m) {
-            $meal = new Meal();
-            $meal = $meal->find($m['meal_id']);
-            if ($meal->mealCategory->company_id != $request->company_id) {
-                return false;
-            }
-        }
+//        foreach ($request->meals as $m) {
+//            $meal = Meal::find($m['meal_id']);
+//            if ($meal->mealCategory->company_id != $request->company_id) {
+//                return false;
+//            }
+//        }
 
         $price = 0;
         foreach ($request->meals as $m) {
-            $meal = new Meal();
-            $meal = $meal->find($m['meal_id']);
+            $meal = Meal::find($m['meal_id']);
             $price += $meal->price * $m['quantity'];
         }
 
-        if (Auth::user()->company_id == $request->company_id) {
-            $company = new Company();
-            $company = $company->find($request->company_id);
+        if ($request->user()->company_id == $request->company_id) {
+            $company = Company::find($request->company_id);
             $discount = $company->discount;
             $price = $price * $discount;
         }
@@ -101,13 +97,12 @@ class OrderService
         $order = $this->repository->create([
             'price'             => $price,
             'delivery_datetime' => $request->delivery_datetime,
-            'user_id'           => Auth::user()->id,
+            'user_id'           => $request->user()->id,
             'company_id'        => $request->company_id
         ]);
 
         foreach ($request->meals as $m) {
-            $meal = new Meal();
-            $meal = $meal->find($m['meal_id']);
+            $meal = Meal::find($m['meal_id']);
             $order->meals()->attach($meal->id, ['price' => $meal->price, 'quantity' => $m['quantity']]);
         }
 
@@ -122,22 +117,20 @@ class OrderService
      */
     public function update($request, $order)
     {
-        foreach ($request->meals as $m) {
-            $meal = new Meal();
-            $meal = $meal->find($m['meal_id']);
-            if ($meal->mealCategory->company_id != $order->company_id) {
-                return false;
-            }
-        }
+//        foreach ($request->meals as $m) {
+//            $meal = Meal::find($m['meal_id']);
+//            if ($meal->mealCategory->company_id != $order->company_id) {
+//                return false;
+//            }
+//        }
 
         $price = 0;
         foreach ($request->meals as $m) {
-            $meal = new Meal();
-            $meal = $meal->find($m['meal_id']);
+            $meal = Meal::find($m['meal_id']);
             $price += $meal->price * $m['quantity'];
         }
 
-        if (Auth::user()->company_id == $order->company_id) {
+        if ($request->user()->company_id == $order->company_id) {
             $discount = $order->company()->getResults()->discount;
             $price = $price * $discount;
         }
@@ -152,8 +145,7 @@ class OrderService
 
         $order->meals()->detach();
         foreach ($request->meals as $m) {
-            $meal = new Meal();
-            $meal = $meal->find($m['meal_id']);
+            $meal = Meal::find($m['meal_id']);
             $order->meals()->attach($meal->id, ['price' => $meal->price, 'quantity' => $m['quantity']]);
         }
 
@@ -167,11 +159,11 @@ class OrderService
      */
     public function producerUpdateStatus($order)
     {
-        if ($order->status == 'processing') {
-            return $this->repository->update(['status' => 'delivered'], $order->id);
+        if ($order->status == Order::STATUS_PROCESSING) {
+            return $this->repository->update(['status' => Order::STATUS_DELIVERED], $order->id);
         }
-        if ($order->status == 'ordered') {
-            return $this->repository->update(['status' => 'processing'], $order->id);
+        if ($order->status == Order::STATUS_ORDERED) {
+            return $this->repository->update(['status' => Order::STATUS_PROCESSING], $order->id);
         }
         return false;
     }
@@ -183,7 +175,7 @@ class OrderService
      */
     public function cancel($order)
     {
-        return $this->repository->update(['status' => 'cancelled'], $order->id);
+        return $this->repository->update(['status' => Order::STATUS_CANCELLED], $order->id);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Class MealRequest
@@ -31,7 +32,11 @@ class MealRequest extends FormRequest
             'name'             => 'required|max:255',
             'image'            => 'required|image|mimes:jpeg,png,jpg,gif|max:10000',
             'price'            => 'required|numeric|not_in:0',
-            'meal_category_id' => 'required',
+            'meal_category_id' => ['required',
+                Rule::exists('meal_categories', 'id')->where(function ($query) {
+                    $query->where('company_id', auth()->user()->company_id);
+                }),
+            ],
         ];
     }
 }
