@@ -63,7 +63,7 @@ class UserUpdateRequest extends FormRequest
             'role'       => ['required', Rule::in(User::$roles)],
             'company_id' => [Rule::requiredIf(function () use ($self) {
                 return ($self->role != User::ROLE_ADMIN && $self->role != User::ROLE_USER);
-            }), $this->validCompanyIdRule->setRequest($this->all())],
+            }), $this->validCompanyIdRule->setRequest($this->input())],
         ];
     }
 }
