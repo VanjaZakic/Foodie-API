@@ -13,7 +13,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class CompanyPolicy
 {
     use HandlesAuthorization;
-    
+
     /**
      * @param User    $user
      * @param Company $company
@@ -22,6 +22,6 @@ class CompanyPolicy
      */
     public function view(User $user, Company $company)
     {
-        return $user->company_id === $company->id;
+        return $user->role == USER::ROLE_ADMIN || $user->company_id === $company->id;
     }
 }
