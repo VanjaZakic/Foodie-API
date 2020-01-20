@@ -35,7 +35,7 @@ class UserPolicy
      */
     public function __construct(PermissionFactory $permissionFactory, Request $request)
     {
-        $this->permission = $permissionFactory->getPermission($request->user('api'));
+        $this->permission = $permissionFactory->getPermission($request->user());
         $this->request    = $request;
     }
 

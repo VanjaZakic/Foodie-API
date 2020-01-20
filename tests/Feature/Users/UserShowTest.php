@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Users;
 
+use App\Company;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -88,5 +89,19 @@ class UserShowTest extends TestCase
             $this->actingAs($producer_admin)->json('GET', "api/v1/users/{$user->id}")
                 ->assertStatus(403);
         }
+    }
+
+    public function test_user_includes_company()
+    {
+        $company        = factory(Company::class)->states(COMPANY::TYPE_PRODUCER)->create();
+        $producer_admin = factory(User::class)->states(USER::ROLE_PRODUCER_ADMIN)->create([
+            'company_id' => $company->id
+        ]);
+
+        $this->actingAs($producer_admin)->json('GET', "api/v1/users/{$producer_admin->id}")
+            ->assertJsonFragment([
+                'id'   => $company->id,
+                'name' => $company->name
+            ]);
     }
 }

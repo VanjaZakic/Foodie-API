@@ -24,10 +24,8 @@ class CompanyIndexTransformer extends TransformerAbstract
             'id'    => $company->id,
             'name'  => $company->name,
             'links' => [
-                [
-                    'rel' => 'company',
-                    'uri' => '/companies/' . $company->id,
-                ]
+                'rel' => 'company',
+                'uri' => '/companies/' . $company->id,
             ],
 
         ];

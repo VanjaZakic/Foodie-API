@@ -105,8 +105,6 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
             ['id', '!=', $this->input['id']]
         ]);
 
-        dd($companyAdmin);
-        
         return !($company->type != $this->companyType($role) || count($companyAdmin));
     }
 

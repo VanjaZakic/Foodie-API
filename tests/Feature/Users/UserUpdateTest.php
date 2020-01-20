@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Users;
 
 use App\Company;
 use App\User;
@@ -21,7 +21,7 @@ class UserUpdateTest extends TestCase
         //$this->withoutExceptionHandling();
     }
 
-    public function test_it_stores_data()
+    public function test_it_requires_data()
     {
         $admin = factory(User::class)->states(USER::ROLE_ADMIN)->create();
 
@@ -240,6 +240,7 @@ class UserUpdateTest extends TestCase
             $user = factory(User::class)->states($role)->create();
 
             $this->actingAs($admin)->json('PUT', "api/v1/users/{$user->id}", [
+                "id"         => $user->id,
                 "first_name" => $user->first_name,
                 "last_name"  => $user->last_name,
                 "phone"      => $user->phone,
@@ -250,5 +251,50 @@ class UserUpdateTest extends TestCase
             ])
                 ->assertJsonValidationErrors(['company_id']);
         }
+    }
+
+    public function test_it_returns_validation_error_if_producer_admin_for_company_already_exists()
+    {
+        $admin           = factory(User::class)->states(USER::ROLE_ADMIN)->create();
+        $producer_admin1 = factory(User::class)->states(USER::ROLE_PRODUCER_ADMIN)->create();
+        $producer_admin2 = factory(User::class)->states(USER::ROLE_PRODUCER_ADMIN)->create();
+
+        $this->actingAs($admin)->json('PUT', "api/v1/users/{$producer_admin1->id}", [
+            "id"         => $producer_admin1->id,
+            "first_name" => $producer_admin1->first_name,
+            "last_name"  => $producer_admin1->last_name,
+            "phone"      => $producer_admin1->phone,
+            "address"    => $producer_admin1->address,
+            "email"      => $producer_admin1->email,
+            "role"       => $producer_admin1->role,
+            "company_id" => $producer_admin2->company_id
+        ])
+            ->assertJsonValidationErrors(['company_id']);
+    }
+
+    public function test_it_fails_if_a_user_cant_be_found()
+    {
+        $admin = factory(User::class)->states(USER::ROLE_ADMIN)->create();
+
+        $this->actingAs($admin)->json('PUT', '/api/v1/users/nouser')
+            ->assertStatus(404);
+    }
+
+    public function test_it_fails_if_a_company_cant_be_found()
+    {
+        $admin          = factory(User::class)->states(USER::ROLE_ADMIN)->create();
+        $producer_admin = factory(User::class)->states(USER::ROLE_PRODUCER_ADMIN)->create();
+
+        $this->actingAs($admin)->json('PUT', "api/v1/users/{$producer_admin->id}", [
+            "id"         => $producer_admin->id,
+            "first_name" => $producer_admin->first_name,
+            "last_name"  => $producer_admin->last_name,
+            "phone"      => $producer_admin->phone,
+            "address"    => $producer_admin->address,
+            "email"      => $producer_admin->email,
+            "role"       => $producer_admin->role,
+            "company_id" => "invalidCompanyId"
+        ])
+            ->assertStatus(404);
     }
 }

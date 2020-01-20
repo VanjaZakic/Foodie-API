@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Users;
 
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -28,7 +28,7 @@ class UserIndexTest extends TestCase
                 ->assertStatus(401);
         }
     }
-    
+
     public function test_it_returns_a_collection_of_users()
     {
         $admin = factory(User::class)->states(USER::ROLE_ADMIN)->create();
