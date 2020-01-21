@@ -59,11 +59,11 @@ class OrderPolicy
      */
     public function cancel(User $user, Order $order)
     {
-        if ($order->status == Order::STATUS_ORDERED) {
-            if ($order->user_id === $user->id) {
-                return true;
-            }
-        }
-        return $user->role == User::ROLE_PRODUCER_ADMIN || $user->role == User::ROLE_PRODUCER_USER ? $order->company_id === $user->company_id : false;
+        return $order->status == Order::STATUS_ORDERED ?
+                    ($order->user_id === $user->id ?
+                        true : ($user->role == User::ROLE_PRODUCER_ADMIN || $user->role == User::ROLE_PRODUCER_USER ?
+                                    $order->company_id === $user->company_id : false
+                               )
+                    ) : false;
     }
 }
