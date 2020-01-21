@@ -75,12 +75,9 @@ class OrderService
      */
     public function store($request)
     {
-//        foreach ($request->meals as $m) {
-//            $meal = Meal::find($m['meal_id']);
-//            if ($meal->mealCategory->company_id != $request->company_id) {
-//                return false;
-//            }
-//        }
+        if (!$this->isValidMeals($request)) {
+            return false;
+        }
 
         $price = 0;
         foreach ($request->meals as $m) {
@@ -185,5 +182,31 @@ class OrderService
     public function destroy($orderId)
     {
         return $this->repository->delete($orderId);
+    }
+
+    /**
+     * @param $request
+     * @return bool
+     */
+    private function isValidMeals($request)
+    {
+        $mealIds = array_reduce(
+            array_map(
+                function ($meal) {
+                    return $meal['meal_id'];
+                },
+                $request->meals
+            ),
+            function ($a, $b) {
+                return !is_array($a) ? [$b] : (in_array($b, $a) ? $a : [...$a, $b]);
+            }
+        );
+
+        $count = Meal::join('meal_categories', 'meal_categories.id', '=', 'meals.meal_category_id')
+            ->where('meal_categories.company_id', $request->company_id)
+            ->whereIn('meals.id', $mealIds)
+            ->count();
+
+        return $count === count($mealIds);
     }
 }

@@ -35,16 +35,7 @@ class OrderRequest extends FormRequest
                     $query->where('type', 'producer');
                 }),
             ],
-            'meals.*.meal_id' => ['required',
-                Rule::exists('meal_categories')->where(function ($query) {
-                    $query->where('company_id', 1);
-                }),
-            ],
-//             'meals.*.meal_id' => ['required',
-//                 Rule::exists('meals', 'id')->where(function ($query) {
-//                     $query->where(Meal::with('mealCategory')->where('company_id')->get(), 1);
-//                 }),
-//             ],
+            'meals.*.meal_id' => 'required|exists:meals,id',
             'meals.*.quantity' => 'required|integer',
         ];
     }
