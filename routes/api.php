@@ -62,8 +62,7 @@ Route::prefix('v1')->group(function () {
         Route::get('companies/{company}/customerOrders', 'OrderController@customerIndex')->middleware(['role:customer_admin', 'can:view,company']);
         Route::prefix('orders')->group(function () {
             Route::post('/', 'OrderController@store');
-            Route::get('{order}', 'OrderController@show')->middleware('can:show,order');
-            Route::put('{order}', 'OrderController@update')->middleware('can:update,order');
+            Route::get('{order}', 'OrderController@show')->middleware('can:view,order');
             Route::put('producer-update-status/{order}', 'OrderController@producerUpdateStatus')->middleware('role:producer_admin,producer_user', 'can:ifCompanyId,order');
             Route::put('cancel/{order}', 'OrderController@cancel')->middleware('can:cancel,order');
             Route::delete('{order}', 'OrderController@destroy')->middleware(['role:producer_admin', 'can:ifCompanyId,order']);

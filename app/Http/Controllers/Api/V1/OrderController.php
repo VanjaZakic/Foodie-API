@@ -106,27 +106,6 @@ class OrderController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param OrderRequest $request
-     * @param Order $order
-     * @return mixed
-     * @throws ValidatorException
-     */
-    public function update(OrderRequest $request, Order $order)
-    {
-        $order = $this->orderService->update($request, $order);
-
-        if (!$order) {
-            return response('Meals must be from the same company.', 400);
-        }
-        return fractal()
-            ->item($order)
-            ->transformWith(new OrderTransformer())
-            ->toArray();
-    }
-
-    /**
      * Update status to specified resource in storage.
      *
      * @param Order $order

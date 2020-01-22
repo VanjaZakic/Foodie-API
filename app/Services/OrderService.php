@@ -108,49 +108,6 @@ class OrderService
 
     /**
      * @param Order $order
-     * @param OrderRequest $request
-     * @return mixed
-     * @throws ValidatorException
-     */
-    public function update($request, $order)
-    {
-//        foreach ($request->meals as $m) {
-//            $meal = Meal::find($m['meal_id']);
-//            if ($meal->mealCategory->company_id != $order->company_id) {
-//                return false;
-//            }
-//        }
-
-        $price = 0;
-        foreach ($request->meals as $m) {
-            $meal = Meal::find($m['meal_id']);
-            $price += $meal->price * $m['quantity'];
-        }
-
-        if ($request->user()->company_id == $order->company_id) {
-            $discount = $order->company()->getResults()->discount;
-            $price = $price * $discount;
-        }
-
-        $order = $this->repository->update(
-            [
-                'price'             => $price,
-                'delivery_datetime' => $request->delivery_datetime
-            ],
-            $order->id
-        );
-
-        $order->meals()->detach();
-        foreach ($request->meals as $m) {
-            $meal = Meal::find($m['meal_id']);
-            $order->meals()->attach($meal->id, ['price' => $meal->price, 'quantity' => $m['quantity']]);
-        }
-
-        return $order;
-    }
-
-    /**
-     * @param Order $order
      * @return mixed
      * @throws ValidatorException
      */

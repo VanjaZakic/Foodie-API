@@ -21,21 +21,9 @@ class OrderPolicy
      * @param Order $order
      * @return bool
      */
-    public function show(User $user, Order $order)
+    public function view(User $user, Order $order)
     {
         return $order->user_id === $user->id;
-    }
-
-    /**
-     * Determine whether the user can update the order.
-     *
-     * @param User  $user
-     * @param Order $order
-     * @return bool
-     */
-    public function update(User $user, Order $order)
-    {
-        return $order->status == Order::STATUS_ORDERED ? $order->user_id === $user->id : false;
     }
 
     /**
