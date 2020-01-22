@@ -35,8 +35,8 @@ class OrderRequest extends FormRequest
                     $query->where('type', 'producer');
                 }),
             ],
-            'meals.*.meal_id' => 'required|exists:meals,id',
-            'meals.*.quantity' => 'required|integer',
+            'meals.*.meal_id'   => 'required|exists:meals,id',
+            'meals.*.quantity'  => 'required|integer',
         ];
     }
 }
