@@ -37,7 +37,7 @@ Route::prefix('v1')->group(function () {
             Route::delete('{company}', 'CompanyController@destroy')->middleware('role:admin');
 
             Route::prefix('/{company}/users')->group(function () {
-                Route::get('/', 'CompanyUserController@index')->middleware(['role:admin,producer_admin,customer_admin', 'can:view,company']);
+                Route::get('/', 'CompanyUserController@index')->middleware(['role:admin,producer_admin,customer_admin', 'can:index,company']);
                 Route::post('/', 'CompanyUserController@store')->middleware('role:admin');
             });
         });

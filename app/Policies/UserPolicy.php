@@ -49,7 +49,7 @@ class UserPolicy
      */
     public function view(User $authUser, User $user)
     {
-        return $this->permission->canView($user);
+        return $this->permission->canViewUser($user);
     }
 
     /**
@@ -64,6 +64,7 @@ class UserPolicy
     {
         $input = (object)$this->request->input();
 
-        return $this->permission->canUpdate($user, $input);
+        return $this->permission->canUpdateUser($user, $input);
     }
+
 }

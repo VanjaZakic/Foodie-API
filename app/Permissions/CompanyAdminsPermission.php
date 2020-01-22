@@ -2,6 +2,7 @@
 
 namespace App\Permissions;
 
+use App\Company;
 use App\User;
 
 /**
@@ -30,7 +31,7 @@ class CompanyAdminsPermission implements Permissionable
      *
      * @return bool
      */
-    public function canView($user)
+    public function canViewUser($user)
     {
         return $this->authUser->id == $user->id || $this->authUser->company_id == $user->company_id;
     }
@@ -41,9 +42,9 @@ class CompanyAdminsPermission implements Permissionable
      *
      * @return bool
      */
-    public function canUpdate($user, $input)
+    public function canUpdateUser($user, $input)
     {
-        return $this->canUpdateSelf($user, $input) || $this->canUpdateUser($user, $input);
+        return $this->canUpdateSelf($user, $input) || $this->canUpdateOtherUser($user, $input);
     }
 
     /**
@@ -66,7 +67,7 @@ class CompanyAdminsPermission implements Permissionable
      *
      * @return bool
      */
-    private function canUpdateUser($user, $input)
+    private function canUpdateOtherUser($user, $input)
     {
         return
             $this->authUser->company_id == $user->company_id &&
@@ -77,5 +78,15 @@ class CompanyAdminsPermission implements Permissionable
             $input->email == $user->email &&
             $input->role == User::ROLE_USER &&
             $input->company_id == null;
+    }
+
+    /**
+     * @param Company $company
+     *
+     * @return bool
+     */
+    public function canViewCompanyUsers(Company $company)
+    {
+        return $this->authUser->company_id == $company->id;
     }
 }

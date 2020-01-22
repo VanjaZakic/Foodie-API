@@ -2,6 +2,7 @@
 
 namespace App\Permissions;
 
+use App\Company;
 use App\User;
 
 /**
@@ -15,7 +16,7 @@ interface Permissionable
      *
      * @return mixed
      */
-    public function canView(User $user);
+    public function canViewUser(User $user);
 
     /**
      * @param User $user
@@ -23,5 +24,12 @@ interface Permissionable
      *
      * @return mixed
      */
-    public function canUpdate(User $user, $input);
+    public function canUpdateUser(User $user, $input);
+
+    /**
+     * @param Company $company
+     *
+     * @return mixed
+     */
+    public function canViewCompanyUsers(Company $company);
 }

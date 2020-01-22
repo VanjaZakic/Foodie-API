@@ -2,12 +2,8 @@
 
 namespace App\Services;
 
-use App\Company;
 use App\Criteria\CompanyCriteria;
-use App\Exceptions\AlreadyExistsException;
-use App\Exceptions\InvalidUserRoleException;
 use App\Http\Requests\CompanyUserStoreRequest;
-use App\User;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 use App\Repositories\UserRepository;
@@ -52,34 +48,9 @@ class CompanyUserService
      *
      * @return mixed
      * @throws ValidatorException
-     * @throws AlreadyExistsException
-     * @throws InvalidUserRoleException
      */
     public function store($request, $company)
     {
-        $user = $this->repository->findWhere(['company_id' => $company->id, 'role' => $request->role]);
-
-        if (count($user) != 0) {
-            throw new AlreadyExistsException();
-        }
-
-        if (!$this->isCompanyTypeCompatible($request, $company)) {
-            throw new InvalidUserRoleException();
-        }
-
         return $this->repository->create(array_merge($request->all(), ['company_id' => $company->id]));
     }
-
-    /**
-     * @param $request
-     * @param $company
-     *
-     * @return bool
-     */
-    private function isCompanyTypeCompatible($request, $company)
-    {
-        return (($company->type == Company::TYPE_PRODUCER && $request->role == User::ROLE_PRODUCER_ADMIN) ||
-            ($company->type == Company::TYPE_CUSTOMER && $request->role == User::ROLE_CUSTOMER_ADMIN));
-    }
-
 }

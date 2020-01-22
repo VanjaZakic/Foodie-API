@@ -2,12 +2,12 @@
 
 namespace App\Rules;
 
-use App\Company;
 use App\Repositories\CompanyRepository;
 use App\Repositories\UserRepository;
 use App\User;
 use Illuminate\Contracts\Validation\ImplicitRule;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Http\Request;
 
 /**
  * Class ValidCompanyId
@@ -27,27 +27,38 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
      * @var CompanyRepository
      */
     private $companyRepository;
+    /**
+     * @var Request
+     */
+    private $request;
+    /**
+     * @var
+     */
+    private $companyId;
+
 
     /**
      * ValidCompanyIdRule constructor.
      *
+     * @param Request           $request
      * @param UserRepository    $userRepository
      * @param CompanyRepository $companyRepository
      */
-    public function __construct(UserRepository $userRepository, CompanyRepository $companyRepository)
+    public function __construct(Request $request, UserRepository $userRepository, CompanyRepository $companyRepository)
     {
+        $this->request           = $request;
         $this->userRepository    = $userRepository;
         $this->companyRepository = $companyRepository;
     }
 
     /**
-     * @param $input
+     * @param $companyId
      *
-     * @return ValidCompanyIdRule
+     * @return $this
      */
-    public function setRequest($input)
+    public function setCompanyId($companyId)
     {
-        $this->input = $input;
+        $this->companyId = $companyId;
         return $this;
     }
 
@@ -61,9 +72,8 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
      */
     public function passes($attribute, $value)
     {
-        if (request()->user()->role == User::ROLE_ADMIN) {
-
-            switch ($this->input['role']) {
+        if ($this->request->user()->role == User::ROLE_ADMIN) {
+            switch ($this->request->role) {
                 case User::ROLE_ADMIN:
                 case User::ROLE_USER:
                     return !($value != null);
@@ -72,7 +82,7 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
                     return $this->validCompanyIdForCompanyUsers();
                 case User::ROLE_PRODUCER_ADMIN:
                 case User::ROLE_CUSTOMER_ADMIN:
-                    return $this->validCompanyIdForCompanyAdmins($this->input['role']);
+                    return $this->validCompanyIdForCompanyAdmins();
                 default:
                     return true;
             }
@@ -86,51 +96,55 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
      */
     private function validCompanyIdForCompanyUsers()
     {
-        $company = $this->findCompany();
-
-        return !($company->type != $this->companyType($this->input['role']));
+        $company = $this->findCompany($this->companyId);
+        return $this->isCompanyTypeCompatibleWithUserRole($this->request->role, $company->type);
     }
 
     /**
-     * @param $role
+     * @return bool
+     */
+    private function validCompanyIdForCompanyAdmins()
+    {
+        $company      = $this->findCompany($this->companyId);
+        $companyAdmin = $this->findCompanyAdmin($this->request->role, $this->companyId);
+
+        return $this->isCompanyTypeCompatibleWithUserRole($this->request->role, $company->type) && !count($companyAdmin);
+    }
+
+    /**
+     * @param $companyId
+     *
+     * @return mixed
+     */
+    private function findCompany($companyId)
+    {
+        return $this->companyRepository->find($companyId);
+    }
+
+    /**
+     * @param $userRole
+     * @param $companyId
+     *
+     * @return mixed
+     */
+    private function findCompanyAdmin($userRole, $companyId)
+    {
+        return $this->userRepository->findWhere([
+            'role'       => $userRole,
+            'company_id' => $companyId,
+            ['id', '!=', $this->request->id]
+        ]);
+    }
+
+    /**
+     * @param $userRole
+     * @param $companyType
      *
      * @return bool
      */
-    private function validCompanyIdForCompanyAdmins($role)
+    private function isCompanyTypeCompatibleWithUserRole($userRole, $companyType)
     {
-        $company      = $this->findCompany();
-        $companyAdmin = $this->userRepository->findWhere([
-            'company_id' => $this->input['company_id'],
-            'role'       => $role,
-            ['id', '!=', $this->input['id']]
-        ]);
-
-        return !($company->type != $this->companyType($role) || count($companyAdmin));
-    }
-
-    /**
-     * @return mixed
-     */
-    private function findCompany()
-    {
-        if ($this->input['company_id'] != null) {
-            return $this->companyRepository->find($this->input['company_id']);
-        }
-    }
-
-    /**
-     * @param $role
-     *
-     * @return string
-     */
-    private function companyType($role)
-    {
-        if ($role == User::ROLE_PRODUCER_ADMIN || $role == User::ROLE_PRODUCER_USER) {
-            return Company::TYPE_PRODUCER;
-        }
-        if ($role == User::ROLE_CUSTOMER_ADMIN || $role == User::ROLE_CUSTOMER_USER) {
-            return Company::TYPE_CUSTOMER;
-        }
+        return strpos($userRole, $companyType) !== false;
     }
 
     /**

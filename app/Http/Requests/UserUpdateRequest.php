@@ -89,7 +89,15 @@ class UserUpdateRequest extends FormRequest
         return [
             'phone'      => 'unique:users,phone,' . $this->route('user')->id,
             'email'      => 'unique:users,email,' . $this->route('user')->id,
-            'company_id' => [$this->validCompanyIdRule->setRequest($this->input())],
+            'company_id' => $this->validCompanyIdRule->setCompanyId($this->company_id),
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isAuthorized()
+    {
+        return $this->user()->can('update', $this->user);
     }
 }
