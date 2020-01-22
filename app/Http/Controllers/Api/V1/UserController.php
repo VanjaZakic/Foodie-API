@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
-use App\Pipes\UpdateAuthorization;
-use App\Pipes\UpdateRequestBusinessValidation;
-use App\Pipes\UpdateRequestValidation;
+use App\Pipes\Authorization;
+use App\Pipes\RequestBusinessValidation;
+use App\Pipes\RequestValidation;
 use App\Services\UserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
@@ -107,9 +107,9 @@ class UserController extends Controller
         $pipeline = app(Pipeline::class)
             ->send($request)
             ->through([
-                UpdateRequestValidation::class,
-                UpdateAuthorization::class,
-                UpdateRequestBusinessValidation::class
+                RequestValidation::class,
+                Authorization::class,
+                RequestBusinessValidation::class
             ])
             ->thenReturn($request);
 
