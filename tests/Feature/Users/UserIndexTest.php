@@ -25,7 +25,7 @@ class UserIndexTest extends TestCase
 
             $this->actingAs($user)
                 ->json('GET', 'api/v1/users')
-                ->assertStatus(401);
+                ->assertStatus(403);
         }
     }
 
