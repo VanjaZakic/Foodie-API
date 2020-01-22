@@ -67,7 +67,7 @@ class OrderController extends Controller
                 ->collection($userOrders)
                 ->transformWith(new UserOrdersTransformer())
                 ->toArray(),
-            $totalPrice
+            'meta' => ['totalPrice' => $totalPrice]
         ];
     }
 
