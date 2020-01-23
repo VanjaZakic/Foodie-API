@@ -11,14 +11,19 @@ class CompanyUserIndexTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_admin_can_see_producer_company_users()
+
+    public function test_admin_can_see_company_users()
     {
         $admin = factory(User::class)->states(USER::ROLE_ADMIN)->create();
 
-        $company_admin = factory(User::class)->states(USER::ROLE_PRODUCER_ADMIN)->create();
-        $company_user  = factory(User::class)->states(USER::ROLE_PRODUCER_USER)->create([
-            'company_id' => $company_admin->company_id
-        ]);
+        $roles = [USER::ROLE_PRODUCER_ADMIN, USER::ROLE_CUSTOMER_ADMIN];
+        foreach ($roles as $role) {
+            $company_admin     = factory(User::class)->states($role)->create();
+            $company_user_role = $role == USER::ROLE_PRODUCER_ADMIN ? USER::ROLE_PRODUCER_USER : USER::ROLE_CUSTOMER_USER;
+            $company_user      = factory(User::class)->states($company_user_role)->create([
+                'company_id' => $company_admin->company_id
+            ]);
+        }
 
         $this->actingAs($admin)
             ->json('GET', "api/v1/companies/{$company_admin->company_id}/users")
@@ -26,23 +31,7 @@ class CompanyUserIndexTest extends TestCase
                 'id' => $company_user->id
             ]);
     }
-
-    public function test_admin_can_see_customer_company_users()
-    {
-        $admin = factory(User::class)->states(USER::ROLE_ADMIN)->create();
-
-        $company_admin = factory(User::class)->states(USER::ROLE_CUSTOMER_ADMIN)->create();
-        $company_user  = factory(User::class)->states(USER::ROLE_CUSTOMER_USER)->create([
-            'company_id' => $company_admin->company_id
-        ]);
-
-        $this->actingAs($admin)
-            ->json('GET', "api/v1/companies/{$company_admin->company_id}/users")
-            ->assertJsonFragment([
-                'id' => $company_user->id
-            ]);
-    }
-
+    
     public function test_company_admins_can_see_self_company_users()
     {
         $roles = [USER::ROLE_PRODUCER_ADMIN, USER::ROLE_CUSTOMER_ADMIN];
