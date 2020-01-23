@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,6 +22,7 @@ class CheckRole
      * @param array   $roles
      *
      * @return mixed
+     * @throws AuthorizationException
      */
     public function handle($request, Closure $next, ...$roles)
     {
@@ -32,8 +34,6 @@ class CheckRole
             }
         }
 
-        return response()->json([
-            'Unauthorized'
-        ]);
+        throw new AuthorizationException();
     }
 }

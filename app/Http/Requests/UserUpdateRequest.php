@@ -53,17 +53,51 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        return [
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function requestRules()
+    {
         $self = $this;
         return [
             'first_name' => 'required|max:60',
             'last_name'  => 'required|max:60',
-            'phone'      => 'required|max:20|unique:users,phone,' . $this->route('user')->id,
+            'phone'      => 'required|max:20',
             'address'    => 'required',
-            'email'      => 'required|email|max:60|unique:users,email,' . $this->route('user')->id,
+            'email'      => 'required|email|max:60',
             'role'       => ['required', Rule::in(User::$roles)],
             'company_id' => [Rule::requiredIf(function () use ($self) {
-                return ($self->role != User::ROLE_ADMIN && $self->role != User::ROLE_USER);
-            }), $this->validCompanyIdRule->setRequest($this->input())],
+                return (
+                    $this->role == User::ROLE_PRODUCER_ADMIN ||
+                    $this->role == User::ROLE_CUSTOMER_ADMIN ||
+                    $this->role == User::ROLE_PRODUCER_USER ||
+                    $this->role == User::ROLE_CUSTOMER_USER
+                );
+            })],
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function businessRequestRules()
+    {
+        return [
+            'phone'      => 'unique:users,phone,' . $this->route('user')->id,
+            'email'      => 'unique:users,email,' . $this->route('user')->id,
+            'company_id' => $this->validCompanyIdRule->setCompanyId($this->company_id),
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function isAuthorized()
+    {
+        return $this->user()->can('update', $this->user);
     }
 }
