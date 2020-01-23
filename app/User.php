@@ -38,14 +38,21 @@ class User extends Authenticatable
     ];
 
     /**
+     * @param $role
+     *
      * @return array
      */
-    public static function rolesWithoutAdmin()
+    public static function availableRoles(...$ejectRoles)
     {
         $roles = User::$roles;
-        $key   = array_search(User::ROLE_ADMIN, $roles);
-        unset($roles[$key]);
-        return $roles;
+
+        $filterFunc = function ($currentRole) use ($ejectRoles) {
+            foreach ($ejectRoles as $ejectRole) {
+                return $currentRole != $ejectRole;
+            }
+        };
+
+        return array_filter($roles, $filterFunc);
     }
 
     /**
