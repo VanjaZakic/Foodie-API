@@ -39,13 +39,11 @@ class UserService
      */
     public function login(LoginRequest $request)
     {
-        $client       = DB::table('oauth_clients')->where('id', 2)->first();
-        $clientSecret = $client->secret;
         try {
             return (new ServerRequest())->withParsedBody([
                 'grant_type'    => config('auth.passport.grant_type', 'password'),
-                'client_id'     => 2,
-                'client_secret' => $clientSecret,
+                'client_id'     => config('auth.passport.client_id'),
+                'client_secret' => config('auth.passport.client_secret'),
                 'username'      => $request->get('email'),
                 'password'      => $request->get('password'),
             ]);

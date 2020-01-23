@@ -40,7 +40,7 @@ class LoginTest extends TestCase
 
     public function test_it_returns_a_bad_request_if_credentials_dont_match()
     {
-        $this->passportInstall();
+        $this->clientSeed();
         $this->json('POST', 'api/v1/login', [
             'email'    => $this->admin->email,
             'password' => 'wrongPassword'
@@ -50,7 +50,7 @@ class LoginTest extends TestCase
 
     public function test_it_returns_a_token_if_credentials_do_match()
     {
-        $this->passportInstall();
+        $this->clientSeed();
         $this->json('POST', 'api/v1/login', [
             'email'    => $this->admin->email,
             'password' => '123456'
@@ -65,7 +65,7 @@ class LoginTest extends TestCase
 
     public function test_it_returns_a_user_type_if_credentials_do_match()
     {
-        $this->passportInstall();
+        $this->clientSeed();
         $this->json('POST', 'api/v1/login', [
             'email'    => $this->admin->email,
             'password' => '123456'
@@ -75,8 +75,9 @@ class LoginTest extends TestCase
             ]);
     }
 
-    private function passportInstall()
+    private function clientSeed()
     {
-        return Artisan::call('passport:install', ['-vvv' => true]);
+        Artisan::call('cache:clear');
+        Artisan::call('db:seed --class=OauthClientsTableSeeder');
     }
 }

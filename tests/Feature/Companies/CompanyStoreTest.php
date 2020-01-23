@@ -5,7 +5,6 @@ namespace Tests\Feature\Companies;
 use App\Company;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 /**
@@ -25,7 +24,6 @@ class CompanyStoreTest extends TestCase
     {
         parent::setUp();
         $this->admin = factory(User::class)->states(USER::ROLE_ADMIN)->create();
-        //$this->withoutExceptionHandling();
     }
 
     public function test_it_requires_data()

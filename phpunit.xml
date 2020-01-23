@@ -33,5 +33,7 @@
         <server name="SESSION_DRIVER" value="array"/>
         <server name="DB_CONNECTION" value="sqlite"/>
         <server name="DB_DATABASE" value=":memory:"/>
+        <server name="CLIENT_ID" value="2" force="true"/>
+        <server name="CLIENT_SECRET" value="GigcKdLPKJOO5eDV9fgmbZvKLuMgatfzqaWpwEYA" force="true"/>
     </php>
 </phpunit>
