@@ -6,10 +6,10 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Class MealRequest
+ * Class OrderRequest
  * @package App\Http\Requests
  */
-class MealRequest extends FormRequest
+class OrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,14 +29,14 @@ class MealRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'             => 'required|max:255',
-            'image'            => 'required|image|mimes:jpeg,png,jpg,gif|max:10000',
-            'price'            => 'required|numeric|not_in:0',
-            'meal_category_id' => ['required',
-                Rule::exists('meal_categories', 'id')->where(function ($query) {
-                    $query->where('company_id', auth()->user()->company_id);
+            'delivery_datetime' => 'required|after:1 hour',
+            'company_id'        => ['sometimes',
+                Rule::exists('companies', 'id')->where(function ($query) {
+                    $query->where('type', 'producer');
                 }),
             ],
+            'meals.*.meal_id'   => 'required|exists:meals,id',
+            'meals.*.quantity'  => 'required|integer',
         ];
     }
 }

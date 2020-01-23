@@ -6,7 +6,6 @@ use App\Company;
 use App\Criteria\CompanyCriteria;
 use App\Http\Requests\MealCategoryRequest;
 use App\Repositories\MealCategoryRepository;
-use Illuminate\Support\Facades\Auth;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
@@ -52,7 +51,7 @@ class MealCategoryService
         return $this->repository->create([
             'name'       => $request->name,
             'image'      => $request->image,
-            'company_id' => Auth::user()->company_id
+            'company_id' => $request->user()->company_id
         ]);
     }
 

@@ -15,27 +15,14 @@ class MealCategoryPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can update the meal category.
+     * Determine whether the user can update or delete the meal category.
      *
      * @param User         $user
      * @param MealCategory $mealCategory
      *
-     * @return mixed
+     * @return bool
      */
-    public function update(User $user, MealCategory $mealCategory)
-    {
-        return $mealCategory->company_id === $user->company_id;
-    }
-
-    /**
-     * Determine whether the user can delete the meal category.
-     *
-     * @param User         $user
-     * @param MealCategory $mealCategory
-     *
-     * @return mixed
-     */
-    public function delete(User $user, MealCategory $mealCategory)
+    public function ifCompanyId(User $user, MealCategory $mealCategory)
     {
         return $mealCategory->company_id === $user->company_id;
     }
