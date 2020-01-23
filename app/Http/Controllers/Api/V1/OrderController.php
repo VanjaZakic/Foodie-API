@@ -67,7 +67,7 @@ class OrderController extends Controller
                 ->collection($userOrders)
                 ->transformWith(new UserOrdersTransformer())
                 ->toArray(),
-            'meta' => ['totalPrice' => $totalPrice]
+            'meta' => ['Total price' => $totalPrice]
         ];
     }
 
@@ -83,7 +83,8 @@ class OrderController extends Controller
         $order = $this->orderService->store($request);
 
         if (!$order) {
-            return response('Meals must be from the same company.', 400);
+            return response()->json([
+                'error' => 'Meals must be from the same company'], 400);
         }
         return fractal()
             ->item($order)
@@ -109,7 +110,7 @@ class OrderController extends Controller
      * Update status to specified resource in storage.
      *
      * @param Order $order
-     * @return ResponseFactory|Response
+     * @return mixed
      * @throws ValidatorException
      */
     public function producerUpdateStatus(Order $order)
@@ -117,9 +118,10 @@ class OrderController extends Controller
         $status = $this->orderService->producerUpdateStatus($order);
 
         if (!$status) {
-            return response('Status can not be changed.', 400);
+            return response()->json([
+                'error' => 'Status can not be changed'], 400);
         }
-        return response('Status changed.', 200);
+        return response(null, 204);
     }
 
     /**
@@ -133,7 +135,8 @@ class OrderController extends Controller
     {
         $this->orderService->cancel($order);
 
-        return response('Item is cancelled.', 200);
+        return response(null, 204);
+
     }
 
     /**
