@@ -30,6 +30,7 @@ class MealRequest extends FormRequest
     {
         return [
             'name'             => 'required|max:255',
+            'description'      => 'sometimes|max:5000',
             'image'            => 'required|image|mimes:jpeg,png,jpg,gif|max:10000',
             'price'            => 'required|numeric|not_in:0',
             'meal_category_id' => ['required',

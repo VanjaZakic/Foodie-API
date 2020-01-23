@@ -22,6 +22,7 @@ class MealTransformer extends TransformerAbstract
         return [
             'id'               => $meal->id,
             'name'             => $meal->name,
+            'description'      => $meal->description,
             'image'            => $meal->image,
             'price'            => $meal->price,
             'meal_category_id' => $meal->meal_category_id,
