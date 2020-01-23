@@ -35,7 +35,7 @@ class UserPolicy
      */
     public function __construct(PermissionFactory $permissionFactory, Request $request)
     {
-        $this->permission = $permissionFactory->getPermission($request->user('api'));
+        $this->permission = $permissionFactory->getPermission($request->user());
         $this->request    = $request;
     }
 
@@ -45,11 +45,11 @@ class UserPolicy
      * @param User $authUser
      * @param User $user
      *
-     * @return mixed
+     * @return bool
      */
     public function view(User $authUser, User $user)
     {
-        return $this->permission->canView($user);
+        return $this->permission->canViewUser($user);
     }
 
     /**
@@ -58,10 +58,13 @@ class UserPolicy
      * @param User $authUser
      * @param User $user
      *
-     * @return mixed
+     * @return bool
      */
     public function update(User $authUser, User $user)
     {
-        return $this->permission->canUpdate($user, (object)$this->request->input());
+        $input = (object)$this->request->input();
+
+        return $this->permission->canUpdateUser($user, $input);
     }
+
 }

@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Company;
-use App\Exceptions\AlreadyExistsException;
-use App\Exceptions\InvalidUserRoleException;
 use App\Http\Requests\CompanyUserStoreRequest;
+use App\Pipes\Authorization;
+use App\Pipes\RequestBusinessValidation;
+use App\Pipes\RequestValidation;
 use App\Services\CompanyService;
 use App\Services\CompanyUserService;
 use App\Transformers\UserIndexTransformer;
 use App\Transformers\UserTransformer;
-use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Pipeline;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -69,13 +71,23 @@ class CompanyUserController extends Controller
      *
      * @return mixed
      * @throws ValidatorException
-     * @throws AlreadyExistsException
-     * @throws InvalidUserRoleException
      */
     public function store(Company $company, CompanyUserStoreRequest $request, CompanyService $companyService)
     {
-        $company = $companyService->get($company->id);
-        $user    = $this->companyUserService->store($request, $company);
+        $pipeline = app(Pipeline::class)
+            ->send($request)
+            ->through([
+                RequestValidation::class,
+                Authorization::class,
+                RequestBusinessValidation::class
+            ])
+            ->thenReturn($request);
+
+        if ($pipeline instanceof JsonResponse) {
+            return $pipeline;
+        }
+
+        $user = $this->companyUserService->store($request, $company);
 
         return fractal()
             ->item($user)

@@ -25,7 +25,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/', 'UserController@index')->middleware('role:admin');
             Route::get('/{user}', 'UserController@show')->middleware('can:view,user');
             Route::post('/', 'UserController@store');
-            Route::put('/{user}', 'UserController@update')->middleware('can:update,user');
+            Route::put('/{user}', 'UserController@update');
             Route::delete('/{user}', 'UserController@destroy')->middleware('role:admin');
         });
 
@@ -37,7 +37,7 @@ Route::prefix('v1')->group(function () {
             Route::delete('{company}', 'CompanyController@destroy')->middleware('role:admin');
 
             Route::prefix('/{company}/users')->group(function () {
-                Route::get('/', 'CompanyUserController@index')->middleware(['role:admin,producer_admin,customer_admin', 'can:view,company']);
+                Route::get('/', 'CompanyUserController@index')->middleware(['role:admin,producer_admin,customer_admin', 'can:index,company']);
                 Route::post('/', 'CompanyUserController@store')->middleware('role:admin');
             });
         });
