@@ -69,33 +69,16 @@ class OrderService
     }
 
     /**
-     * @param $request
-     * @return array
-     */
-    private function mealIds($request)
-    {
-        $mealIds = array_reduce(
-            array_map(
-                function ($meal) {
-                    return $meal['meal_id'];
-                },
-                $request->meals
-            ),
-            function ($a, $b) {
-                return !is_array($a) ? [$b] : (in_array($b, $a) ? $a : [...$a, $b]);
-            }
-        );
-        return $mealIds;
-    }
-
-    /**
      * @param OrderRequest $request
      * @return mixed
      * @throws ValidatorException
      */
     public function store($request)
     {
-        $mealIds = $this->mealIds($request);
+        $mealIds = [];
+        foreach ($request->meals as $meal) {
+            $mealIds[] = $meal['meal_id'];
+        }
 
         $count = Meal::join('meal_categories', 'meal_categories.id', '=', 'meals.meal_category_id')
             ->where('meal_categories.company_id', $request->company_id)

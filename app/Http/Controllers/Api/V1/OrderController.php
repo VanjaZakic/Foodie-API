@@ -84,7 +84,7 @@ class OrderController extends Controller
 
         if (!$order) {
             return response()->json([
-                'error' => 'Meals must be from the same company'], 400);
+                'error' => 'Meals must be from the same company and without duplicate'], 400);
         }
         return fractal()
             ->item($order)
