@@ -48,9 +48,11 @@ class MealCategoryService
      */
     public function store($request)
     {
+        $path = $request->file('image')->store('public/images');
+
         return $this->repository->create([
             'name'       => $request->name,
-            'image'      => $request->image,
+            'image'      => $path,
             'company_id' => $request->user()->company_id
         ]);
     }
