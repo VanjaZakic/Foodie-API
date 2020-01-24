@@ -49,7 +49,18 @@ class CompanyService
      */
     public function store(CompanyStoreRequest $request)
     {
-        return $this->repository->create($request->all());
+        $path = $request->file('image')->store('public/images');
+
+        return $this->repository->create([
+            'name'    => $request->name,
+            'phone'   => $request->phone,
+            'address' => $request->address,
+            'email'   => $request->email,
+            'type'    => $request->type,
+            'image'   => $path,
+            'lat'     => $request->lat,
+            'lng'     => $request->lng
+        ]);
     }
 
     /**
