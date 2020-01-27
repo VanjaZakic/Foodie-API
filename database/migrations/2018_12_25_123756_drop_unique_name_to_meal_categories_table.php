@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropUniqueMealsTable extends Migration
+class DropUniqueNameToMealCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class DropUniqueMealsTable extends Migration
      */
     public function up()
     {
-        Schema::table('meals', function (Blueprint $table) {
+        Schema::table('meal_categories', function (Blueprint $table) {
             $table->dropUnique(['name']);
         });
     }
@@ -25,7 +25,7 @@ class DropUniqueMealsTable extends Migration
      */
     public function down()
     {
-        Schema::table('meals', function (Blueprint $table) {
+        Schema::table('meal_categories', function (Blueprint $table) {
             $table->unique('name');
         });
     }

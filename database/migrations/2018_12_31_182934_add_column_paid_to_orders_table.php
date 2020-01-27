@@ -1,13 +1,11 @@
 <?php
 
-use App\Order;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeColumnOrdersTable extends Migration
+class AddColumnPaidToOrdersTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
@@ -16,11 +14,7 @@ class ChangeColumnOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
-
-        Schema::table('orders', function (Blueprint $table) {
-            $table->enum('status', Order::$statuses)->default(Order::STATUS_ORDERED);
+            $table->boolean('paid')->nullable()->default(0)->after('status');
         });
     }
 
@@ -32,10 +26,7 @@ class ChangeColumnOrdersTable extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
-        Schema::table('orders', function (Blueprint $table) {
-            $table->enum('status', Order::$statuses);
+            $table->dropColumn('paid');
         });
     }
 }

@@ -6,10 +6,10 @@ use App\User;
 use Illuminate\Http\Request;
 
 /**
- * Class CheckoutService
+ * Class PaymentService
  * @package App\Services
  */
-class CheckoutService
+class PaymentService
 {
     /**
      * @var User user
@@ -17,7 +17,7 @@ class CheckoutService
     private $user;
 
     /**
-     * CheckoutService constructor.
+     * PaymentService constructor.
      *
      * @param Request $request
      */

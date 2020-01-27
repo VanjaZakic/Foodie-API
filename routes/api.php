@@ -66,9 +66,10 @@ Route::prefix('v1')->group(function () {
             Route::put('producer-update-status/{order}', 'OrderController@producerUpdateStatus')->middleware('role:producer_admin,producer_user', 'can:ifCompanyId,order');
             Route::put('cancel/{order}', 'OrderController@cancel')->middleware('can:cancel,order');
             Route::delete('{order}', 'OrderController@destroy')->middleware(['role:producer_admin', 'can:ifCompanyId,order']);
+
+            Route::resource('{order}/payment', 'PaymentController');
         });
 
-        Route::middleware('auth:api')->resource('payment-methods', 'PaymentMethodController');
-        Route::middleware('auth:api')->resource('checkout', 'CheckoutController');
+        Route::resource('payment-methods', 'PaymentMethodController');
     });
 });

@@ -47,7 +47,7 @@ class OrderPolicy
      */
     public function cancel(User $user, Order $order)
     {
-        return $order->status == Order::STATUS_ORDERED ?
+        return $order->status == Order::STATUS_ORDERED && $order->paid == 0 ?
                     ($order->user_id === $user->id ?
                         true : ($user->role == User::ROLE_PRODUCER_ADMIN || $user->role == User::ROLE_PRODUCER_USER ?
                                     $order->company_id === $user->company_id : false

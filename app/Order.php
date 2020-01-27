@@ -41,6 +41,7 @@ class Order extends Model
         'user_id',
         'company_id',
         'status',
+        'paid',
     ];
 
     /**

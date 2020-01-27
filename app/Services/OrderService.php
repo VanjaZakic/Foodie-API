@@ -141,6 +141,16 @@ class OrderService
      * @return mixed
      * @throws ValidatorException
      */
+    public function paid($order)
+    {
+         return $this->repository->update(['paid' => 1], $order->id);
+    }
+
+    /**
+     * @param Order $order
+     * @return mixed
+     * @throws ValidatorException
+     */
     public function cancel($order)
     {
         return $this->repository->update(['status' => Order::STATUS_CANCELLED], $order->id);
