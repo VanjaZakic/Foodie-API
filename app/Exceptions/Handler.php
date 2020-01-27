@@ -65,6 +65,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof AuthorizationException) {
             return response()->json(['errors' => [$exception->getMessage()]], Response::HTTP_FORBIDDEN);
         }
+
         return parent::render($request, $exception);
     }
 }
