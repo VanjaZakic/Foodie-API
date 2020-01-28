@@ -49,17 +49,11 @@ class CompanyUserStoreTest extends TestCase
 
     public function test_it_requires_unique_email_and_phone()
     {
-        $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$this->producerCompany->id}/users", [
-            'first_name'            => 'firstname',
-            'last_name'             => 'lastname',
-            'phone'                 => $this->admin->phone,
-            'password'              => '123456',
-            'password_confirmation' => '123456',
-            'address'               => 'address',
-            'email'                 => $this->admin->email,
-            'role'                  => User::ROLE_PRODUCER_ADMIN,
-            'company_id'            => $this->producerCompany->id
-        ])
+        $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$this->producerCompany->id}/users",
+            $this->getParams(User::ROLE_PRODUCER_ADMIN, $this->producerCompany->id, [
+                'phone' => $this->admin->phone,
+                'email' => $this->admin->email,
+            ]))
             ->assertJsonValidationErrors(['email', 'phone']);
     }
 
@@ -80,27 +74,12 @@ class CompanyUserStoreTest extends TestCase
         $roles = [USER::ROLE_PRODUCER_ADMIN, USER::ROLE_CUSTOMER_ADMIN];
         foreach ($roles as $role) {
             $company = $role == USER::ROLE_PRODUCER_ADMIN ? $this->producerCompany : $this->customerCompany;
-            $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$company->id}/users", [
-                'first_name'            => 'firstname',
-                'last_name'             => 'lastname',
-                'phone'                 => $phone = rand(111111111, 999999999),
-                'password'              => '123456',
-                'password_confirmation' => '123456',
-                'address'               => 'address',
-                'email'                 => $email = "{$role}@gmail.com",
-                'role'                  => $role,
-                'company_id'            => $company->id
-            ]);
+            $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$company->id}/users",
+                $params = $this->getParams($role, $company->id, []));
 
-            $this->assertDatabaseHas('users', [
-                'first_name' => 'firstname',
-                'last_name'  => 'lastname',
-                'phone'      => $phone,
-                'address'    => 'address',
-                'email'      => $email,
-                'role'       => $role,
-                'company_id' => $company->id
-            ]);
+            unset($params['password']);
+            unset($params['password_confirmation']);
+            $this->assertDatabaseHas('users', $params);
         }
     }
 
@@ -110,17 +89,8 @@ class CompanyUserStoreTest extends TestCase
 
         foreach ($roles as $role) {
             $company = $role == USER::ROLE_PRODUCER_ADMIN ? $this->customerCompany : $this->producerCompany;
-            $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$company->id}/users", [
-                'first_name'            => 'firstname',
-                'last_name'             => 'lastname',
-                'phone'                 => rand(111111111, 999999999),
-                'password'              => '123456',
-                'password_confirmation' => '123456',
-                'address'               => 'address',
-                'email'                 => "{$role}@gmail.com",
-                'role'                  => $role,
-                'company_id'            => $company->id
-            ])
+            $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$company->id}/users",
+                $this->getParams($role, $company->id, []))
                 ->assertJsonValidationErrors(['company_id']);
         }
     }
@@ -132,17 +102,8 @@ class CompanyUserStoreTest extends TestCase
         foreach ($roles as $role) {
             $company_admin = factory(User::class)->states($role)->create();
 
-            $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$company_admin->company_id}/users", [
-                'first_name'            => 'firstname',
-                'last_name'             => 'lastname',
-                'phone'                 => rand(111111111, 999999999),
-                'password'              => '123456',
-                'password_confirmation' => '123456',
-                'address'               => 'address',
-                'email'                 => "{$role}@gmail.com",
-                'role'                  => $role,
-                'company_id'            => $company_admin->company_id
-            ])
+            $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$company_admin->company_id}/users",
+                $this->getParams($role, $company_admin->company_id, []))
                 ->assertJsonValidationErrors(['company_id']);
         }
     }
@@ -151,5 +112,23 @@ class CompanyUserStoreTest extends TestCase
     {
         $this->actingAs($this->admin)->json('POST', "api/v1/companies/noCompany/users")
             ->assertStatus(404);
+    }
+
+    private function getParams($role, $companyId, $difference)
+    {
+        $params = [
+            'first_name'            => 'firstname',
+            'last_name'             => 'lastname',
+            'phone'                 => rand(111111111, 999999999),
+            'password'              => '123456',
+            'password_confirmation' => '123456',
+            'address'               => 'address',
+            'email'                 => "{$role}@gmail.com",
+            'role'                  => $role,
+            'company_id'            => $companyId
+        ];
+        $params = array_merge($params, $difference);
+
+        return $params;
     }
 }
