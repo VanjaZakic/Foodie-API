@@ -5,7 +5,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeColumnOrdersTable extends Migration
+/**
+ * Class ChangeColumnStatusToOrdersTable
+ */
+class ChangeColumnStatusToOrdersTable extends Migration
 {
 
     /**
@@ -20,7 +23,7 @@ class ChangeColumnOrdersTable extends Migration
         });
 
         Schema::table('orders', function (Blueprint $table) {
-            $table->enum('status', Order::$statuses)->default(Order::STATUS_ORDERED);
+            $table->enum('status', Order::$statuses)->default(Order::STATUS_ORDERED)->after('company_id');
         });
     }
 

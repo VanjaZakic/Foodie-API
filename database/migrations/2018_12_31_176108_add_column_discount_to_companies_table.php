@@ -5,9 +5,9 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Class CreatePasswordResetsTable
+ * Class AddColumnDiscountToCompaniesTable
  */
-class CreatePasswordResetsTable extends Migration
+class AddColumnDiscountToCompaniesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,10 +16,8 @@ class CreatePasswordResetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+        Schema::table('companies', function (Blueprint $table) {
+            $table->decimal('discount', 3, 2)->nullable()->default('1.00')->after('image');
         });
     }
 
@@ -30,6 +28,8 @@ class CreatePasswordResetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('password_resets');
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn('discount');
+        });
     }
 }

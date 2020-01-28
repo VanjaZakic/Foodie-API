@@ -4,7 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnToCompaniesTable extends Migration
+/**
+ * Class DropUniqueNameToMealCategoriesTable
+ */
+class DropUniqueNameToMealCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +16,8 @@ class AddColumnToCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->decimal('discount', 3, 2)->nullable()->default('1.00')->after('image');
+        Schema::table('meal_categories', function (Blueprint $table) {
+            $table->dropUnique(['name']);
         });
     }
 
@@ -25,8 +28,8 @@ class AddColumnToCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::table('companies', function (Blueprint $table) {
-            $table->dropColumn('discount');
+        Schema::table('meal_categories', function (Blueprint $table) {
+            $table->unique('name');
         });
     }
 }

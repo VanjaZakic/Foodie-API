@@ -4,7 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropColumnMealOrderTable extends Migration
+/**
+ * Class DropColumnUserIdToMealOrderTable
+ */
+class DropColumnUserIdToMealOrderTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,7 +19,6 @@ class DropColumnMealOrderTable extends Migration
         Schema::table('meal_order', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
-
         });
     }
 

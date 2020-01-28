@@ -4,7 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class DropUniqueMealCategoriesTable extends Migration
+/**
+ * Class AddColumnPaidToOrdersTable
+ */
+class AddColumnPaidToOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +16,8 @@ class DropUniqueMealCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('meal_categories', function (Blueprint $table) {
-            $table->dropUnique(['name']);
+        Schema::table('orders', function (Blueprint $table) {
+            $table->boolean('paid')->nullable()->default(0)->after('status');
         });
     }
 
@@ -25,8 +28,8 @@ class DropUniqueMealCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::table('meal_categories', function (Blueprint $table) {
-            $table->unique('name');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('paid');
         });
     }
 }
