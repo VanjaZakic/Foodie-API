@@ -76,7 +76,7 @@ class OrderController extends Controller
      *
      * @param OrderRequest $request
      * @return mixed
-     * @throws ValidatorException
+     * @throws \Exception
      */
     public function store(OrderRequest $request)
     {
@@ -84,7 +84,7 @@ class OrderController extends Controller
 
         if (!$order) {
             return response()->json([
-                'error' => 'Meals must be from the same company and without duplicate'], 400);
+                'errors' => 'Meals must be from the same company and without duplicate'], 400);
         }
         return fractal()
             ->item($order)
@@ -119,7 +119,7 @@ class OrderController extends Controller
 
         if (!$status) {
             return response()->json([
-                'error' => 'Status can not be changed'], 400);
+                'errors' => 'Status can not be changed'], 400);
         }
         return response(null, 204);
     }

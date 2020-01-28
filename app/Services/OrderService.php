@@ -8,6 +8,8 @@ use App\Http\Requests\OrderRequest;
 use App\Meal;
 use App\Order;
 use App\Repositories\OrderRepository;
+use Dotenv\Exception\ValidationException;
+use Illuminate\Support\Facades\DB;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
 
@@ -71,52 +73,75 @@ class OrderService
     /**
      * @param OrderRequest $request
      * @return mixed
-     * @throws ValidatorException
+     * @throws \Exception
      */
     public function store($request)
     {
-        $mealIds = [];
-        foreach ($request->meals as $meal) {
-            $mealIds[] = $meal['meal_id'];
-        }
+        DB::beginTransaction();
 
-        $count = Meal::join('meal_categories', 'meal_categories.id', '=', 'meals.meal_category_id')
-            ->where('meal_categories.company_id', $request->company_id)
-            ->whereIn('meals.id', $mealIds)
-            ->count();
-        if ($count !== count($mealIds)) {
-            return false;
-        }
-
-        $meals = Meal::whereIn('id', $mealIds)->get();
-
-        $price = 0;
-        foreach ($meals as $meal) {
-            foreach ($request->meals as $m) {
-                if($m['meal_id'] == $meal->id) {
-                    $meal['quantity'] = $m['quantity'];
-                }
+        try {
+            $mealIds = [];
+            foreach ($request->meals as $meal) {
+                $mealIds[] = $meal['meal_id'];
             }
-            $price += $meal->price * $meal->quantity;
+
+            $count = Meal::join('meal_categories', 'meal_categories.id', '=', 'meals.meal_category_id')
+                ->where('meal_categories.company_id', $request->company_id)
+                ->whereIn('meals.id', $mealIds)
+                ->count();
+            if ($count !== count($mealIds)) {
+                return false;
+            }
+
+            $meals = Meal::whereIn('id', $mealIds)->get();
+
+            $price = 0;
+            foreach ($meals as $meal) {
+                foreach ($request->meals as $m) {
+                    if ($m['meal_id'] == $meal->id) {
+                        $meal['quantity'] = $m['quantity'];
+                    }
+                }
+                $price += $meal->price * $meal->quantity;
+            }
+
+            if ($request->user()->company_id == $request->company_id) {
+                $company = Company::find($request->company_id);
+                $discount = $company->discount;
+                $price = $price * $discount;
+            }
+
+            $order = $this->repository->create([
+                'price'             => $price,
+                'delivery_datetime' => $request->delivery_datetime,
+                'user_id'           => $request->user()->id,
+                'company_id'        => $request->company_id
+            ]);
+        } catch(ValidationException $e)
+        {
+            DB::rollback();
+            return response(null, 400);
+        } catch(\Exception $e)
+        {
+            DB::rollback();
+            throw $e;
         }
 
-        if ($request->user()->company_id == $request->company_id) {
-            $company = Company::find($request->company_id);
-            $discount = $company->discount;
-            $price = $price * $discount;
+        try {
+            foreach ($meals as $meal) {
+                $order->meals()->attach($meal->id, ['price' => $meal->price, 'quantity' => $meal->quantity]);
+            }
+        } catch(ValidationException $e)
+        {
+            DB::rollback();
+            return response(null, 400);
+        } catch(\Exception $e)
+        {
+            DB::rollback();
+            throw $e;
         }
 
-        $order = $this->repository->create([
-            'price'             => $price,
-            'delivery_datetime' => $request->delivery_datetime,
-            'user_id'           => $request->user()->id,
-            'company_id'        => $request->company_id
-        ]);
-
-        foreach ($meals as $meal) {
-            $order->meals()->attach($meal->id, ['price' => $meal->price, 'quantity' => $meal->quantity]);
-        }
-
+        DB::commit();
         return $order;
     }
 
