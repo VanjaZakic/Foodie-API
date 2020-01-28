@@ -34,7 +34,7 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
     /**
      * @var
      */
-    private $companyId;
+    public $companyId;
 
 
     /**
