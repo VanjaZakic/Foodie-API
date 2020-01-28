@@ -67,9 +67,9 @@ Route::prefix('v1')->group(function () {
             Route::put('cancel/{order}', 'OrderController@cancel')->middleware('can:cancel,order');
             Route::delete('{order}', 'OrderController@destroy')->middleware(['role:producer_admin', 'can:ifCompanyId,order']);
 
-            Route::resource('{order}/payment', 'PaymentController');
+            Route::resource('{order}/payment', 'PaymentController')->middleware('can:view,order');
         });
 
-        Route::resource('payment-methods', 'PaymentMethodController');
+        Route::resource('payment-methods', 'PaymentMethodController')->middleware('auth');
     });
 });

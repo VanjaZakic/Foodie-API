@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Requests\PaymentRequest;
 use App\Order;
 use App\Services\OrderService;
 use App\Services\PaymentService;
@@ -39,20 +40,16 @@ class PaymentController extends Controller
     }
 
     /**
-     * @param Request $request
+     * Store a newly created resource in storage.
+     *
+     * @param PaymentRequest $request
      * @param Order $order
-     * @return ResponseFactory|Response
      * @throws ValidatorException
      */
-    public function store(Request $request, Order $order)
+    public function store(PaymentRequest $request, Order $order)
     {
-        $paymentMethodId = $request->get('paymentMethodId');
+        $this->paymentService->charge($order->price * 100, $request->paymentMethodId);
 
-        if ($order->paid) {
-            return response('You already paid', 418);
-        }
-
-        $this->paymentService->charge($order->price * 100, $paymentMethodId);
         $this->orderService->paid($order);
     }
 }
