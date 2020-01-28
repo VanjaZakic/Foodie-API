@@ -6,9 +6,6 @@ use App\Http\Requests\PaymentRequest;
 use App\Order;
 use App\Services\OrderService;
 use App\Services\PaymentService;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Prettus\Validator\Exceptions\ValidatorException;
 
 /**
