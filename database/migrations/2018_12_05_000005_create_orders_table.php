@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class CreateOrdersTable
+ */
 class CreateOrdersTable extends Migration
 {
     /**
@@ -35,7 +38,7 @@ class CreateOrdersTable extends Migration
             $table->index(["company_id"], 'company_id');
             $table->softDeletes();
             $table->timestamps();
-            
+
             $table->foreign('user_id')
                 ->references('id')->on('users')
                 ->onDelete('restrict')
