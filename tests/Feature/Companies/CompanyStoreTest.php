@@ -5,6 +5,8 @@ namespace Tests\Feature\Companies;
 use App\Company;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /**
@@ -34,7 +36,6 @@ class CompanyStoreTest extends TestCase
 
     public function test_it_returns_validation_error_if_over_max_length()
     {
-
         $this->actingAs($this->admin)->json('POST', 'api/v1/companies', [
             'name'  => 'namanamenamenamanamenamenamanamenamenamanamenamenamanamenamenamanamenamenamanamenamenamanamename',
             'phone' => '012345678901234567890123456789',
@@ -60,5 +61,24 @@ class CompanyStoreTest extends TestCase
             'type' => 'WrongCompanyType'
         ])
             ->assertJsonValidationErrors(['type']);
+    }
+
+    public function test_it_stores_a_company()
+    {
+        Storage::fake('local');
+        $this->actingAs($this->admin)->json('POST', 'api/v1/companies', [
+            'name'    => 'companyname',
+            'phone'   => '123456789',
+            'address' => 'companyaddress',
+            'email'   => 'companyname@gmail.com',
+            'image'   => $image = UploadedFile::fake()->image('companyname.jpg'),
+            'type'    => COMPANY::TYPE_PRODUCER,
+            'lat'     => 0,
+            'lng'     => 0
+        ]);
+
+        //dd($image->getPathInfo());
+
+        Storage::disk('local')->assertExists($image->hashName());
     }
 }

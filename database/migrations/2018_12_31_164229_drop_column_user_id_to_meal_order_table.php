@@ -16,10 +16,10 @@ class DropColumnUserIdToMealOrderTable extends Migration
      */
     public function up()
     {
-        Schema::table('meal_order', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-            $table->dropColumn('user_id');
-        });
+//        Schema::table('meal_order', function (Blueprint $table) {
+//            $table->dropForeign(['user_id']);
+//            $table->dropColumn('user_id');
+//        });
     }
 
     /**
