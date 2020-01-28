@@ -48,7 +48,15 @@ class MealService
      */
     public function store($request)
     {
-        return $this->repository->create($request->all());
+        $path = $request->file('image')->store('public/images');
+
+        return $this->repository->create([
+            'name'             => $request->name,
+            'description'      => $request->description,
+            'image'            => $path,
+            'price'            => $request->price,
+            'meal_category_id' => $request->meal_category_id
+        ]);
     }
 
     /**
