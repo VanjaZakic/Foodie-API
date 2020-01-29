@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Meal;
+use Illuminate\Container\Container as Application;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 /**
@@ -11,6 +12,23 @@ use Prettus\Repository\Eloquent\BaseRepository;
  */
 class MealRepository extends BaseRepository
 {
+    /**
+     * @var Meal
+     */
+    protected $mealModel;
+
+    /**
+     * MealRepository constructor
+     *
+     * @param Application $app
+     * @param Meal $mealModel
+     */
+    public function __construct(Application $app, Meal $mealModel)
+    {
+        parent::__construct($app);
+        $this->mealModel = $mealModel;
+    }
+
     /**
      * Specify Model class name
      *
@@ -24,11 +42,11 @@ class MealRepository extends BaseRepository
     /**
      * @param $companyId
      * @param $mealIds
-     * @return mixed
+     * @return int
      */
     public function countIds($companyId, $mealIds)
     {
-        $count = Meal::join('meal_categories', 'meal_categories.id', '=', 'meals.meal_category_id')
+        $count = $this->mealModel->join('meal_categories', 'meal_categories.id', '=', 'meals.meal_category_id')
             ->where('meal_categories.company_id', $companyId)
             ->whereIn('meals.id', $mealIds)
             ->count();
@@ -42,7 +60,7 @@ class MealRepository extends BaseRepository
      */
     public function getMeals($mealIds)
     {
-        $meals = Meal::whereIn('id', $mealIds)->get();
+        $meals = $this->mealModel->whereIn('id', $mealIds)->get();
 
         return $meals;
     }
