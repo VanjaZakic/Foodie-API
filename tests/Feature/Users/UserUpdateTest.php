@@ -71,7 +71,7 @@ class UserUpdateTest extends TestCase
         $roles = User::$roles;
         foreach ($roles as $role) {
             $user = factory(User::class)->states($role)->create();
-            $this->actingAs($user)->json('PUT', "api/v1/users/{$user->id}", $params = $this->getNewParams($user, []));
+            $this->actingAs($user)->json('PUT', "api/v1/users/{$user->id}", $params = $this->getNewParams($user));
             $this->assertDatabaseHas('users', $this->getNewParams($user, $params));
         }
     }
@@ -198,7 +198,7 @@ class UserUpdateTest extends TestCase
             ->assertStatus(404);
     }
 
-    private function getNewParams($user, $difference)
+    private function getNewParams($user, ...$difference)
     {
         $params = [
             "id"         => $user->id,
@@ -210,12 +210,12 @@ class UserUpdateTest extends TestCase
             "role"       => $user->role,
             "company_id" => $user->company_id
         ];
-        $params = array_merge($params, $difference);
+        $params = array_merge($params, ...$difference);
 
         return $params;
     }
 
-    private function getParams($user, $difference)
+    private function getParams($user, ...$difference)
     {
         $params = [
             'id'         => $user->id,
@@ -227,7 +227,7 @@ class UserUpdateTest extends TestCase
             'role'       => $user->role,
             'company_id' => $user->company_id
         ];
-        $params = array_merge($params, $difference);
+        $params = array_merge($params, ...$difference);
 
         return $params;
     }

@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 /**
- * Class CompanyStoreTest
+ * Class CompanyUpdateTest
  * @package Tests\Feature
  */
-class CompanyStoreTest extends TestCase
+class CompanyUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -21,11 +21,15 @@ class CompanyStoreTest extends TestCase
      * @var User $admin
      */
     protected $admin;
+    private $producer_company;
+    private $customer_company;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->admin = factory(User::class)->states(USER::ROLE_ADMIN)->create();
+        $this->admin            = factory(User::class)->states(USER::ROLE_ADMIN)->create();
+        $this->producer_company = factory(Company::class)->states(COMPANY::TYPE_PRODUCER)->create();
+        $this->customer_company = factory(Company::class)->states(COMPANY::TYPE_CUSTOMER)->create();
     }
 
     public function test_it_shows_unauthorized_if_not_admin()
@@ -38,20 +42,20 @@ class CompanyStoreTest extends TestCase
             ]);
 
             $this->actingAs($user)
-                ->json('POST', 'api/v1/companies')
+                ->json('PUT', "api/v1/companies/{$this->producer_company->id}")
                 ->assertStatus(403);
         }
     }
 
     public function test_it_requires_data()
     {
-        $this->actingAs($this->admin)->json('POST', 'api/v1/companies')
+        $this->actingAs($this->admin)->json('PUT', "api/v1/companies/{$this->producer_company->id}")
             ->assertJsonValidationErrors(['name', 'phone', 'address', 'email', 'image', 'type']);
     }
 
     public function test_it_returns_validation_error_if_over_max_length()
     {
-        $this->actingAs($this->admin)->json('POST', 'api/v1/companies', [
+        $this->actingAs($this->admin)->json('PUT', "api/v1/companies/{$this->producer_company->id}", [
             'name'  => 'namanamenamenamanamenamenamanamenamenamanamenamenamanamenamenamanamenamenamanamenamenamanamename',
             'phone' => '012345678901234567890123456789',
             'email' => 'emailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemailemail@gmail.com'
@@ -61,18 +65,18 @@ class CompanyStoreTest extends TestCase
 
     public function test_it_requires_unique_email_and_phone()
     {
-        $company = factory(Company::class)->states(COMPANY::TYPE_PRODUCER)->create();
+        $producer_company_db = factory(Company::class)->states(COMPANY::TYPE_PRODUCER)->create();
 
-        $this->actingAs($this->admin)->json('POST', 'api/v1/companies', [
-            'email' => $company->email,
-            'phone' => $company->phone
+        $this->actingAs($this->admin)->json('PUT', "api/v1/companies/{$this->producer_company->id}", [
+            'email' => $producer_company_db->email,
+            'phone' => $producer_company_db->phone
         ])
             ->assertJsonValidationErrors(['email', 'phone']);
     }
 
     public function test_it_returns_validation_error_if_not_valid_company_type()
     {
-        $this->actingAs($this->admin)->json('POST', 'api/v1/companies', [
+        $this->actingAs($this->admin)->json('PUT', "api/v1/companies/{$this->producer_company->id}", [
             'type' => 'WrongCompanyType'
         ])
             ->assertJsonValidationErrors(['type']);
@@ -80,7 +84,7 @@ class CompanyStoreTest extends TestCase
 
     public function test_it_returns_validation_error_if_not_valid_image()
     {
-        $this->actingAs($this->admin)->json('POST', 'api/v1/companies', [
+        $this->actingAs($this->admin)->json('PUT', "api/v1/companies/{$this->producer_company->id}", [
             'image' => 'NotImage'
         ])
             ->assertJsonValidationErrors(['image']);
@@ -88,50 +92,46 @@ class CompanyStoreTest extends TestCase
 
     public function test_it_returns_validation_error_if_not_valid_lat_and_lng()
     {
-        $this->actingAs($this->admin)->json('POST', 'api/v1/companies', [
+        $this->actingAs($this->admin)->json('PUT', "api/v1/companies/{$this->producer_company->id}", [
             'lat' => -91,
             'lng' => -181
         ])
             ->assertJsonValidationErrors(['lat', 'lng']);
 
-        $this->actingAs($this->admin)->json('POST', 'api/v1/companies', [
+        $this->actingAs($this->admin)->json('PUT', "api/v1/companies/{$this->producer_company->id}", [
             'lat' => 91,
             'lng' => 81
         ])
             ->assertJsonValidationErrors(['lat', 'lng']);
     }
 
-    public function test_it_stores_a_company()
+    public function test_it_returns_validation_error_if_company_type_is_incompatible()
     {
-        Storage::fake('public');
-
-        $types = COMPANY::$types;
-        foreach ($types as $type) {
-            $image = UploadedFile::fake()->image("{$type}.jpg");
-            $this->actingAs($this->admin)->json('POST', 'api/v1/companies', $params = $this->getParams($image, $type));
-
-            $path            = 'images/' . $image->hashName();
-            $params['image'] = $path;
-            Storage::disk('public')->assertExists($path);
-
-            $this->assertDatabaseHas('companies', $params);
-        }
+        $this->actingAs($this->admin)->json('PUT', "api/v1/companies/{$this->producer_company->id}", [
+            "type" => $this->customer_company->type
+        ])
+            ->assertJsonValidationErrors(['type']);
     }
 
-    private function getParams($image, $type, ...$difference)
+    public function test_it_updates_a_company()
     {
-        $params = [
-            'name'    => 'companyname',
+        Storage::fake('public');
+        $type = COMPANY::TYPE_PRODUCER;
+
+        $image = UploadedFile::fake()->image("new{$type}.jpg");
+        $this->actingAs($this->admin)->json('PUT', "api/v1/companies/{$this->producer_company->id}", $params = [
+            'name'    => 'newcompanyname',
             'phone'   => rand(111111111, 999999999),
-            'address' => 'companyaddress',
-            'email'   => "{$type}@gmail.com",
+            'address' => 'newcompanyaddress',
+            'email'   => "new{$type}@gmail.com",
             'image'   => $image,
             'type'    => $type,
             'lat'     => 0,
             'lng'     => 0
-        ];
-        $params = array_merge($params, ...$difference);
+        ]);
 
-        return $params;
+        $this->assertDatabaseHas('companies', $params);
     }
+
+
 }

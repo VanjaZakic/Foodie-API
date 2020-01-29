@@ -75,7 +75,7 @@ class CompanyUserStoreTest extends TestCase
         foreach ($roles as $role) {
             $company = $role == USER::ROLE_PRODUCER_ADMIN ? $this->producerCompany : $this->customerCompany;
             $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$company->id}/users",
-                $params = $this->getParams($role, $company->id, []));
+                $params = $this->getParams($role, $company->id));
 
             unset($params['password']);
             unset($params['password_confirmation']);
@@ -90,7 +90,7 @@ class CompanyUserStoreTest extends TestCase
         foreach ($roles as $role) {
             $company = $role == USER::ROLE_PRODUCER_ADMIN ? $this->customerCompany : $this->producerCompany;
             $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$company->id}/users",
-                $this->getParams($role, $company->id, []))
+                $this->getParams($role, $company->id))
                 ->assertJsonValidationErrors(['company_id']);
         }
     }
@@ -103,7 +103,7 @@ class CompanyUserStoreTest extends TestCase
             $company_admin = factory(User::class)->states($role)->create();
 
             $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$company_admin->company_id}/users",
-                $this->getParams($role, $company_admin->company_id, []))
+                $this->getParams($role, $company_admin->company_id))
                 ->assertJsonValidationErrors(['company_id']);
         }
     }
@@ -114,7 +114,7 @@ class CompanyUserStoreTest extends TestCase
             ->assertStatus(404);
     }
 
-    private function getParams($role, $companyId, $difference)
+    private function getParams($role, $companyId, ...$difference)
     {
         $params = [
             'first_name'            => 'firstname',
@@ -127,7 +127,7 @@ class CompanyUserStoreTest extends TestCase
             'role'                  => $role,
             'company_id'            => $companyId
         ];
-        $params = array_merge($params, $difference);
+        $params = array_merge($params, ...$difference);
 
         return $params;
     }
