@@ -5,8 +5,8 @@ namespace App\Services;
 use App\Company;
 use App\Criteria\CompanyCriteria;
 use App\Http\Requests\OrderRequest;
-use App\Meal;
 use App\Order;
+use App\Repositories\MealRepository;
 use App\Repositories\OrderRepository;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\DB;
@@ -22,16 +22,23 @@ class OrderService
     /**
      * @var OrderRepository
      */
-    protected $repository;
+    protected $orderRepository;
+
+    /**
+     * @var MealRepository
+     */
+    protected $mealRepository;
 
     /**
      * OrderService constructor.
      *
-     * @param OrderRepository $repository
+     * @param OrderRepository $orderRepository
+     * @param MealRepository $mealRepository
      */
-    public function __construct(OrderRepository $repository)
+    public function __construct(OrderRepository $orderRepository, MealRepository $mealRepository)
     {
-        $this->repository = $repository;
+        $this->orderRepository = $orderRepository;
+        $this->mealRepository  = $mealRepository;
     }
 
     /**
@@ -41,8 +48,8 @@ class OrderService
      */
     public function producerShowAll($company)
     {
-        $this->repository->pushCriteria(new CompanyCriteria($company));
-        return $this->repository->all();
+        $this->orderRepository->pushCriteria(new CompanyCriteria($company));
+        return $this->orderRepository->all();
     }
 
     /**
@@ -85,15 +92,13 @@ class OrderService
                 $mealIds[] = $meal['meal_id'];
             }
 
-            $count = Meal::join('meal_categories', 'meal_categories.id', '=', 'meals.meal_category_id')
-                ->where('meal_categories.company_id', $request->company_id)
-                ->whereIn('meals.id', $mealIds)
-                ->count();
+            $count = $this->mealRepository->countIds($request->company_id, $mealIds);
+
             if ($count !== count($mealIds)) {
                 return false;
             }
 
-            $meals = Meal::whereIn('id', $mealIds)->get();
+            $meals = $this->mealRepository->getMeals($mealIds);
 
             $price = 0;
             foreach ($meals as $meal) {
@@ -111,7 +116,7 @@ class OrderService
                 $price = $price * $discount;
             }
 
-            $order = $this->repository->create([
+            $order = $this->orderRepository->create([
                 'price'             => $price,
                 'delivery_datetime' => $request->delivery_datetime,
                 'user_id'           => $request->user()->id,
@@ -153,10 +158,10 @@ class OrderService
     public function producerUpdateStatus($order)
     {
         if ($order->status == Order::STATUS_PROCESSING) {
-            return $this->repository->update(['status' => Order::STATUS_DELIVERED], $order->id);
+            return $this->orderRepository->update(['status' => Order::STATUS_DELIVERED], $order->id);
         }
         if ($order->status == Order::STATUS_ORDERED) {
-            return $this->repository->update(['status' => Order::STATUS_PROCESSING], $order->id);
+            return $this->orderRepository->update(['status' => Order::STATUS_PROCESSING], $order->id);
         }
         return false;
     }
@@ -168,7 +173,7 @@ class OrderService
      */
     public function paid($order)
     {
-         return $this->repository->update(['paid' => 1], $order->id);
+         return $this->orderRepository->update(['paid' => 1], $order->id);
     }
 
     /**
@@ -178,7 +183,7 @@ class OrderService
      */
     public function cancel($order)
     {
-        return $this->repository->update(['status' => Order::STATUS_CANCELLED], $order->id);
+        return $this->orderRepository->update(['status' => Order::STATUS_CANCELLED], $order->id);
     }
 
     /**
@@ -187,6 +192,6 @@ class OrderService
      */
     public function destroy($orderId)
     {
-        return $this->repository->delete($orderId);
+        return $this->orderRepository->delete($orderId);
     }
 }
