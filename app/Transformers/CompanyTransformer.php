@@ -14,6 +14,8 @@ class CompanyTransformer extends TransformerAbstract
     /**
      * A Fractal transformer.
      *
+     * @param Company $company
+     *
      * @return array
      */
     public function transform(Company $company)

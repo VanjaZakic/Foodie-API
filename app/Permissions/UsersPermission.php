@@ -14,7 +14,7 @@ class UsersPermission implements Permissionable
     /**
      * @var User $authUser
      */
-    private $authUser;
+    private User $authUser;
 
     /**
      * UsersPermission constructor.

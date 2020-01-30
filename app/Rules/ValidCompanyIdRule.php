@@ -22,15 +22,15 @@ class ValidCompanyIdRule implements Rule, ImplicitRule
     /**
      * @var UserRepository
      */
-    private $userRepository;
+    private UserRepository $userRepository;
     /**
      * @var CompanyRepository
      */
-    private $companyRepository;
+    private CompanyRepository $companyRepository;
     /**
      * @var Request
      */
-    private $request;
+    private Request $request;
     /**
      * @var
      */

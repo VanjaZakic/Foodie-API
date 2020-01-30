@@ -28,19 +28,20 @@ class PaymentController extends Controller
      * PaymentController constructor.
      *
      * @param PaymentService $paymentService
-     * @param OrderService $orderService
+     * @param OrderService   $orderService
      */
     public function __construct(PaymentService $paymentService, OrderService $orderService)
     {
         $this->paymentService = $paymentService;
-        $this->orderService = $orderService;
+        $this->orderService   = $orderService;
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param PaymentRequest $request
-     * @param Order $order
+     * @param Order          $order
+     *
      * @throws ValidatorException
      */
     public function store(PaymentRequest $request, Order $order)
