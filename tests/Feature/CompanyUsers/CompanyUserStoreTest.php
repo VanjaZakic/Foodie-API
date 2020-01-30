@@ -100,10 +100,10 @@ class CompanyUserStoreTest extends TestCase
         $roles = [USER::ROLE_PRODUCER_ADMIN, USER::ROLE_CUSTOMER_ADMIN];
 
         foreach ($roles as $role) {
-            $company_admin = factory(User::class)->states($role)->create();
+            $companyAdmin = factory(User::class)->states($role)->create();
 
-            $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$company_admin->company_id}/users",
-                $this->getParams($role, $company_admin->company_id))
+            $this->actingAs($this->admin)->json('POST', "api/v1/companies/{$companyAdmin->company_id}/users",
+                $this->getParams($role, $companyAdmin->company_id))
                 ->assertJsonValidationErrors(['company_id']);
         }
     }

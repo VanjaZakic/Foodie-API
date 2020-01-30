@@ -5,7 +5,6 @@ namespace Tests\Feature\Companies;
 use App\Company;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -21,7 +20,7 @@ class CompanyStoreTest extends TestCase
      * @var User $admin
      */
     protected $admin;
-
+    
     public function setUp(): void
     {
         parent::setUp();
@@ -107,8 +106,9 @@ class CompanyStoreTest extends TestCase
 
         $types = COMPANY::$types;
         foreach ($types as $type) {
-            $image = UploadedFile::fake()->image("{$type}.jpg");
-            $this->actingAs($this->admin)->json('POST', 'api/v1/companies', $params = $this->getParams($image, $type));
+            $company = factory(COMPANY::class)->states($type)->make();
+            $image   = $company->image;
+            $this->actingAs($this->admin)->json('POST', 'api/v1/companies', $params = $company->toArray());
 
             $path            = 'images/' . $image->hashName();
             $params['image'] = $path;
@@ -116,22 +116,5 @@ class CompanyStoreTest extends TestCase
 
             $this->assertDatabaseHas('companies', $params);
         }
-    }
-
-    private function getParams($image, $type, ...$difference)
-    {
-        $params = [
-            'name'    => 'companyname',
-            'phone'   => rand(111111111, 999999999),
-            'address' => 'companyaddress',
-            'email'   => "{$type}@gmail.com",
-            'image'   => $image,
-            'type'    => $type,
-            'lat'     => 0,
-            'lng'     => 0
-        ];
-        $params = array_merge($params, ...$difference);
-
-        return $params;
     }
 }
