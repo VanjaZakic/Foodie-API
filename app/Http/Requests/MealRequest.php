@@ -8,6 +8,13 @@ use Illuminate\Validation\Rule;
 /**
  * Class MealRequest
  * @package App\Http\Requests
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $description
+ * @property string $image
+ * @property int    $price
+ * @property int    $meal_category_id
  */
 class MealRequest extends FormRequest
 {

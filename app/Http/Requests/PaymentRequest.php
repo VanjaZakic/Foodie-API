@@ -2,12 +2,16 @@
 
 namespace App\Http\Requests;
 
+use App\Order;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
  * Class PaymentRequest
  * @package App\Http\Requests
+ *
+ * @property string $paymentMethodId
+ * @property Order  order
  */
 class PaymentRequest extends FormRequest
 {

@@ -22,7 +22,6 @@ class OrderTransformer extends TransformerAbstract
         return [
             'id'                => $order->id,
             'price'             => $order->price,
-            'discount'          => $order->discount,
             'delivery_datetime' => $order->delivery_datetime,
             'status'            => $order->status,
             'user_id'           => $order->user_id,
