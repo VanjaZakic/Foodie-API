@@ -17,12 +17,12 @@ class PaymentController extends Controller
     /**
      * @var PaymentService
      */
-    private $paymentService;
+    private PaymentService $paymentService;
 
     /**
      * @var OrderService
      */
-    private $orderService;
+    private OrderService $orderService;
 
     /**
      * PaymentController constructor.

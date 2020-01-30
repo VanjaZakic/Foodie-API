@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Request;
  */
 trait ResponseTrait
 {
-    protected $metaData = [];
+    protected array $metaData = [];
 
     /**
      * @param       $data

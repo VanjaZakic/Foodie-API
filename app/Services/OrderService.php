@@ -20,7 +20,7 @@ class OrderService
     /**
      * @var OrderRepository
      */
-    protected $repository;
+    protected OrderRepository $repository;
 
     /**
      * OrderService constructor.
