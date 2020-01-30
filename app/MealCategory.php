@@ -28,7 +28,7 @@ class MealCategory extends Model
      *
      * @var array
      */
-    protected array $fillable = [
+    protected $fillable = [
         'name',
         'image',
         'company_id',
