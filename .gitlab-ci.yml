@@ -4,22 +4,22 @@ stages:
   - prepare
   - build
   - test
-  
+
 variables:
-    DB_HOST: mysql
-    MYSQL_DATABASE: foodie
-    MYSQL_USER: homestead
-    MYSQL_PASSWORD: secret
-    #MYSQL_ROOT_PASSWORD: 
-    
+  DB_HOST: mysql
+  MYSQL_DATABASE: foodie
+  MYSQL_USER: homestead
+  MYSQL_PASSWORD: secret
+  #MYSQL_ROOT_PASSWORD:
+
 composer:
   stage: prepare
   script:
     - php -v
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - cp .env.example .env
-- php artisan key:generate
-- php artisan config:cache
+    - php artisan key:generate
+    - php artisan config:cache
   artifacts:
     paths:
       - vendor/
@@ -44,11 +44,11 @@ db-seeding:
     - mysqldump --host="${DB_HOST}" --user="${MYSQL_USER}" --password="${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" > db.sql
   artifacts:
     paths:
-      - storage/logs # for debugging
+      - storage/logs
       - db.sql
     expire_in: 1 days
     when: always
-    
+
 phpunit:
   stage: test
   services:
@@ -67,6 +67,6 @@ phpunit:
     - sudo cp /usr/local/etc/php/conf.d/docker-php-ext-xdebug.bak /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
   artifacts:
     paths:
-      - ./storage/logs # for debugging
+      - ./storage/logs
     expire_in: 1 days
     when: on_failure
