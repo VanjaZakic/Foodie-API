@@ -13,6 +13,17 @@ use Laravel\Passport\HasApiTokens;
 /**
  * Class User
  * @package App
+ * @property int     $id
+ * @property string  $first_name
+ * @property string  $last_name
+ * @property string  $phone
+ * @property string  $address
+ * @property string  $email
+ * @property string  $password
+ * @property string  $role
+ * @property string  $company_id
+ * @property Company company
+ * @property Order   order
  */
 class User extends Authenticatable
 {
@@ -28,7 +39,7 @@ class User extends Authenticatable
     /**
      * @var array
      */
-    public static $roles = [
+    public static array $roles = [
         User::ROLE_ADMIN,
         User::ROLE_PRODUCER_ADMIN,
         User::ROLE_PRODUCER_USER,
@@ -38,7 +49,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * @param $role
+     * @param array $ejectRoles
      *
      * @return array
      */
@@ -60,6 +71,8 @@ class User extends Authenticatable
      *
      * @var array
      */
+
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -90,6 +103,7 @@ class User extends Authenticatable
 
     /**
      * @return BelongsTo
+     * @property User $user
      */
     public function company()
     {

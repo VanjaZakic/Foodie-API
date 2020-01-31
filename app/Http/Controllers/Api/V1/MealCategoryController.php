@@ -21,7 +21,7 @@ class MealCategoryController extends Controller
     /**
      * @var MealCategoryService
      */
-    protected $mealCategoryService;
+    protected MealCategoryService $mealCategoryService;
 
     /**
      * MealCategoryController constructor.

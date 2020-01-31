@@ -24,7 +24,7 @@ class CompanyController extends Controller
     /**
      * @var CompanyService
      */
-    private $companyService;
+    private CompanyService $companyService;
 
     /**
      * CompanyController constructor.

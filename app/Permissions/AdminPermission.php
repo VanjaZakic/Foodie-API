@@ -14,7 +14,7 @@ class AdminPermission implements Permissionable
     /**
      * @var User $authUser
      */
-    private $authUser;
+    private User $authUser;
 
     /**
      * AdminPermission constructor.

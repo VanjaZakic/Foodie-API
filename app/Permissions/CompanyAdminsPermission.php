@@ -14,7 +14,7 @@ class CompanyAdminsPermission implements Permissionable
     /**
      * @var User $authUser
      */
-    private $authUser;
+    private User $authUser;
 
     /**
      * CompanyAdminsPermission constructor.

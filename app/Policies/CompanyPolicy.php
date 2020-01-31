@@ -3,7 +3,10 @@
 namespace App\Policies;
 
 use App\Company;
+use App\Permissions\AdminPermission;
+use App\Permissions\CompanyAdminsPermission;
 use App\Permissions\PermissionFactory;
+use App\Permissions\UsersPermission;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Http\Request;
@@ -15,6 +18,14 @@ use Illuminate\Http\Request;
 class CompanyPolicy
 {
     use HandlesAuthorization;
+    /**
+     * @var Request
+     */
+    private Request $request;
+    /**
+     * @var AdminPermission|CompanyAdminsPermission|UsersPermission|bool
+     */
+    private $permission;
 
     /**
      * CompanyPolicy constructor.

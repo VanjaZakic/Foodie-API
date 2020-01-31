@@ -17,7 +17,7 @@ class UserTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = [
+    protected array $availableIncludes = [
         'company',
     ];
 

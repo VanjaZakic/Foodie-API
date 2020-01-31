@@ -8,6 +8,7 @@ use App\Order;
 use App\Services\OrderService;
 use App\Transformers\OrderTransformer;
 use App\Transformers\UserOrdersTransformer;
+use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
 use Prettus\Repository\Exceptions\RepositoryException;
@@ -22,7 +23,7 @@ class OrderController extends Controller
     /**
      * @var OrderService
      */
-    protected $orderService;
+    protected OrderService $orderService;
 
     /**
      * OrderController constructor.
@@ -76,7 +77,7 @@ class OrderController extends Controller
      *
      * @param OrderRequest $request
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function store(OrderRequest $request)
     {
