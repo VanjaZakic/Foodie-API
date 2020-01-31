@@ -113,50 +113,23 @@ class CompanyUpdateTest extends TestCase
             ->assertJsonValidationErrors(['type']);
     }
 
-//    public function test_it_updates_a_company()
-//    {
-//        Storage::fake('public');
-//        $type = COMPANY::TYPE_PRODUCER;
-//
-//        $image = UploadedFile::fake()->image("new{$type}.jpg");
-//        $this->actingAs($this->admin)->json('PUT', "api/v1/companies/{$this->producerCompany->id}", $params = [
-//            'name'    => 'newcompanyname',
-//            'phone'   => rand(111111111, 999999999),
-//            'address' => 'newcompanyaddress',
-//            'email'   => "new{$type}@gmail.com",
-//            'image'   => $image,
-//            'type'    => $type,
-//            'lat'     => 0,
-//            'lng'     => 0
-//        ]);
-//
-//        $this->assertDatabaseHas('companies', $params);
-//    }
-
     public function test_it_updates_a_company()
     {
         Storage::fake('public');
+        $type = COMPANY::TYPE_PRODUCER;
 
-        $types = COMPANY::$types;
-        foreach ($types as $type) {
-            $company = factory(COMPANY::class)->states($type)->create();
-            $image   = UploadedFile::fake()->image("{$type}.jpg");
-            $this->actingAs($this->admin)->json('PATCH', "api/v1/companies/{$company->id}", $params = [
-                'name'    => 'newcompanyname',
-                'phone'   => rand(111111111, 999999999),
-                'address' => 'newcompanyaddress',
-                'email'   => "new{$type}@gmail.com",
-                'image'   => $image,
-                'type'    => $type,
-                'lat'     => 0,
-                'lng'     => 0
-            ]);
+        $image = UploadedFile::fake()->image("new{$type}.jpg");
+        $this->actingAs($this->admin)->json('PATCH', "api/v1/companies/{$this->producerCompany->id}", $params = [
+            'name'    => 'newcompanyname',
+            'phone'   => rand(111111111, 999999999),
+            'address' => 'newcompanyaddress',
+            'email'   => "new{$type}@gmail.com",
+            'image'   => $image,
+            'type'    => $type,
+            'lat'     => 0,
+            'lng'     => 0
+        ]);
 
-            $path            = 'images/' . $image->hashName();
-            $params['image'] = $path;
-            Storage::disk('public')->assertExists($path);
-
-            $this->assertDatabaseHas('companies', $params);
-        }
+        $this->assertDatabaseHas('companies', $params);
     }
 }
