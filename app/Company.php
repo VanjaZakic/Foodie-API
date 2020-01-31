@@ -9,6 +9,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Company
  * @package App
+ * @property int          $id
+ * @property string       $name
+ * @property string       $phone
+ * @property string       $address
+ * @property string       $email
+ * @property string       $image
+ * @property string       $type
+ * @property int          $lat
+ * @property int          $lng
+ * @property MealCategory $mealCategory
+ * @property Order        $order
  */
 class Company extends Model
 {
@@ -20,7 +31,7 @@ class Company extends Model
     /**
      * @var array
      */
-    public static $types = [
+    public static array $types = [
         Company::TYPE_PRODUCER,
         Company::TYPE_CUSTOMER
     ];
@@ -36,6 +47,7 @@ class Company extends Model
         'address',
         'email',
         'image',
+        'discount',
         'type',
         'lat',
         'lng'

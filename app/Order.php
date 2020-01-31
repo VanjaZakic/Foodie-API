@@ -10,20 +10,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Order
  * @package App
+ *
+ * @property int    $id
+ * @property int    $price
+ * @property string $delivery_datetime
+ * @property int    $user_id
+ * @property int    $company_id
+ * @property string $status
+ * @property bool   $paid
+ *
+ * @property User       user
+ * @property Company    company
+ * @property Meal       meals
  */
 class Order extends Model
 {
     use SoftDeletes;
 
-    const STATUS_ORDERED = 'ordered';
-    const STATUS_CANCELLED = 'cancelled';
+    const STATUS_ORDERED    = 'ordered';
+    const STATUS_CANCELLED  = 'cancelled';
     const STATUS_PROCESSING = 'processing';
-    const STATUS_DELIVERED = 'delivered';
+    const STATUS_DELIVERED  = 'delivered';
 
     /**
      * @var array
      */
-    public static $statuses = [
+    public static array $statuses = [
         Order::STATUS_ORDERED,
         Order::STATUS_CANCELLED,
         Order::STATUS_PROCESSING,
@@ -66,10 +78,10 @@ class Order extends Model
     public function meals()
     {
         return $this->belongsToMany(Meal::class)
-                    ->using(MealOrder::class)
-                    ->withPivot([
-                        'price',
-                        'quantity',
-                    ]);
+            ->using(MealOrder::class)
+            ->withPivot([
+                'price',
+                'quantity',
+            ]);
     }
 }

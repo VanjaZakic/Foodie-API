@@ -5,8 +5,6 @@ namespace App\Pipes;
 use Illuminate\Http\Request;
 use Closure;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 /**
  * Class UpdateAuthorization

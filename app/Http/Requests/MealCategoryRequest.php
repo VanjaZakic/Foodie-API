@@ -7,6 +7,11 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Class MealCategoryRequest
  * @package App\Http\Requests
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $image
+ * @property int    $company_id
  */
 class MealCategoryRequest extends FormRequest
 {

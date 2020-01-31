@@ -24,7 +24,7 @@ class PaymentMethodController extends Controller
     /**
      * @var PaymentMethodService
      */
-    private $paymentMethodService;
+    private PaymentMethodService $paymentMethodService;
 
     /**
      * PaymentMethodController constructor.

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Criteria\ProducerCompaniesCriteria;
 use App\Http\Requests\CompanyStoreRequest;
+use App\Http\Requests\CompanyUpdateRequest;
 use App\Repositories\CompanyRepository;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -70,10 +71,20 @@ class CompanyService
      * @return mixed
      * @throws ValidatorException
      */
-    public function update($request, $companyId)
+    public function update(CompanyUpdateRequest $request, $companyId)
     {
-        return $this->repository->update(
-            $request->all(), $companyId);
+        $path = $request->file('image')->store('images', 'public');
+
+        return $this->repository->update([
+            'name'    => $request->name,
+            'phone'   => $request->phone,
+            'address' => $request->address,
+            'email'   => $request->email,
+            'type'    => $request->type,
+            'image'   => $path,
+            'lat'     => $request->lat,
+            'lng'     => $request->lng],
+            $companyId);
     }
 
     /**

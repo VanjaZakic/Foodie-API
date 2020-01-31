@@ -27,7 +27,7 @@ class CompanyUserController extends Controller
     /**
      * @var CompanyUserService
      */
-    private $companyUserService;
+    private CompanyUserService $companyUserService;
 
     /**
      * CompanyUserController constructor.

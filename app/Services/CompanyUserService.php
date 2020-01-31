@@ -17,7 +17,7 @@ class CompanyUserService
     /**
      * @var UserRepository
      */
-    protected $repository;
+    protected UserRepository $repository;
 
     /**
      * UserService constructor.

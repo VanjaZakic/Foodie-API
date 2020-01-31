@@ -18,7 +18,7 @@ class MealService
     /**
      * @var MealRepository
      */
-    protected $repository;
+    protected MealRepository $repository;
 
     /**
      * MealService constructor.
