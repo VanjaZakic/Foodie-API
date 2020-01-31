@@ -2,12 +2,23 @@
 
 namespace App\Http\Requests;
 
+use App\Company;
 use App\Rules\ValidCompanyTypeRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class CompanyUpdateRequest
  * @package App\Http\Requests
+ * @property int     $id
+ * @property string  $name
+ * @property string  $phone
+ * @property string  $address
+ * @property string  $email
+ * @property string  $image
+ * @property string  type
+ * @property int     $lat
+ * @property int     $lng
+ * @property Company company
  */
 class CompanyUpdateRequest extends FormRequest
 {

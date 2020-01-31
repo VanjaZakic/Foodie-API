@@ -2,12 +2,23 @@
 
 namespace App\Http\Requests;
 
+use App\Meal;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
  * Class OrderRequest
  * @package App\Http\Requests
+ *
+ * @property int    $id
+ * @property int    $price
+ * @property string $delivery_datetime
+ * @property int    $user_id
+ * @property int    $company_id
+ * @property string $status
+ * @property bool   $paid
+ *
+ * @property Meal   meals
  */
 class OrderRequest extends FormRequest
 {

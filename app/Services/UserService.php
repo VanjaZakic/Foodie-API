@@ -20,7 +20,7 @@ class UserService
     /**
      * @var UserRepository
      */
-    protected $repository;
+    protected UserRepository $repository;
 
     /**
      * UserService constructor.

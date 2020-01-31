@@ -14,7 +14,7 @@ class PaymentService
     /**
      * @var User user
      */
-    private $user;
+    private User $user;
 
     /**
      * PaymentService constructor.

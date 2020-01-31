@@ -16,7 +16,7 @@ class CompanyCriteria implements CriteriaInterface
     /**
      * @var Company
      */
-    protected $company;
+    protected Company $company;
 
     /**
      * CompanyCriteria constructor
@@ -27,7 +27,7 @@ class CompanyCriteria implements CriteriaInterface
     {
         $this->company = $company;
     }
-    
+
     /**
      * Apply criteria in query repository
      *

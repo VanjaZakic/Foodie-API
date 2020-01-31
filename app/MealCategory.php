@@ -10,6 +10,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class MealCategory
  * @package App
+ *
+ * @property int    $id
+ * @property string $name
+ * @property string $image
+ * @property int    $company_id
+ *
+ * @property Company   company
+ * @property Meal      meals
  */
 class MealCategory extends Model
 {

@@ -27,7 +27,7 @@ class UserController extends Controller
     /**
      * @var UserService
      */
-    private $userService;
+    private UserService $userService;
 
     /**
      * UserController constructor.

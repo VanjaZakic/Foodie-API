@@ -9,6 +9,15 @@ use Illuminate\Validation\Rule;
 /**
  * Class UserStoreRequest
  * @package App\Http\Requests
+ * @property int    $id
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $phone
+ * @property string $address
+ * @property string $email
+ * @property string $password
+ * @property string $role
+ * @property string $company_id
  */
 class UserStoreRequest extends FormRequest
 {

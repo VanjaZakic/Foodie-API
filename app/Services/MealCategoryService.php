@@ -18,7 +18,7 @@ class MealCategoryService
     /**
      * @var MealCategoryRepository
      */
-    protected $repository;
+    protected MealCategoryRepository $repository;
 
     /**
      * MealCategoryService constructor.

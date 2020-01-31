@@ -8,6 +8,15 @@ use Illuminate\Validation\Rule;
 
 /**
  * Class CompanyStoreRequest
+ * @property int    $id
+ * @property string $name
+ * @property string $phone
+ * @property string $address
+ * @property string $email
+ * @property string $image
+ * @property string type
+ * @property int    $lat
+ * @property int    $lng
  * @package App\Http\Requests
  */
 class CompanyStoreRequest extends FormRequest
