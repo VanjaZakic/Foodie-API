@@ -27,16 +27,10 @@ class CreateMealOrderTable extends Migration
             $table->engine = 'InnoDB';
             $table->unsignedInteger('order_id');
             $table->unsignedInteger('meal_id');
-            $table->unsignedInteger('user_id');
             $table->decimal('price', 8, 2);
             $table->integer('quantity');
 
             $table->index(["meal_id"], 'meal_id');
-
-            $table->foreign('user_id')
-                ->references('id')->on('users')
-                ->onDelete('restrict')
-                ->onUpdate('restrict');
 
             $table->foreign('order_id')
                 ->references('id')->on('orders')
