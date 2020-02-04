@@ -35,5 +35,6 @@
         <server name="DB_DATABASE" value=":memory:"/>
         <server name="CLIENT_ID" value="2" force="true"/>
         <server name="CLIENT_SECRET" value="GigcKdLPKJOO5eDV9fgmbZvKLuMgatfzqaWpwEYA" force="true"/>
+        <server name="DB_FOREIGN_KEYS" value="false" force="true"/>
     </php>
 </phpunit>

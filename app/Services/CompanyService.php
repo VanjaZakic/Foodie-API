@@ -50,7 +50,7 @@ class CompanyService
      */
     public function store(CompanyStoreRequest $request)
     {
-        $path = $request->file('image')->store('public/images');
+        $path = $request->file('image')->store('images', 'public');
 
         return $this->repository->create([
             'name'    => $request->name,
