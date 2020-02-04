@@ -120,15 +120,20 @@ class CompanyUpdateTest extends TestCase
 
         $image = UploadedFile::fake()->image("new{$type}.jpg");
         $this->actingAs($this->admin)->json('PATCH', "api/v1/companies/{$this->producerCompany->id}", $params = [
-            'name'    => 'newcompanyname',
-            'phone'   => rand(111111111, 999999999),
-            'address' => 'newcompanyaddress',
-            'email'   => "new{$type}@gmail.com",
-            'image'   => $image,
-            'type'    => $type,
-            'lat'     => 0,
-            'lng'     => 0
+            'name'     => 'newcompanyname',
+            'phone'    => rand(111111111, 999999999),
+            'address'  => 'newcompanyaddress',
+            'email'    => "new{$type}@gmail.com",
+            'image'    => $image,
+            'type'     => $type,
+            'lat'      => 0,
+            'lng'      => 0,
+            'discount' => 1
         ]);
+
+        $path            = 'images/' . $image->hashName();
+        $params['image'] = $path;
+        Storage::disk('public')->assertExists($path);
 
         $this->assertDatabaseHas('companies', $params);
     }
