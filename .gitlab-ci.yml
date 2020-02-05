@@ -35,6 +35,8 @@ composer:
 
 db-seeding:
   stage: build
+  tags:
+    - docker
   services:
     - name: mysql:latest
       command: ["--default-authentication-plugin=mysql_native_password"]
@@ -53,6 +55,8 @@ db-seeding:
 
 phpunit:
   stage: test
+  tags:
+    - docker
   services:
     - name: mysql:latest
       command: ["--default-authentication-plugin=mysql_native_password"]
