@@ -69,67 +69,50 @@ class UserStoreTest extends TestCase
 
     public function test_it_stores_a_user()
     {
-        $user = factory(User::class)->create([
-            'first_name' => 'firstname',
-            'last_name'  => 'lastname',
-            'phone'      => '123456789',
-            'password'   => '123456',
-            'address'    => 'address',
-            'role'       => User::ROLE_USER,
-            'company_id' => null
-        ]);
+        $user = factory(User::class)->create($params = $this->getParams());
 
-        $this->assertDatabaseHas('users', [
-            'first_name' => 'firstname',
-            'last_name'  => 'lastname',
-            'phone'      => '123456789',
-            'address'    => 'address',
-            'role'       => User::ROLE_USER,
-            'company_id' => null
-        ]);
+        $this->assertDatabaseHas('users', $this->getDbParams($params));
     }
 
     public function test_it_stores_a_producer_user()
     {
-        $user = factory(User::class)->create([
-            'first_name' => 'firstname',
-            'last_name'  => 'lastname',
-            'phone'      => '123456789',
-            'password'   => '123456',
-            'address'    => 'address',
+        $user = factory(User::class)->create($params = $this->getParams([
             'role'       => User::ROLE_PRODUCER_USER,
             'company_id' => $company_id = (factory(Company::class)->states('producer')->create())->id
-        ]);
+        ]));
 
-        $this->assertDatabaseHas('users', [
-            'first_name' => 'firstname',
-            'last_name'  => 'lastname',
-            'phone'      => '123456789',
-            'address'    => 'address',
-            'role'       => User::ROLE_PRODUCER_USER,
-            'company_id' => $company_id
-        ]);
+        $this->assertDatabaseHas('users', $this->getDbParams($params));
     }
 
     public function test_it_stores_a_customer_user()
     {
-        $user = factory(User::class)->create([
+        $user = factory(User::class)->create($params = $this->getParams([
+            'role'       => User::ROLE_CUSTOMER_USER,
+            'company_id' => $company_id = (factory(Company::class)->states(COMPANY::TYPE_CUSTOMER)->create())->id
+        ]));
+
+        $this->assertDatabaseHas('users', $this->getDbParams($params));
+    }
+
+    private function getParams(...$difference)
+    {
+        $params = [
             'first_name' => 'firstname',
             'last_name'  => 'lastname',
             'phone'      => '123456789',
             'password'   => '123456',
             'address'    => 'address',
-            'role'       => User::ROLE_CUSTOMER_USER,
-            'company_id' => $company_id = (factory(Company::class)->states(COMPANY::TYPE_CUSTOMER)->create())->id
-        ]);
+            'role'       => User::ROLE_USER,
+            'company_id' => null
+        ];
+        $params = array_merge($params, ...$difference);
 
-        $this->assertDatabaseHas('users', [
-            'first_name' => 'firstname',
-            'last_name'  => 'lastname',
-            'phone'      => '123456789',
-            'address'    => 'address',
-            'role'       => User::ROLE_CUSTOMER_USER,
-            'company_id' => $company_id
-        ]);
+        return $params;
+    }
+
+    private function getDbParams($params)
+    {
+        unset($params['password']);
+        return $params;
     }
 }
