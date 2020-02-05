@@ -10,9 +10,8 @@ variables:
   MYSQL_DATABASE: foodie
   MYSQL_USER: homestead
   MYSQL_PASSWORD: secret
-  #MYSQL_ROOT_PASSWORD:
 
-composer:
+foodie:
   stage: prepare
   tags:
     - docker
@@ -33,7 +32,6 @@ composer:
     paths:
       - vendor/
 
-db-seeding:
   stage: build
   tags:
     - docker
@@ -53,7 +51,6 @@ db-seeding:
     expire_in: 1 days
     when: always
 
-phpunit:
   stage: test
   tags:
     - docker
