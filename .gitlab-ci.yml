@@ -38,7 +38,7 @@ db-seeding:
   tags:
     - docker
   services:
-    - name: mysql:mysql:5.7.28
+    - name: mysql:5.7.28
       command: ["--default-authentication-plugin=mysql_native_password"]
   dependencies:
     - composer
@@ -58,7 +58,7 @@ phpunit:
   tags:
     - docker
   services:
-    - name: mysql:mysql:5.7.28
+    - name: mysql:5.7.28
       command: ["--default-authentication-plugin=mysql_native_password"]
   dependencies:
     - composer
