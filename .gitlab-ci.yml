@@ -6,10 +6,10 @@ stages:
   - test
 
 variables:
-  DB_HOST: mysql
-  MYSQL_DATABASE: foodie
-  MYSQL_USER: homestead
-  MYSQL_PASSWORD: secret
+  - DB_HOST: mysql
+  - MYSQL_DATABASE: foodie
+  - MYSQL_USER: homestead
+  - MYSQL_PASSWORD: secret
 
 foodie:
   stage: prepare
