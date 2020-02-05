@@ -6,12 +6,13 @@ stages:
   - test
 
 variables:
-  - DB_HOST: mysql
-  - MYSQL_DATABASE: foodie
-  - MYSQL_USER: homestead
-  - MYSQL_PASSWORD: secret
+  DB_HOST: mysql
+  MYSQL_DATABASE: foodie
+  MYSQL_USER: homestead
+  MYSQL_PASSWORD: secret
+  #MYSQL_ROOT_PASSWORD:
 
-foodie:
+composer:
   stage: prepare
   tags:
     - docker
@@ -32,12 +33,15 @@ foodie:
     paths:
       - vendor/
 
+db-seeding:
   stage: build
   tags:
     - docker
   services:
     - name: mysql:5.7.28
       command: ["--default-authentication-plugin=mysql_native_password"]
+  dependencies:
+    - composer
   script:
     - mysql --version
     - php artisan migrate:fresh --seed
@@ -49,12 +53,16 @@ foodie:
     expire_in: 1 days
     when: always
 
+phpunit:
   stage: test
   tags:
     - docker
   services:
     - name: mysql:5.7.28
       command: ["--default-authentication-plugin=mysql_native_password"]
+  dependencies:
+    - composer
+    - db-seeding
   script:
     - php -v
     - sudo cp /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.bak
@@ -68,3 +76,4 @@ foodie:
       - ./storage/logs
     expire_in: 1 days
     when: on_failure
+
