@@ -21,8 +21,7 @@ composer:
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - cp .env.example .env
     - php artisan key:generate
-    - php artisan cache:clear
-    - php artisan config:clear
+    - php artisan config:cache
   artifacts:
     paths:
       - vendor/
