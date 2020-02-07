@@ -1,5 +1,3 @@
-#!/bin/bash
-
 image: edbizarro/gitlab-ci-pipeline-php:7.4
 
 stages:
@@ -66,16 +64,16 @@ phpunit:
   dependencies:
     - composer
     - db-seeding
-  variables: 
-    GRANT_TYPE: password
-    CLIENT_ID: 2
+  variables:
+   CLIENT_ID: 2
+   GRANT_TYPE: password
   script:
     - php -v
     - sudo cp /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.bak
     - echo "" | sudo tee /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     - mysql --host="${DB_HOST}" --user="${MYSQL_USER}" --password="${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" < db.sql
     - php artisan passport:keys
-    - CLIENT_SECRET="${mysql --host=mysql --user=homestead --password=secret foodie -e 'select secret from oauth_clients where id=2' -N}"
+    - CLIENT_SECRET="$(mysql --host=mysql --user=homestead --password=secret foodie -e 'select secret from oauth_clients where id=2' -N)"
     - ./vendor/phpunit/phpunit/phpunit --version
     - php -d short_open_tag=off ./vendor/phpunit/phpunit/phpunit -v --colors=never --stderr
     - sudo cp /usr/local/etc/php/conf.d/docker-php-ext-xdebug.bak /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
@@ -84,4 +82,5 @@ phpunit:
       - ./storage/logs
     expire_in: 1 days
     when: on_failure
+
 
