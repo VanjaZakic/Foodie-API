@@ -16,7 +16,7 @@ class OauthClientsTableSeeder extends Seeder
             'id'                     => 2,
             'user_id'                => null,
             'name'                   => 'Laravel Password Grant Client',
-            'secret'                 => 'GigcKdLPKJOO5eDV9fgmbZvKLuMgatfzqaWpwEYA',
+            'secret'                 => config('auth.passport.client_secret'),
             'redirect'               => 'http://localhost',
             'personal_access_client' => 0,
             'password_client'        => 1,
