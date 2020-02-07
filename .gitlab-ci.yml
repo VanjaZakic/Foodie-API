@@ -1,0 +1,86 @@
+image: edbizarro/gitlab-ci-pipeline-php:7.4
+
+stages:
+  - prepare
+  - build
+  - test
+
+variables:
+  DB_HOST: mysql
+  MYSQL_DATABASE: foodie
+  MYSQL_USER: homestead
+  MYSQL_PASSWORD: secret
+  MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+
+composer:
+  stage: prepare
+  tags:
+    - docker
+  script:
+    - php -v
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+    - cp .env.example .env
+    - php artisan key:generate
+    - php artisan config:cache
+  artifacts:
+    paths:
+      - vendor/
+      - .env
+    expire_in: 1 days
+    when: always
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - vendor/
+
+db-seeding:
+  stage: build
+  tags:
+    - docker
+  services:
+    - name: mysql:5.7.28
+      command: ["--default-authentication-plugin=mysql_native_password"]
+  dependencies:
+    - composer
+  script:
+    - mysql --version
+    - php artisan migrate:fresh --seed
+    - php artisan passport:install
+    - mysqldump --host="${DB_HOST}" --user="${MYSQL_USER}" --password="${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" > db.sql
+  artifacts:
+    paths:
+      - storage/logs
+      - db.sql
+    expire_in: 1 days
+    when: always
+
+phpunit:
+  stage: test
+  tags:
+    - docker
+  services:
+    - name: mysql:5.7.28
+      command: ["--default-authentication-plugin=mysql_native_password"]
+  dependencies:
+    - composer
+    - db-seeding
+  variables:
+   CLIENT_ID: 2
+   GRANT_TYPE: password
+  script:
+    - php -v
+    - sudo cp /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.bak
+    - echo "" | sudo tee /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+    - mysql --host="${DB_HOST}" --user="${MYSQL_USER}" --password="${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" < db.sql
+    - php artisan passport:keys
+    - CLIENT_SECRET="$(mysql --host=mysql --user=homestead --password=secret foodie -e 'select secret from oauth_clients where id=2' -N)"
+    - ./vendor/phpunit/phpunit/phpunit --version
+    - php -d short_open_tag=off ./vendor/phpunit/phpunit/phpunit -v --colors=never --stderr
+    - sudo cp /usr/local/etc/php/conf.d/docker-php-ext-xdebug.bak /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+  artifacts:
+    paths:
+      - ./storage/logs
+    expire_in: 1 days
+    when: on_failure
+
+

@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard'     => 'api',
         'passwords' => 'users',
     ],
 
@@ -37,14 +37,14 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver'   => 'session',
             'provider' => 'users',
         ],
 
         'api' => [
-            'driver' => 'token',
+            'driver'   => 'passport',
             'provider' => 'users',
-            'hash' => false,
+            'hash'     => false,
         ],
     ],
 
@@ -68,13 +68,8 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model'  => App\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -95,8 +90,8 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
+            'table'    => 'password_resets',
+            'expire'   => 60,
             'throttle' => 60,
         ],
     ],
@@ -113,5 +108,11 @@ return [
     */
 
     'password_timeout' => 10800,
+
+    'passport' => [
+        'grant_type'    => env('GRANT_TYPE'),
+        'client_id'     => env('CLIENT_ID'),
+        'client_secret' => env('CLIENT_SECRET'),
+    ],
 
 ];

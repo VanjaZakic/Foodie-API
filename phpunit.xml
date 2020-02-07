@@ -31,5 +31,10 @@
         <server name="MAIL_DRIVER" value="array"/>
         <server name="QUEUE_CONNECTION" value="sync"/>
         <server name="SESSION_DRIVER" value="array"/>
+        <server name="DB_CONNECTION" value="sqlite"/>
+        <server name="DB_DATABASE" value=":memory:"/>
+        <server name="CLIENT_ID" value="2"/>
+        <server name="CLIENT_SECRET" value="GigcKdLPKJOO5eDV9fgmbZvKLuMgatfzqaWpwEYA"/>
+        <server name="DB_FOREIGN_KEYS" value="false" force="true"/>
     </php>
 </phpunit>

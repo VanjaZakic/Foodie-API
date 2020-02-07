@@ -1,78 +1,139 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+<h1 align="center">Foodie</h1>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## About Foodie
 
-## About Laravel
+Foodie is an online ordering site designed primarily for use in the food industry. 
+This site allows food company to quickly and easily manage an online menu which customers can browse and use to 
+place orders with just a few clicks. 
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Structure is divided in 3 main components:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. Admin system – control to add companies and company admins 
+2. Producer system – allows producer company to control what can be ordered by the users  
+3. User system  - provides the functionality for customers to place their orders.
+ 
+The admin system is only available to super admin of the site. 
+Admin have functionality of creating companies. There are two types of companies: producer and customer. 
+Producer companies produce food while customer companies buy food from producer companies.
+Admin can also create company's admins. 
+Admins of producer companies are producer admins while admins of customer companies are customer admins.
+He have the option to update or delete companies or admins and also can view all users and change their roles.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The producer system is available only to food producer company’s owners (producer admins) and employees (producer users). 
+Producer admin can create meal categories and add meals into them with the option to update or delete them. 
+Once an order is placed on the web page, it is entered into database and then retrieved, in real time on producer company’s end.
+On company’s account all meals in the order are displayed, along with their corresponding options and delivery details. 
+Both producer admins and users can quickly go through the orders and produce the necessary meals in received order 
+as well as update order's status which have already been processed or cancel order if necessary.
 
-## Learning Laravel
+User of the ordering site have functionality of creating account with option of choosing work company. 
+If the user choose producer company his role is producer user, choosing customer company role is customer user, or if he doesn't pick company his role is user.
+All admins are also ordinary users and can order the meals.
+After the users logs in, he is presented with the list of all available restaurants (producer companies).
+When the user choose the producer company, he sees an interactive menu with all available meals 
+sorted in meal's categories. Then the user can select the meals from the menu, define quantity and provide delivery information.
+User can review the current order with price details, and have option to cancel the current order. 
+Payment can be processed on delivery or paid online by entering card details.
+Producer companies can offer discount to their employees.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Customer admin can submit the group order with all orders from his company's customer uses with total price.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+## Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Foodie is made in Laravel. Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+- API RESTFul project
+- [Prettus -l5- Repository layer](https://github.com/andersao/l5-repository)
+- [Fractal - Transformer](https://github.com/spatie/laravel-fractal)
+- [Passport - Laravel API authentication package](https://github.com/laravel/passport)
+- [Cashier -  Stripe's billing services](https://github.com/laravel/cashier)
+- [Simple, fast routing engine](https://laravel.com/docs/routing)
+- [Powerful dependency injection container](https://laravel.com/docs/container)
+- Expressive, intuitive [database](https://laravel.com/docs/eloquent)
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations)
+- Full with PHPDoc
+
+
+## Installation
+
+Follow the instructions from provided links.
+
+You need to install [VirtualBox 6.x](https://www.virtualbox.org/wiki/Downloads) as well as [Vagrant](https://www.vagrantup.com/downloads.html).
+
+[Laravel Homestead](https://laravel.com/docs/6.x/homestead) is an official, pre-packaged Vagrant box that provides a wonderful development environment 
+without requiring to install PHP, a web server, and any other server software on local machine.
+
+###### Homestead yaml config
+```html
+---
+ip: "192.168.10.10"
+memory: 2048
+cpus: 2
+provider: virtualbox
+
+authorize: ~/.ssh/id_rsa.pub
+
+keys:
+    - ~/.ssh/id_rsa
+
+folders:
+    - map: ~/code/foodie
+      to: /home/vagrant/foodie
+
+sites:
+    - map: foodie.local
+      to: /home/vagrant/foodie/public
+
+databases:
+    - homestead
+    - foodie
+
+features:
+    - mariadb: false
+    - ohmyzsh: false
+    - webdriver: false
+
+# ports:
+#     - send: 50000
+#       to: 5000
+#     - send: 7777
+#       to: 777
+#       protocol: udp
+```
+
+###### Add into etc/hosts
+```html
+192.168.10.10 foodie.local
+```
+
+Install [Laravel](https://laravel.com/docs/6.x/installation). The Laravel framework has a few system requirements. 
+All of these requirements are satisfied by the Laravel Homestead virtual machine, so it's highly recommended that you 
+use Homestead as your local Laravel development environment.
+
+Clone project Foodie from remote repository [Git](https://git.quantox.tech/foodie/foodie-api) into code/foodie folder.
+
+###### In Laravel .env file enter these parameters
+```html
+DB_DATABASE=foodie
+DB_USERNAME=homestead
+DB_PASSWORD=secret
+```
+
+You can find database model of Foodie project in _install folder. 
+Create database named foodie and connect with foodie project.
+Run migrations with command `php artisan migrate`.
+
+To install packages type command `composer install`.
+
+Next, you should run the `php artisan passport:install` command and place encryption keys into .env file.
+
+You can register with [stripe](https://stripe.com/) if you wish to process payment and place stripe keys into .env file.
+
+Install [Postman](https://www.postman.com/) with command `sudo snap install postman`. 
+Postman is a collaboration platform for API development.
+Download foodie.postman_collection from _install folder and import them into postman workspace.
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Thank you for considering contributing to the Foodie!

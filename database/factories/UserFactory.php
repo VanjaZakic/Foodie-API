@@ -1,27 +1,58 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
+
+use App\Company;
 use App\User;
 use Faker\Generator as Faker;
-use Illuminate\Support\Str;
-
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| This directory should contain each of the model factory definitions for
-| your application. Factories provide a convenient way to generate new
-| model instances for testing / seeding your application's database.
-|
-*/
+use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(User::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'email_verified_at' => now(),
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-        'remember_token' => Str::random(10),
+        'first_name' => $faker->name,
+        'last_name'  => $faker->lastName,
+        'phone'      => $faker->e164PhoneNumber,
+        'address'    => $faker->address,
+        'email'      => $faker->unique()->safeEmail,
+        'password'   => '123456',
+        'role'       => USER::ROLE_USER
     ];
 });
+
+$factory->state(User::class, USER::ROLE_ADMIN, [
+    'role'       => USER::ROLE_ADMIN,
+    'company_id' => null
+]);
+
+$factory->state(User::class, USER::ROLE_PRODUCER_ADMIN, [
+    'role'       => USER::ROLE_PRODUCER_ADMIN,
+    'company_id' => function () {
+        return factory(Company::class)->states(COMPANY::TYPE_PRODUCER)->create()->id;
+    },
+]);
+
+$factory->state(User::class, USER::ROLE_CUSTOMER_ADMIN, [
+    'role'       => USER::ROLE_CUSTOMER_ADMIN,
+    'company_id' => function () {
+        return factory(Company::class)->states(COMPANY::TYPE_CUSTOMER)->create()->id;
+    },
+]);
+
+$factory->state(User::class, USER::ROLE_PRODUCER_USER, [
+    'role'       => USER::ROLE_PRODUCER_USER,
+    'company_id' => function () {
+        return factory(Company::class)->states(COMPANY::TYPE_PRODUCER)->create()->id;
+    },
+]);
+
+$factory->state(User::class, USER::ROLE_CUSTOMER_USER, [
+    'role'       => USER::ROLE_CUSTOMER_USER,
+    'company_id' => function () {
+        return factory(Company::class)->states(COMPANY::TYPE_CUSTOMER)->create()->id;
+    },
+]);
+
+$factory->state(User::class, USER::ROLE_USER, [
+    'role'       => USER::ROLE_USER,
+    'company_id' => null
+]);
