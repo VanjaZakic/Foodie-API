@@ -45,9 +45,8 @@ db-seeding:
     - composer
   script:
     - mysql --version
-    - php artisan cache:clear
-    - php artisan config:clear
     - php artisan migrate:fresh --seed
+    - php artisan passport:install
     - mysqldump --host="${DB_HOST}" --user="${MYSQL_USER}" --password="${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" > db.sql
   artifacts:
     paths:
@@ -66,11 +65,16 @@ phpunit:
   dependencies:
     - composer
     - db-seeding
+  variables: 
+    GRANT_TYPE: password
+    CLIENT_ID: 2
   script:
     - php -v
     - sudo cp /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.bak
     - echo "" | sudo tee /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     - mysql --host="${DB_HOST}" --user="${MYSQL_USER}" --password="${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" < db.sql
+    - php artisan passport:keys
+    - CLIENT_SECRET="${mysql --host=mysql --user=homestead --password=secret foodie -e 'SELECT secret FROM oauth_clients WHERE id=2' -N}"
     - ./vendor/phpunit/phpunit/phpunit --version
     - php -d short_open_tag=off ./vendor/phpunit/phpunit/phpunit -v --colors=never --stderr
     - sudo cp /usr/local/etc/php/conf.d/docker-php-ext-xdebug.bak /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
