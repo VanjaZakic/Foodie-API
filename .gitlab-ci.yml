@@ -45,6 +45,8 @@ db-seeding:
     - composer
   script:
     - mysql --version
+    - php artisan cache:clear
+    - php artisan config:clear
     - php artisan migrate:fresh --seed
     - mysqldump --host="${DB_HOST}" --user="${MYSQL_USER}" --password="${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" > db.sql
   artifacts:
